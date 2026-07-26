@@ -1009,25 +1009,16 @@ function updateCharts(queryData, cacheData, latencyData, securityData, isInitial
             });
         }
 
-        const labelsChanged = !areLabelsEqual(queryChartInstance.data.labels, localTimestamps);
-        const datasetsChanged = !areDatasetsEqual(queryChartInstance.data.datasets, queryDatasets);
-
-        if (labelsChanged || datasetsChanged || isInitial) {
-            queryChartInstance.data.labels = localTimestamps;
-            queryChartInstance.data.datasets = queryDatasets;
-            queryChartInstance.update(updateMode);
-        }
+        queryChartInstance.data.labels = localTimestamps;
+        queryChartInstance.data.datasets = queryDatasets;
+        queryChartInstance.update(updateMode);
     }
 
     if (cacheChartInstance) {
         const totalHits = cacheData.hits ? cacheData.hits.reduce((a, b) => a + b, 0) : 0;
         const totalMisses = cacheData.misses ? cacheData.misses.reduce((a, b) => a + b, 0) : 0;
-        const newData = [totalHits, totalMisses];
-        const oldData = cacheChartInstance.data.datasets[0].data;
-        if (isInitial || oldData[0] !== newData[0] || oldData[1] !== newData[1]) {
-            cacheChartInstance.data.datasets[0].data = newData;
-            cacheChartInstance.update(updateMode);
-        }
+        cacheChartInstance.data.datasets[0].data = [totalHits, totalMisses];
+        cacheChartInstance.update(updateMode);
     }
 
     if (latencyChartInstance) {
@@ -1062,14 +1053,9 @@ function updateCharts(queryData, cacheData, latencyData, securityData, isInitial
             ];
         }
 
-        const labelsChanged = !areLabelsEqual(latencyChartInstance.data.labels, localTimestamps);
-        const datasetsChanged = !areDatasetsEqual(latencyChartInstance.data.datasets, latencyDatasets);
-
-        if (labelsChanged || datasetsChanged || isInitial) {
-            latencyChartInstance.data.labels = localTimestamps;
-            latencyChartInstance.data.datasets = latencyDatasets;
-            latencyChartInstance.update(updateMode);
-        }
+        latencyChartInstance.data.labels = localTimestamps;
+        latencyChartInstance.data.datasets = latencyDatasets;
+        latencyChartInstance.update(updateMode);
     }
 
     // Update Query Types Doughnut Chart
