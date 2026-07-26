@@ -45,12 +45,7 @@ def add_alert_if_not_duplicate(server_id, server_name, alert_type, severity, mes
 
 from concurrent.futures import ThreadPoolExecutor
 
-def _poll_single_server(server, root_path):
-    server_id = server.id
-    server_name = server.name
-    host = server.host
-    port = server.port or 8953
-    
+def _poll_single_server(server_id, server_name, host, port, root_path):
     stats_data = None
     last_error = ""
     custom_conf = os.path.join(root_path, 'certs', host, 'unbound.conf')
@@ -87,7 +82,7 @@ def _poll_single_server(server, root_path):
         except Exception as e:
             last_error = str(e)
 
-    return (server, stats_data, last_error)
+    return (server_id, server_name, host, port, stats_data, last_error)
 
 def fetch_and_record_metrics(app):
     """
@@ -111,15 +106,11 @@ def fetch_and_record_metrics(app):
             else:
                 servers = [existing]
 
-        with ThreadPoolExecutor(max_workers=min(10, len(servers))) as executor:
-            futures = [executor.submit(_poll_single_server, s, app.root_path) for s in servers]
+        with ThreadPoolExecutor(max_workers=min(10, max(1, len(servers)))) as executor:
+            futures = [executor.submit(_poll_single_server, s.id, s.name, s.host, s.port or 8953, app.root_path) for s in servers]
             results = [f.result() for f in futures]
 
-        for server, stats_data, last_error in results:
-            server_id = server.id
-            server_name = server.name
-            host = server.host
-            port = server.port or 8953
+        for server_id, server_name, host, port, stats_data, last_error in results:
 
             if not stats_data:
                 diag_msg = f"Connection failed to {host}@{port}: {last_error}."
