@@ -24,11 +24,19 @@ def purge_orphan_metrics(app):
             MetricHistory.query.delete()
             db.session.commit()
 
+LAST_ALERTS_CLEARED_AT = None
+
+def set_alerts_cleared():
+    global LAST_ALERTS_CLEARED_AT
+    LAST_ALERTS_CLEARED_AT = datetime.utcnow()
+
 def add_alert_if_not_duplicate(server_id, server_name, alert_type, severity, message, cooldown_minutes=10):
-    """
-    Deduplicates alerts by enforcing a cooldown window (default 10 minutes) per alert_type.
-    """
-    cutoff = datetime.utcnow() - timedelta(minutes=cooldown_minutes)
+    global LAST_ALERTS_CLEARED_AT
+    now = datetime.utcnow()
+    if LAST_ALERTS_CLEARED_AT and (now - LAST_ALERTS_CLEARED_AT).total_seconds() < 3600:
+        return
+
+    cutoff = now - timedelta(minutes=cooldown_minutes)
     recent = AlertLog.query.filter(
         AlertLog.server_id == server_id,
         AlertLog.alert_type == alert_type,

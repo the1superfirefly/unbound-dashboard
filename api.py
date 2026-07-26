@@ -95,6 +95,11 @@ def clear_alerts():
     else:
         AlertLog.query.delete()
     db.session.commit()
+    try:
+        from collector import set_alerts_cleared
+        set_alerts_cleared()
+    except Exception:
+        pass
     return jsonify({'status': 'ok', 'message': 'Alert logs cleared successfully.'})
 
 def _get_global_top_server_1h(active_ids):

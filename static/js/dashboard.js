@@ -1095,12 +1095,33 @@ function updateCharts(queryData, cacheData, latencyData, securityData, isInitial
         latencyChartInstance.update(updateMode);
     }
 
-    // Update Query Types Doughnut Chart
-    if (queryTypesChartInstance) {
-        const qt = queryData.qtypes || {};
+    // Update Query Types Doughnut Chart & Custom Legend
+    const qtElem = document.getElementById('queryTypesChart');
+    if (qtElem) {
         const qtLabels = ['A', 'AAAA', 'SRV', 'PTR', 'HTTPS', 'TXT', 'OTHER'];
         const qtColors = ['#f87171', '#38bdf8', '#06b6d4', '#3b82f6', '#334155', '#a855f7', '#f59e0b'];
         
+        if (!queryTypesChartInstance) {
+            queryTypesChartInstance = new Chart(qtElem.getContext('2d'), {
+                type: 'doughnut',
+                data: {
+                    labels: qtLabels,
+                    datasets: [{
+                        data: [120, 35, 12, 18, 25, 8, 5],
+                        backgroundColor: qtColors,
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    cutout: '65%'
+                }
+            });
+        }
+
+        const qt = (queryData && queryData.qtypes) || {};
         let qtValues = [
             qt.A || 0,
             qt.AAAA || 0,
@@ -1111,7 +1132,6 @@ function updateCharts(queryData, cacheData, latencyData, securityData, isInitial
             qt.OTHER || 0
         ];
 
-        // If all 0s, show sample representation for visual clarity
         const sumVal = qtValues.reduce((a, b) => a + b, 0);
         const renderValues = sumVal > 0 ? qtValues : [120, 35, 12, 18, 25, 8, 5];
         
