@@ -14,7 +14,7 @@ def _get_time_coverage_info(records):
     """
     if not records:
         return {
-            'coverage_label': 'Live 6h Window (Collecting data)',
+            'coverage_label': 'Live 1h Window (Collecting data)',
             'sample_count': 0,
             'start_time': None,
             'end_time': None
@@ -87,16 +87,6 @@ def clear_history():
     db.session.commit()
     return jsonify({'status': 'ok', 'message': 'Metric history and alerts cleared successfully.'})
 
-@api_bp.route('/clear-metrics', methods=['POST'])
-def clear_metrics():
-    server_id = request.args.get('server_id')
-    if server_id and server_id != 'all':
-        MetricHistory.query.filter_by(server_id=server_id).delete()
-    else:
-        MetricHistory.query.delete()
-    db.session.commit()
-    return jsonify({'status': 'ok', 'message': 'Metric history cleared successfully.'})
-
 @api_bp.route('/clear-alerts', methods=['POST'])
 def clear_alerts():
     server_id = request.args.get('server_id')
@@ -119,6 +109,7 @@ def get_overview():
             'status': 'ok',
             'server_count': 0,
             'time_coverage': _get_time_coverage_info([]),
+            'top_used_server': {'id': 'none', 'name': 'N/A', 'queries': 0},
             'latest': {
                 'server_id': 'none', 'server_name': 'No Server Configured',
                 'total_queries': 0, 'qps': 0.0, 'cache_hits': 0, 'cache_misses': 0,
@@ -133,6 +124,7 @@ def get_overview():
             return jsonify({
                 'status': 'ok', 'server_count': server_count,
                 'time_coverage': _get_time_coverage_info([]),
+                'top_used_server': {'id': 'none', 'name': 'N/A', 'queries': 0},
                 'latest': {
                     'server_id': server_id, 'server_name': 'Unknown / Inactive Server',
                     'total_queries': 0, 'qps': 0.0, 'cache_hits': 0, 'cache_misses': 0,
@@ -148,6 +140,7 @@ def get_overview():
             return jsonify({
                 'status': 'ok', 'server_count': server_count,
                 'time_coverage': _get_time_coverage_info([]),
+                'top_used_server': {'id': 'none', 'name': 'N/A', 'queries': 0},
                 'latest': {
                     'server_id': server_id, 'server_name': srv.name if srv else 'Unbound Server',
                     'total_queries': 0, 'qps': 0.0, 'cache_hits': 0, 'cache_misses': 0,
@@ -160,6 +153,7 @@ def get_overview():
             'status': 'ok',
             'server_count': server_count,
             'time_coverage': _get_time_coverage_info(records_coverage),
+            'top_used_server': {'id': latest.server_id, 'name': latest.server_name, 'queries': latest.total_queries},
             'latest': latest.to_dict()
         })
 
@@ -180,6 +174,7 @@ def get_overview():
             'status': 'ok',
             'server_count': server_count,
             'time_coverage': _get_time_coverage_info([]),
+            'top_used_server': {'id': 'none', 'name': 'N/A', 'queries': 0},
             'latest': {
                 'server_id': 'all',
                 'server_name': 'All Servers (Aggregated)',
@@ -245,8 +240,8 @@ def _get_48h_query_filter(server_id):
 def _downsample_records_to_buckets(records, target_bucket_sec=10, pad_to_hours=1):
     """
     Downsamples dense 1-second records into target_bucket_sec (default 10s) buckets.
-    Pads timeline back to 1 hour ago with 0 values if historical data is short.
-    Returns: (timestamps, delta_queries, delta_qps, avg_latencies, p95_latencies, nxdomains, servfails)
+    Calculates per-server deltas and sums them for clean aggregate multi-line charts.
+    Returns: (timestamps, delta_queries, delta_qps, avg_latencies, p95_latencies, nxdomains, servfails, per_server_series)
     """
     now = datetime.utcnow()
     start_pad = now - timedelta(hours=pad_to_hours)
@@ -257,13 +252,13 @@ def _downsample_records_to_buckets(records, target_bucket_sec=10, pad_to_hours=1
         while curr <= now:
             ts_list.append(curr.strftime('%Y-%m-%dT%H:%M:%SZ'))
             curr += timedelta(minutes=5)
-        return ts_list, [0]*len(ts_list), [0.0]*len(ts_list), [0.0]*len(ts_list), [0.0]*len(ts_list), [0]*len(ts_list), [0]*len(ts_list)
+        return ts_list, [0]*len(ts_list), [0.0]*len(ts_list), [0.0]*len(ts_list), [0.0]*len(ts_list), [0]*len(ts_list), [0]*len(ts_list), {}
 
     # Sort records chronologically
     records = sorted(records, key=lambda r: r.timestamp)
     first_ts = records[0].timestamp
 
-    # If first record is within past 1h and padding requested, prepend initial padded points
+    # Prepend padded timestamps
     prepended_ts = []
     if pad_to_hours and first_ts > start_pad + timedelta(minutes=2):
         curr = start_pad
@@ -271,7 +266,7 @@ def _downsample_records_to_buckets(records, target_bucket_sec=10, pad_to_hours=1
             prepended_ts.append(curr.strftime('%Y-%m-%dT%H:%M:%SZ'))
             curr += timedelta(minutes=5)
 
-    # Bucket actual records by 10s intervals
+    # Bucket records chronologically into 10-second intervals
     buckets = []
     current_bucket_start = None
     current_bucket = []
@@ -296,28 +291,57 @@ def _downsample_records_to_buckets(records, target_bucket_sec=10, pad_to_hours=1
     nxdomains = [0] * len(prepended_ts)
     servfails = [0] * len(prepended_ts)
 
+    # Track distinct servers present in records
+    active_servers = ServerConfig.query.filter_by(is_active=True).all()
+    server_names = {s.id: s.name for s in active_servers}
+    server_ids = list(set(r.server_id for r in records))
+    
+    per_server_series = {
+        s_id: {
+            'name': server_names.get(s_id, s_id),
+            'queries': [0] * len(prepended_ts),
+            'avg_latency': [0.0] * len(prepended_ts)
+        } for s_id in server_ids
+    }
+
+    last_seen_totals = {}
+
     for i in range(len(buckets)):
         b_start, b_recs = buckets[i]
         timestamps.append(b_start.strftime('%Y-%m-%dT%H:%M:%SZ'))
 
-        if i == 0:
-            q_diff = 0
-            qps_val = 0.0
-        else:
-            prev_total = buckets[i-1][1][-1].total_queries
-            curr_total = b_recs[-1].total_queries
-            q_diff = max(0, curr_total - prev_total)
-            time_diff = max(1.0, (b_start - buckets[i-1][0]).total_seconds())
-            qps_val = round(q_diff / time_diff, 3)
+        bucket_by_server = {}
+        for r in b_recs:
+            bucket_by_server[r.server_id] = r
 
-        queries.append(q_diff)
-        qps.append(qps_val)
+        bucket_query_sum = 0
+
+        for s_id in server_ids:
+            if s_id in bucket_by_server:
+                r = bucket_by_server[s_id]
+                curr_tot = r.total_queries or 0
+                if s_id in last_seen_totals:
+                    s_diff = max(0, curr_tot - last_seen_totals[s_id])
+                else:
+                    s_diff = 0
+                last_seen_totals[s_id] = curr_tot
+
+                per_server_series[s_id]['queries'].append(s_diff)
+                per_server_series[s_id]['avg_latency'].append(round(r.avg_latency or 0.0, 3))
+                bucket_query_sum += s_diff
+            else:
+                per_server_series[s_id]['queries'].append(0)
+                per_server_series[s_id]['avg_latency'].append(0.0)
+
+        time_diff = max(1.0, (b_start - buckets[i-1][0]).total_seconds()) if i > 0 else 10.0
+        queries.append(bucket_query_sum)
+        qps.append(round(bucket_query_sum / time_diff, 3))
         avg_lat.append(round(sum(r.avg_latency or 0.0 for r in b_recs) / len(b_recs), 3))
         p95_lat.append(round(max(r.p95_latency or 0.0 for r in b_recs), 3))
         nxdomains.append(int(b_recs[-1].nxdomain_count or 0))
         servfails.append(int(b_recs[-1].servfail_count or 0))
 
-    return timestamps, queries, qps, avg_lat, p95_lat, nxdomains, servfails
+    return timestamps, queries, qps, avg_lat, p95_lat, nxdomains, servfails, per_server_series
 
 @api_bp.route('/query', methods=['GET'])
 def get_query_analytics():
@@ -325,21 +349,8 @@ def get_query_analytics():
     query = _get_48h_query_filter(server_id)
     records = query.order_by(MetricHistory.timestamp.asc()).all()
     
-    timestamps, delta_queries, delta_qps, avg_lat, p95_lat, nxdomains, servfails = _downsample_records_to_buckets(records, target_bucket_sec=10, pad_to_hours=1)
+    timestamps, delta_queries, delta_qps, avg_lat, p95_lat, nxdomains, servfails, per_server_data = _downsample_records_to_buckets(records, target_bucket_sec=10, pad_to_hours=1)
     
-    per_server_data = {}
-    if not server_id or server_id == 'all':
-        active_servers = ServerConfig.query.filter_by(is_active=True).all()
-        for srv in active_servers:
-            srv_records = [r for r in records if r.server_id == srv.id]
-            if srv_records:
-                _, srv_queries, _, srv_avg_lat, _, _, _ = _downsample_records_to_buckets(srv_records, target_bucket_sec=10, pad_to_hours=1)
-                per_server_data[srv.id] = {
-                    'name': srv.name,
-                    'queries': srv_queries,
-                    'avg_latency': srv_avg_lat
-                }
-
     latest = records[-1] if records else None
     qtypes = {
         'A': latest.qtype_a if latest else 0,
@@ -375,7 +386,7 @@ def get_query_analytics():
         'qtypes': qtypes,
         'top_cached_domains': top_cached_domains,
         'top_fetched_domains': top_fetched_domains,
-        'per_server': per_server_data
+        'per_server': per_server_data if (not server_id or server_id == 'all') else {}
     })
 
 @api_bp.route('/cache', methods=['GET'])
@@ -402,13 +413,14 @@ def get_latency_analytics():
     query = _get_48h_query_filter(server_id)
     records = query.order_by(MetricHistory.timestamp.asc()).all()
     
-    timestamps, delta_queries, delta_qps, avg_lat, p95_lat, nxdomains, servfails = _downsample_records_to_buckets(records, target_bucket_sec=10, pad_to_hours=1)
+    timestamps, delta_queries, delta_qps, avg_lat, p95_lat, nxdomains, servfails, per_server_data = _downsample_records_to_buckets(records, target_bucket_sec=10, pad_to_hours=1)
     
     return jsonify({
         'timestamps': timestamps,
         'avg': avg_lat,
         'p95': p95_lat,
-        'time_coverage': _get_time_coverage_info(records)
+        'time_coverage': _get_time_coverage_info(records),
+        'per_server': per_server_data if (not server_id or server_id == 'all') else {}
     })
 
 @api_bp.route('/security', methods=['GET'])
@@ -417,7 +429,7 @@ def get_security_analytics():
     query = _get_48h_query_filter(server_id)
     records = query.order_by(MetricHistory.timestamp.asc()).all()
     
-    timestamps, delta_queries, delta_qps, avg_lat, p95_lat, nxdomains, servfails = _downsample_records_to_buckets(records, target_bucket_sec=10, pad_to_hours=1)
+    timestamps, delta_queries, delta_qps, avg_lat, p95_lat, nxdomains, servfails, per_server_data = _downsample_records_to_buckets(records, target_bucket_sec=10, pad_to_hours=1)
     
     return jsonify({
         'timestamps': timestamps,
