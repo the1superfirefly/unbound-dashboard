@@ -4,6 +4,7 @@ let queryChartInstance = null;
 let cacheChartInstance = null;
 let latencyChartInstance = null;
 let securityChartInstance = null;
+let currentServersCache = [];
 
 document.addEventListener('DOMContentLoaded', () => {
     initTheme();
@@ -20,7 +21,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Instant data refresh when server dropdown selection changes
     document.getElementById('serverSelect').addEventListener('change', () => {
-        console.log('Server selected:', getSelectedServerId());
         fetchDashboardData();
         fetchAlerts();
     });
@@ -29,20 +29,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.getElementById('addServerForm').addEventListener('submit', async (e) => {
         e.preventDefault();
+        const hiddenId = document.getElementById('serverIdHidden').value;
         const name = document.getElementById('serverName').value;
         const host = document.getElementById('serverHost').value;
         const port = parseInt(document.getElementById('serverPort').value);
 
-        const newServer = {
-            id: 'srv-' + Date.now(),
+        const serverData = {
+            id: hiddenId || ('srv-' + Date.now()),
             name: name,
             host: host,
             port: port
         };
 
-        await saveServerBackend(newServer);
-        bootstrap.Modal.getInstance(document.getElementById('addServerModal')).hide();
-        document.getElementById('addServerForm').reset();
+        await saveServerBackend(serverData);
+        resetServerForm();
     });
 });
 
@@ -71,18 +71,92 @@ function updateThemeIcon(theme) {
 
 async function initServerStorage() {
     const select = document.getElementById('serverSelect');
+    const currentSelected = select.value;
     select.innerHTML = '<option value="all">All Servers (Aggregated)</option>';
     
     try {
         const servers = await fetch('/api/servers').then(r => r.json());
+        currentServersCache = servers;
         servers.forEach(s => {
             const opt = document.createElement('option');
             opt.value = s.id;
             opt.textContent = `${s.name} (${s.host})`;
             select.appendChild(opt);
         });
+
+        if (currentSelected && [...select.options].some(o => o.value === currentSelected)) {
+            select.value = currentSelected;
+        }
+        renderServerManagerTable(servers);
     } catch (e) {
         console.error('Failed to load servers from backend:', e);
+    }
+}
+
+function renderServerManagerTable(servers) {
+    const tbody = document.getElementById('serverManagerTableBody');
+    if (!tbody) return;
+    tbody.innerHTML = '';
+
+    if (!servers || servers.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="4" class="text-center text-muted py-3">No servers configured. Add one below.</td></tr>';
+        return;
+    }
+
+    servers.forEach(s => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td class="ps-3 fw-semibold">${s.name}</td>
+            <td class="text-secondary font-monospace small">${s.host}</td>
+            <td class="text-secondary small">${s.port}</td>
+            <td class="text-end pe-3">
+                <button class="btn btn-xs btn-outline-info me-1 py-1 px-2" onclick="editServer('${s.id}')" title="Edit Server">
+                    <i class="bi bi-pencil-square"></i> Edit
+                </button>
+                <button class="btn btn-xs btn-outline-danger py-1 px-2" onclick="deleteServer('${s.id}', '${s.name}')" title="Delete Server">
+                    <i class="bi bi-trash"></i> Delete
+                </button>
+            </td>
+        `;
+        tbody.appendChild(tr);
+    });
+}
+
+function editServer(id) {
+    const srv = currentServersCache.find(s => s.id === id);
+    if (!srv) return;
+
+    document.getElementById('serverIdHidden').value = srv.id;
+    document.getElementById('serverName').value = srv.name;
+    document.getElementById('serverHost').value = srv.host;
+    document.getElementById('serverPort').value = srv.port;
+
+    document.getElementById('serverFormTitle').innerHTML = '<i class="bi bi-pencil-square me-1 text-info"></i> Edit Server';
+    document.getElementById('saveServerBtn').textContent = 'Update Server';
+    document.getElementById('cancelEditBtn').classList.remove('d-none');
+}
+
+function resetServerForm() {
+    document.getElementById('serverIdHidden').value = '';
+    document.getElementById('addServerForm').reset();
+    document.getElementById('serverFormTitle').innerHTML = '<i class="bi bi-plus-circle me-1 text-primary"></i> Add New Server';
+    document.getElementById('saveServerBtn').textContent = 'Save Server';
+    document.getElementById('cancelEditBtn').classList.add('d-none');
+}
+
+async function deleteServer(id, name) {
+    if (!confirm(`Are you sure you want to delete server "${name}"?`)) return;
+
+    try {
+        await fetch(`/api/servers?id=${id}`, { method: 'DELETE' });
+        await initServerStorage();
+        if (getSelectedServerId() === id) {
+            document.getElementById('serverSelect').value = 'all';
+        }
+        fetchDashboardData();
+        fetchAlerts();
+    } catch (e) {
+        console.error('Failed to delete server:', e);
     }
 }
 
@@ -96,6 +170,7 @@ async function saveServerBackend(server) {
         await initServerStorage();
         document.getElementById('serverSelect').value = server.id;
         fetchDashboardData();
+        fetchAlerts();
     } catch (e) {
         console.error('Failed to save server:', e);
     }

@@ -165,29 +165,57 @@
     </div>
 </div>
 
-<!-- Add Server Modal -->
+<!-- Server Management Modal -->
 <div class="modal fade" id="addServerModal" tabindex="-1">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content bg-dark text-light border-secondary">
             <div class="modal-header border-secondary border-opacity-50">
-                <h5 class="modal-title"><i class="bi bi-server me-2"></i> Manage Unbound Server</h5>
+                <h5 class="modal-title"><i class="bi bi-server me-2"></i> Manage Unbound Servers</h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
+                <!-- Configured Servers List -->
+                <h6 class="fw-bold text-secondary mb-3"><i class="bi bi-list-task me-1"></i> Configured Servers</h6>
+                <div class="table-responsive mb-4 border border-secondary border-opacity-25 rounded">
+                    <table class="table table-dark table-hover align-middle mb-0" id="serverManagerTable">
+                        <thead>
+                            <tr class="text-secondary small">
+                                <th class="ps-3">Name</th>
+                                <th>Host / IP</th>
+                                <th>Port</th>
+                                <th class="text-end pe-3">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="serverManagerTableBody">
+                            <tr><td colspan="4" class="text-center text-muted py-3">Loading servers...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <hr class="border-secondary border-opacity-50 my-4">
+
+                <!-- Add / Edit Server Form -->
+                <h6 class="fw-bold text-light mb-3" id="serverFormTitle"><i class="bi bi-plus-circle me-1 text-primary"></i> Add New Server</h6>
                 <form id="addServerForm">
-                    <div class="mb-3">
-                        <label class="form-label">Server Display Name</label>
-                        <input type="text" class="form-control bg-body-tertiary text-light border-secondary" id="serverName" placeholder="e.g. Unbound Resolver 1" required>
+                    <input type="hidden" id="serverIdHidden" value="">
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label small text-secondary">Server Display Name</label>
+                            <input type="text" class="form-control bg-body-tertiary text-light border-secondary" id="serverName" placeholder="e.g. Primary Resolver" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label small text-secondary">Server Host / IP</label>
+                            <input type="text" class="form-control bg-body-tertiary text-light border-secondary" id="serverHost" placeholder="e.g. 192.168.4.86" required>
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label small text-secondary">Port</label>
+                            <input type="number" class="form-control bg-body-tertiary text-light border-secondary" id="serverPort" value="8953" required>
+                        </div>
                     </div>
-                    <div class="mb-3">
-                        <label class="form-label">Server IP / Hostname</label>
-                        <input type="text" class="form-control bg-body-tertiary text-light border-secondary" id="serverHost" placeholder="e.g. 192.168.4.86" required>
+                    <div class="d-flex justify-content-end gap-2">
+                        <button type="button" class="btn btn-sm btn-outline-secondary d-none" id="cancelEditBtn" onclick="resetServerForm()">Cancel Edit</button>
+                        <button type="submit" class="btn btn-sm btn-primary" id="saveServerBtn">Save Server</button>
                     </div>
-                    <div class="mb-3">
-                        <label class="form-label">Unbound-control Port</label>
-                        <input type="number" class="form-control bg-body-tertiary text-light border-secondary" id="serverPort" value="8953" required>
-                    </div>
-                    <button type="submit" class="btn btn-primary w-100">Save Server Configuration</button>
                 </form>
             </div>
         </div>

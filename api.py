@@ -36,6 +36,9 @@ def handle_servers():
         if server_id:
             srv = db.session.get(ServerConfig, server_id)
             if srv:
+                # Delete associated metric records & alerts
+                MetricHistory.query.filter_by(server_id=server_id).delete()
+                AlertLog.query.filter_by(server_id=server_id).delete()
                 db.session.delete(srv)
                 db.session.commit()
         return jsonify({'status': 'ok'})
