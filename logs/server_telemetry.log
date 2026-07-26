@@ -1,16 +1,10 @@
-[2026-07-26 14:30:29,940] INFO in base: Job "run_log_sync_task (trigger: interval[0:00:30], next run at: 2026-07-26 14:30:58 IST)" executed successfully
-[2026-07-26 14:30:31,000] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 14:30:31] "GET /api/cache?server_id=srv-1785055939311 HTTP/1.1" 200 -
-[2026-07-26 14:30:31,001] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 14:30:31] "GET /api/overview?server_id=srv-1785055939311 HTTP/1.1" 200 -
-[2026-07-26 14:30:31,002] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 14:30:31] "GET /api/security?server_id=srv-1785055939311 HTTP/1.1" 200 -
-[2026-07-26 14:30:31,010] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 14:30:31] "GET /api/query?server_id=srv-1785055939311 HTTP/1.1" 200 -
-[2026-07-26 14:30:31,011] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 14:30:31] "GET /api/latency?server_id=srv-1785055939311 HTTP/1.1" 200 -
-[2026-07-26 14:30:31,013] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 14:30:31] "GET /api/alerts?server_id=srv-1785055939311 HTTP/1.1" 200 -
-[2026-07-26 14:30:43,215] INFO in base: Running job "run_collector_task (trigger: interval[0:00:15], next run at: 2026-07-26 14:30:58 IST)" (scheduled at 2026-07-26 14:30:43.214329+05:30)
-[2026-07-26 14:30:43,218] INFO in collector: Polling unbound-control for server Unbound Local Resolver (127.0.0.1@8953)...
-[2026-07-26 14:30:43,236] INFO in collector: Polling unbound-control for server 192.168.3.111 (192.168.3.111@8953)...
-[2026-07-26 14:30:43,267] WARNING in collector: Connection failed to 192.168.3.111@8953: [1785056443] unbound-control[11679:0] error: connect: Connection refused for 192.168.3.111 port 8953. Ensure 'control-enable: yes' & 'control-interface: 0.0.0.0' are in /etc/unbound/unbound.conf on target host.
-[2026-07-26 14:30:43,306] INFO in base: Job "run_collector_task (trigger: interval[0:00:15], next run at: 2026-07-26 14:30:58 IST)" executed successfully
-[2026-07-26 14:30:58,215] INFO in base: Running job "run_collector_task (trigger: interval[0:00:15], next run at: 2026-07-26 14:31:13 IST)" (scheduled at 2026-07-26 14:30:58.214329+05:30)
-[2026-07-26 14:30:58,216] INFO in base: Running job "run_log_sync_task (trigger: interval[0:00:30], next run at: 2026-07-26 14:31:28 IST)" (scheduled at 2026-07-26 14:30:58.214788+05:30)
-[2026-07-26 14:30:58,219] INFO in collector: Starting automated 30s GitHub log upload & local purge cycle...
-[2026-07-26 14:30:58,220] INFO in collector: Polling unbound-control for server Unbound Local Resolver (127.0.0.1@8953)...
+[2026-07-26 14:30:59,847] INFO in base: Job "run_log_sync_task (trigger: interval[0:00:30], next run at: 2026-07-26 14:31:28 IST)" executed successfully
+[2026-07-26 14:31:13,215] INFO in base: Running job "run_collector_task (trigger: interval[0:00:15], next run at: 2026-07-26 14:31:28 IST)" (scheduled at 2026-07-26 14:31:13.214329+05:30)
+[2026-07-26 14:31:13,216] INFO in collector: Polling unbound-control for server Unbound Local Resolver (127.0.0.1@8953)...
+[2026-07-26 14:31:13,230] INFO in collector: Polling unbound-control for server 192.168.3.111 (192.168.3.111@8953)...
+[2026-07-26 14:31:13,260] WARNING in collector: Connection failed to 192.168.3.111@8953: [1785056473] unbound-control[11696:0] error: connect: Connection refused for 192.168.3.111 port 8953. Ensure 'control-enable: yes' & 'control-interface: 0.0.0.0' are in /etc/unbound/unbound.conf on target host.
+[2026-07-26 14:31:13,304] INFO in base: Job "run_collector_task (trigger: interval[0:00:15], next run at: 2026-07-26 14:31:28 IST)" executed successfully
+[2026-07-26 14:31:28,215] INFO in base: Running job "run_collector_task (trigger: interval[0:00:15], next run at: 2026-07-26 14:31:43 IST)" (scheduled at 2026-07-26 14:31:28.214329+05:30)
+[2026-07-26 14:31:28,216] INFO in base: Running job "run_log_sync_task (trigger: interval[0:00:30], next run at: 2026-07-26 14:31:58 IST)" (scheduled at 2026-07-26 14:31:28.214788+05:30)
+[2026-07-26 14:31:28,218] INFO in collector: Starting automated 30s GitHub log upload & local purge cycle...
+[2026-07-26 14:31:28,220] INFO in collector: Polling unbound-control for server Unbound Local Resolver (127.0.0.1@8953)...
