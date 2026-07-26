@@ -310,7 +310,7 @@ def get_overview():
 
 def _get_48h_query_filter(server_id):
     active_ids = [s.id for s in ServerConfig.query.filter_by(is_active=True).all()]
-    cutoff = datetime.utcnow() - timedelta(hours=48)
+    cutoff = datetime.utcnow() - timedelta(hours=2)
     query = MetricHistory.query.filter(MetricHistory.server_id.in_(active_ids), MetricHistory.timestamp >= cutoff)
     if server_id and server_id != 'all':
         query = query.filter_by(server_id=server_id)

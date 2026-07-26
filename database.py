@@ -16,6 +16,11 @@ def init_db(app):
                         conn.commit()
                     except Exception:
                         pass
+                try:
+                    conn.execute(db.text("CREATE INDEX IF NOT EXISTS idx_srv_ts ON metric_history(server_id, timestamp)"))
+                    conn.commit()
+                except Exception:
+                    pass
         except Exception:
             pass
 
@@ -41,9 +46,10 @@ class ServerConfig(db.Model):
 
 class MetricHistory(db.Model):
     __tablename__ = 'metric_history'
+    __table_args__ = (db.Index('idx_srv_ts', 'server_id', 'timestamp'),)
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    server_id = db.Column(db.String(64), db.ForeignKey('server_configs.id'), nullable=False)
+    server_id = db.Column(db.String(64), db.ForeignKey('server_configs.id'), nullable=False, index=True)
     server_name = db.Column(db.String(128), nullable=False)
     timestamp = db.Column(db.DateTime, default=datetime.utcnow, index=True)
 
