@@ -48,9 +48,6 @@ def handle_servers():
 
 @api_bp.route('/clear-history', methods=['POST'])
 def clear_history():
-    """
-    Clears historical metrics and alert logs from SQLite.
-    """
     MetricHistory.query.delete()
     AlertLog.query.delete()
     db.session.commit()
@@ -174,20 +171,33 @@ def get_query_analytics():
     records.reverse()
     
     timestamps = [r.timestamp.strftime('%H:%M:%S') for r in records]
-    queries = [r.total_queries for r in records]
-    qps = [r.qps for r in records]
+    
+    # Compute delta queries per sample interval for dynamic line chart visualization
+    delta_queries = []
+    delta_qps = []
+    for i in range(len(records)):
+        if i == 0:
+            delta_queries.append(0)
+            delta_qps.append(0.0)
+        else:
+            diff = max(0, records[i].total_queries - records[i-1].total_queries)
+            time_diff = (records[i].timestamp - records[i-1].timestamp).total_seconds() or 15.0
+            qps_val = round(diff / time_diff, 2)
+            delta_queries.append(diff)
+            delta_qps.append(qps_val)
+            
     ipv4 = [r.ipv4_queries for r in records]
     ipv6 = [r.ipv6_queries for r in records]
     
     return jsonify({
         'timestamps': timestamps,
-        'queries': queries,
-        'qps': qps,
+        'queries': delta_queries,
+        'qps': delta_qps,
         'ipv4': ipv4,
         'ipv6': ipv6,
-        'total_sum': sum(queries),
-        'peak_qps': max(qps) if qps else 0.0,
-        'avg_qps': round(sum(qps)/len(qps), 2) if qps else 0.0
+        'total_sum': sum(delta_queries),
+        'peak_qps': max(delta_qps) if delta_qps else 0.0,
+        'avg_qps': round(sum(delta_qps)/len(delta_qps), 2) if delta_qps else 0.0
     })
 
 @api_bp.route('/cache', methods=['GET'])
