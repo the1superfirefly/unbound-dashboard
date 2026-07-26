@@ -20,19 +20,17 @@ def purge_orphan_metrics(app):
             if orphans > 0:
                 logger.info(f"Purged {orphans} orphan metric records from database.")
         else:
-            # If no active servers, clear all metrics history to prevent stale aggregations
             MetricHistory.query.delete()
             db.session.commit()
 
 def fetch_and_record_metrics(app):
     """
-    Polls defined Unbound servers exclusively via unbound-control stats_noreset.
-    Supports direct local execution (like padd.sh) and remote control port 8953.
+    Polls defined Unbound servers using unbound-control stats_noreset with correct @port syntax.
+    Captures detailed diagnostic stderr messages if connection fails.
     """
     with app.app_context():
         servers = ServerConfig.query.filter_by(is_active=True).all()
         if not servers:
-            # Default seed for localhost unbound resolver on port 8953
             default_srv = ServerConfig(id='srv-localhost', name='Unbound Local Resolver', host='127.0.0.1', port=8953)
             db.session.add(default_srv)
             db.session.commit()
@@ -44,40 +42,59 @@ def fetch_and_record_metrics(app):
             host = server.host
             port = server.port or 8953
             
-            logger.info(f"Polling unbound-control for server {server_name} ({host}:{port})...")
+            logger.info(f"Polling unbound-control for server {server_name} ({host}@{port})...")
             stats_data = None
+            last_error = ""
             
-            # Polling Strategy:
-            # 1. If localhost / 127.0.0.1, try running `unbound-control stats_noreset` directly (padd.sh standard)
+            # Polling Variants:
+            # 1. Direct local call if host is localhost
             if host in ['127.0.0.1', 'localhost']:
                 try:
                     res = subprocess.run(["unbound-control", "stats_noreset"], capture_output=True, text=True, timeout=5)
                     if res.returncode == 0 and res.stdout:
                         stats_data = parse_unbound_stats(res.stdout)
+                    else:
+                        last_error = res.stderr.strip()
                 except Exception as e:
-                    logger.debug(f"Direct unbound-control stats_noreset failed: {e}")
+                    last_error = str(e)
                     
-            # 2. If not stats_data yet, try running unbound-control -s host:port stats_noreset
+            # 2. Remote control with @port syntax (-s host@port)
             if not stats_data:
                 try:
-                    cmd = ["unbound-control", "-s", f"{host}:{port}", "stats_noreset"]
+                    cmd = ["unbound-control", "-s", f"{host}@{port}", "stats_noreset"]
                     res = subprocess.run(cmd, capture_output=True, text=True, timeout=5)
                     if res.returncode == 0 and res.stdout:
                         stats_data = parse_unbound_stats(res.stdout)
                     else:
-                        logger.warning(f"Unbound-control returned code {res.returncode} for {host}:{port}: {res.stderr}")
+                        last_error = res.stderr.strip() or f"Exit code {res.returncode}"
                 except Exception as e:
-                    logger.error(f"Failed to poll unbound-control on {host}:{port}: {e}")
+                    last_error = str(e)
+
+            # 3. Fallback (-s host)
+            if not stats_data and host not in ['127.0.0.1', 'localhost']:
+                try:
+                    cmd = ["unbound-control", "-s", host, "stats_noreset"]
+                    res = subprocess.run(cmd, capture_output=True, text=True, timeout=5)
+                    if res.returncode == 0 and res.stdout:
+                        stats_data = parse_unbound_stats(res.stdout)
+                except Exception:
+                    pass
 
             if not stats_data:
-                # Record server offline alert
-                logger.warning(f"Server {server_name} ({host}:{port}) is offline or unbound-control unreachable.")
+                # Format clear diagnostic alert for user
+                diag_msg = f"Connection failed to {host}@{port}: {last_error}."
+                if "Connection refused" in last_error:
+                    diag_msg += " Ensure 'control-enable: yes' & 'control-interface: 0.0.0.0' are in /etc/unbound/unbound.conf on target host."
+                elif "SSL" in last_error or "certificate" in last_error or "cert" in last_error:
+                    diag_msg += " SSL certificate authentication required. Run 'unbound-control-setup' on target server."
+                
+                logger.warning(diag_msg)
                 alert = AlertLog(
                     server_id=server_id,
                     server_name=server_name,
                     alert_type="Server Offline",
                     severity="critical",
-                    message=f"Could not connect to unbound-control on {host}:{port}. Ensure remote-control is enabled on port {port}."
+                    message=diag_msg
                 )
                 db.session.add(alert)
                 db.session.commit()

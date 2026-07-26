@@ -60,6 +60,17 @@ function toggleTheme() {
     updateThemeIcon(next);
 }
 
+function zoomToChart(cardId) {
+    const el = document.getElementById(cardId);
+    if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        el.classList.add('chart-highlight-pulse');
+        setTimeout(() => {
+            el.classList.remove('chart-highlight-pulse');
+        }, 2000);
+    }
+}
+
 function updateThemeIcon(theme) {
     const icon = document.getElementById('themeIcon');
     if (theme === 'dark') {

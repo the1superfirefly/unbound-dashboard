@@ -4,7 +4,7 @@
 <!-- Metric Cards Overview -->
 <div class="row g-3 mb-4">
     <div class="col-xl-3 col-md-6">
-        <div class="card metric-card border-0 shadow-sm bg-gradient-card">
+        <div class="card metric-card border-0 shadow-sm bg-gradient-card clickable-card" onclick="zoomToChart('queryChartCard')" title="Click to zoom into Query Performance chart">
             <div class="card-body">
                 <div class="d-flex align-items-center justify-content-between">
                     <div>
@@ -21,7 +21,7 @@
     </div>
     
     <div class="col-xl-3 col-md-6">
-        <div class="card metric-card border-0 shadow-sm bg-gradient-card">
+        <div class="card metric-card border-0 shadow-sm bg-gradient-card clickable-card" onclick="zoomToChart('cacheChartCard')" title="Click to zoom into Cache Hit/Miss breakdown chart">
             <div class="card-body">
                 <div class="d-flex align-items-center justify-content-between">
                     <div>
@@ -38,7 +38,7 @@
     </div>
 
     <div class="col-xl-3 col-md-6">
-        <div class="card metric-card border-0 shadow-sm bg-gradient-card">
+        <div class="card metric-card border-0 shadow-sm bg-gradient-card clickable-card" onclick="zoomToChart('latencyChartCard')" title="Click to zoom into Latency Distribution chart">
             <div class="card-body">
                 <div class="d-flex align-items-center justify-content-between">
                     <div>
@@ -55,7 +55,7 @@
     </div>
 
     <div class="col-xl-3 col-md-6">
-        <div class="card metric-card border-0 shadow-sm bg-gradient-card">
+        <div class="card metric-card border-0 shadow-sm bg-gradient-card clickable-card" onclick="zoomToChart('securityChartCard')" title="Click to zoom into Security & Anomaly chart">
             <div class="card-body">
                 <div class="d-flex align-items-center justify-content-between">
                     <div>
@@ -76,7 +76,7 @@
 <div class="row g-4 mb-4">
     <!-- Query Volume Chart -->
     <div class="col-lg-8">
-        <div class="card border-0 shadow-sm h-100 bg-card">
+        <div class="card border-0 shadow-sm h-100 bg-card" id="queryChartCard">
             <div class="card-header bg-transparent border-0 d-flex align-items-center justify-content-between pt-3 px-3">
                 <h6 class="fw-bold text-light mb-0"><i class="bi bi-graph-up me-2 text-primary"></i> Query Performance & Volume</h6>
                 <span class="badge bg-secondary bg-opacity-25 text-secondary">Real-time (15s)</span>
@@ -91,7 +91,7 @@
 
     <!-- Cache Analytics Chart -->
     <div class="col-lg-4">
-        <div class="card border-0 shadow-sm h-100 bg-card">
+        <div class="card border-0 shadow-sm h-100 bg-card" id="cacheChartCard">
             <div class="card-header bg-transparent border-0 d-flex align-items-center justify-content-between pt-3 px-3">
                 <h6 class="fw-bold text-light mb-0"><i class="bi bi-pie-chart me-2 text-info"></i> Cache Hit / Miss Breakdown</h6>
             </div>
@@ -108,7 +108,7 @@
 <div class="row g-4 mb-4">
     <!-- Latency Distribution -->
     <div class="col-lg-6">
-        <div class="card border-0 shadow-sm h-100 bg-card">
+        <div class="card border-0 shadow-sm h-100 bg-card" id="latencyChartCard">
             <div class="card-header bg-transparent border-0 d-flex align-items-center justify-content-between pt-3 px-3">
                 <h6 class="fw-bold text-light mb-0"><i class="bi bi-clock-history me-2 text-warning"></i> Latency Distribution (ms)</h6>
             </div>
@@ -122,7 +122,7 @@
 
     <!-- Protocol & Security Trends -->
     <div class="col-lg-6">
-        <div class="card border-0 shadow-sm h-100 bg-card">
+        <div class="card border-0 shadow-sm h-100 bg-card" id="securityChartCard">
             <div class="card-header bg-transparent border-0 d-flex align-items-center justify-content-between pt-3 px-3">
                 <h6 class="fw-bold text-light mb-0"><i class="bi bi-shield-lock me-2 text-danger"></i> Security & Anomaly Indicators</h6>
             </div>
