@@ -886,6 +886,28 @@ function initCharts() {
 
 const SERVER_COLORS = ['#10b981', '#8b5cf6', '#06b6d4', '#ec4899', '#f97316'];
 
+function areDatasetsEqual(ds1, ds2) {
+    if (!ds1 || !ds2 || ds1.length !== ds2.length) return false;
+    for (let i = 0; i < ds1.length; i++) {
+        if (ds1[i].label !== ds2[i].label) return false;
+        const d1 = ds1[i].data || [];
+        const d2 = ds2[i].data || [];
+        if (d1.length !== d2.length) return false;
+        for (let j = 0; j < d1.length; j++) {
+            if (d1[j] !== d2[j]) return false;
+        }
+    }
+    return true;
+}
+
+function areLabelsEqual(l1, l2) {
+    if (!l1 || !l2 || l1.length !== l2.length) return false;
+    for (let i = 0; i < l1.length; i++) {
+        if (l1[i] !== l2[i]) return false;
+    }
+    return true;
+}
+
 function updateCharts(queryData, cacheData, latencyData, securityData, isInitial = false) {
     const timestamps = queryData.timestamps || [];
     const spanOverMultipleDays = timestamps.length > 0 && (
@@ -900,7 +922,6 @@ function updateCharts(queryData, cacheData, latencyData, securityData, isInitial
     const serverKeys = Object.keys(perServer);
 
     if (queryChartInstance) {
-        queryChartInstance.data.labels = localTimestamps;
         let queryDatasets = [];
 
         if (isAggregated) {
@@ -949,19 +970,28 @@ function updateCharts(queryData, cacheData, latencyData, securityData, isInitial
             });
         }
 
-        queryChartInstance.data.datasets = queryDatasets;
-        queryChartInstance.update(updateMode);
+        const labelsChanged = !areLabelsEqual(queryChartInstance.data.labels, localTimestamps);
+        const datasetsChanged = !areDatasetsEqual(queryChartInstance.data.datasets, queryDatasets);
+
+        if (labelsChanged || datasetsChanged || isInitial) {
+            queryChartInstance.data.labels = localTimestamps;
+            queryChartInstance.data.datasets = queryDatasets;
+            queryChartInstance.update(updateMode);
+        }
     }
 
     if (cacheChartInstance) {
         const totalHits = cacheData.hits ? cacheData.hits.reduce((a, b) => a + b, 0) : 0;
         const totalMisses = cacheData.misses ? cacheData.misses.reduce((a, b) => a + b, 0) : 0;
-        cacheChartInstance.data.datasets[0].data = [totalHits, totalMisses];
-        cacheChartInstance.update(updateMode);
+        const newData = [totalHits, totalMisses];
+        const oldData = cacheChartInstance.data.datasets[0].data;
+        if (isInitial || oldData[0] !== newData[0] || oldData[1] !== newData[1]) {
+            cacheChartInstance.data.datasets[0].data = newData;
+            cacheChartInstance.update(updateMode);
+        }
     }
 
     if (latencyChartInstance) {
-        latencyChartInstance.data.labels = localTimestamps;
         let latencyDatasets = [];
 
         if (isAggregated) {
@@ -993,7 +1023,13 @@ function updateCharts(queryData, cacheData, latencyData, securityData, isInitial
             ];
         }
 
-        latencyChartInstance.data.datasets = latencyDatasets;
-        latencyChartInstance.update(updateMode);
+        const labelsChanged = !areLabelsEqual(latencyChartInstance.data.labels, localTimestamps);
+        const datasetsChanged = !areDatasetsEqual(latencyChartInstance.data.datasets, latencyDatasets);
+
+        if (labelsChanged || datasetsChanged || isInitial) {
+            latencyChartInstance.data.labels = localTimestamps;
+            latencyChartInstance.data.datasets = latencyDatasets;
+            latencyChartInstance.update(updateMode);
+        }
     }
 }

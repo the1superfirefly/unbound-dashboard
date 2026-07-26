@@ -149,6 +149,36 @@ def get_overview():
                     'dnssec_failures': 0, 'active_clients': 0
                 }
             })
+        twenty_four_hours_ago = datetime.utcnow() - timedelta(hours=24)
+        recs_24h = [r for r in records_coverage if r.timestamp >= twenty_four_hours_ago]
+
+        if recs_24h:
+            if len(recs_24h) >= 2:
+                q_24h = max(0, (recs_24h[-1].total_queries or 0) - (recs_24h[0].total_queries or 0))
+                hits_24h = max(0, (recs_24h[-1].cache_hits or 0) - (recs_24h[0].cache_hits or 0))
+                miss_24h = max(0, (recs_24h[-1].cache_misses or 0) - (recs_24h[0].cache_misses or 0))
+            else:
+                q_24h = recs_24h[0].total_queries or 0
+                hits_24h = recs_24h[0].cache_hits or 0
+                miss_24h = recs_24h[0].cache_misses or 0
+            
+            tot_cache = hits_24h + miss_24h
+            hit_rate_24h = round((hits_24h / tot_cache * 100), 2) if tot_cache > 0 else 0.0
+            
+            avg_lat_24h = round(sum(r.avg_latency for r in recs_24h) / len(recs_24h), 3)
+            p95_lat_24h = round(max(r.p95_latency for r in recs_24h), 3)
+            p99_lat_24h = round(max(r.p99_latency for r in recs_24h), 3)
+            peak_qps = round(max(r.qps for r in recs_24h), 3)
+        else:
+            q_24h = latest.total_queries or 0
+            hits_24h = latest.cache_hits or 0
+            miss_24h = latest.cache_misses or 0
+            hit_rate_24h = latest.cache_hit_rate or 0.0
+            avg_lat_24h = latest.avg_latency or 0.0
+            p95_lat_24h = latest.p95_latency or 0.0
+            p99_lat_24h = latest.p99_latency or 0.0
+            peak_qps = latest.qps or 0.0
+
         one_hour_ago = datetime.utcnow() - timedelta(hours=1)
         recs_1h = [r for r in records_coverage if r.timestamp >= one_hour_ago]
         if len(recs_1h) >= 2:
@@ -156,14 +186,29 @@ def get_overview():
         elif len(recs_1h) == 1:
             delta_1h = recs_1h[0].total_queries or 0
         else:
-            delta_1h = latest.total_queries or 0
+            delta_1h = q_24h
 
         return jsonify({
             'status': 'ok',
             'server_count': server_count,
             'time_coverage': _get_time_coverage_info(records_coverage),
             'top_used_server': {'id': latest.server_id, 'name': latest.server_name, 'queries': delta_1h},
-            'latest': latest.to_dict()
+            'latest': {
+                'server_id': latest.server_id,
+                'server_name': latest.server_name,
+                'total_queries': q_24h,
+                'qps': peak_qps,
+                'cache_hits': hits_24h,
+                'cache_misses': miss_24h,
+                'cache_hit_rate': hit_rate_24h,
+                'avg_latency': avg_lat_24h,
+                'p95_latency': p95_lat_24h,
+                'p99_latency': p99_lat_24h,
+                'nxdomain_count': latest.nxdomain_count,
+                'servfail_count': latest.servfail_count,
+                'dnssec_failures': latest.dnssec_failures,
+                'active_clients': latest.active_clients
+            }
         })
 
     # Aggregated view across active servers strictly
@@ -281,7 +326,9 @@ def _downsample_records_to_buckets(records, target_bucket_sec=10, pad_to_hours=1
     Calculates per-server deltas and sums them for clean aggregate multi-line charts.
     Returns: (timestamps, delta_queries, delta_qps, avg_latencies, p95_latencies, nxdomains, servfails, per_server_series)
     """
-    now = datetime.utcnow()
+    now_epoch = int(datetime.utcnow().timestamp())
+    snapped_now_epoch = (now_epoch // target_bucket_sec) * target_bucket_sec
+    now = datetime.utcfromtimestamp(snapped_now_epoch)
     start_pad = now - timedelta(hours=pad_to_hours)
 
     if not records:
