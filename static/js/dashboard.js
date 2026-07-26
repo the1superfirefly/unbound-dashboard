@@ -816,19 +816,6 @@ function initCharts() {
         },
         options: createIndependentChartConfig()
     });
-
-    const ctxSec = document.getElementById('securityChart').getContext('2d');
-    securityChartInstance = new Chart(ctxSec, {
-        type: 'bar',
-        data: {
-            labels: [],
-            datasets: [
-                { label: 'NXDOMAIN', data: [], backgroundColor: '#ef4444' },
-                { label: 'SERVFAIL', data: [], backgroundColor: '#a855f7' }
-            ]
-        },
-        options: createIndependentChartConfig()
-    });
 }
 
 function updateCharts(queryData, cacheData, latencyData, securityData, isInitial = false) {
@@ -858,12 +845,5 @@ function updateCharts(queryData, cacheData, latencyData, securityData, isInitial
         latencyChartInstance.data.datasets[0].data = latencyData.avg || [];
         latencyChartInstance.data.datasets[1].data = latencyData.p95 || [];
         latencyChartInstance.update(updateMode);
-    }
-
-    if (securityChartInstance) {
-        securityChartInstance.data.labels = localTimestamps;
-        securityChartInstance.data.datasets[0].data = securityData.nxdomains || [];
-        securityChartInstance.data.datasets[1].data = securityData.servfails || [];
-        securityChartInstance.update(updateMode);
     }
 }
