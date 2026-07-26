@@ -1048,14 +1048,14 @@ function updateCharts(queryData, cacheData, latencyData, securityData, isInitial
 
         queryChartInstance.data.labels = localTimestamps;
         queryChartInstance.data.datasets = queryDatasets;
-        queryChartInstance.update(updateMode);
+        queryChartInstance.update();
     }
 
     if (cacheChartInstance) {
         const totalHits = cacheData.hits ? cacheData.hits.reduce((a, b) => a + b, 0) : 0;
         const totalMisses = cacheData.misses ? cacheData.misses.reduce((a, b) => a + b, 0) : 0;
         cacheChartInstance.data.datasets[0].data = [totalHits, totalMisses];
-        cacheChartInstance.update(updateMode);
+        cacheChartInstance.update();
     }
 
     if (latencyChartInstance) {
@@ -1092,7 +1092,7 @@ function updateCharts(queryData, cacheData, latencyData, securityData, isInitial
 
         latencyChartInstance.data.labels = localTimestamps;
         latencyChartInstance.data.datasets = latencyDatasets;
-        latencyChartInstance.update(updateMode);
+        latencyChartInstance.update();
     }
 
     // Update Query Types Doughnut Chart & Custom Legend
@@ -1136,7 +1136,7 @@ function updateCharts(queryData, cacheData, latencyData, securityData, isInitial
         const renderValues = sumVal > 0 ? qtValues : [120, 35, 12, 18, 25, 8, 5];
         
         queryTypesChartInstance.data.datasets[0].data = renderValues;
-        queryTypesChartInstance.update(updateMode);
+        queryTypesChartInstance.update();
         renderCustomCheckboxLegend('queryTypesLegend', qtLabels, qtColors, renderValues);
     }
 }
