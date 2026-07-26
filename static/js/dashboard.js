@@ -20,7 +20,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 1000);
 
     // Instant data refresh when server dropdown selection changes
-    document.getElementById('serverSelect').addEventListener('change', () => {
+    document.getElementById('serverSelect').addEventListener('change', (e) => {
+        localStorage.setItem('uad_selected_server_id', e.target.value);
         fetchDashboardData(true);
         fetchAlerts();
     });
@@ -531,7 +532,7 @@ function updateThemeIcon(theme) {
 
 async function initServerStorage() {
     const select = document.getElementById('serverSelect');
-    const currentSelected = select.value;
+    const savedServerId = localStorage.getItem('uad_selected_server_id') || 'all';
     select.innerHTML = '<option value="all">All Servers (Aggregated)</option>';
     
     try {
@@ -544,8 +545,10 @@ async function initServerStorage() {
             select.appendChild(opt);
         });
 
-        if (currentSelected && [...select.options].some(o => o.value === currentSelected)) {
-            select.value = currentSelected;
+        if ([...select.options].some(o => o.value === savedServerId)) {
+            select.value = savedServerId;
+        } else {
+            select.value = 'all';
         }
         renderServerManagerTable(servers);
     } catch (e) {
@@ -732,11 +735,14 @@ async function fetchAlerts() {
 }
 
 function initCharts() {
+    Chart.defaults.font.family = "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif";
+    Chart.defaults.font.size = 11;
+
     const chartDefaults = {
         responsive: true,
         maintainAspectRatio: false,
         plugins: {
-            legend: { labels: { color: '#94a3b8' } },
+            legend: { labels: { color: '#94a3b8', font: { size: 11 } } },
             zoom: {
                 zoom: {
                     wheel: { enabled: true },
@@ -753,13 +759,14 @@ function initCharts() {
             x: {
                 ticks: {
                     color: '#64748b',
+                    font: { size: 10 },
                     maxTicksLimit: 10,
                     maxRotation: 0,
                     minRotation: 0
                 },
                 grid: { color: 'rgba(255,255,255,0.05)' }
             },
-            y: { ticks: { color: '#64748b' }, grid: { color: 'rgba(255,255,255,0.05)' } }
+            y: { ticks: { color: '#64748b', font: { size: 10 } }, grid: { color: 'rgba(255,255,255,0.05)' } }
         }
     };
 
