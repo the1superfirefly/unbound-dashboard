@@ -292,11 +292,18 @@ def get_overview():
 
 def _get_48h_query_filter(server_id):
     active_ids = [s.id for s in ServerConfig.query.filter_by(is_active=True).all()]
-    cutoff = datetime.utcnow() - timedelta(hours=2)
-    query = MetricHistory.query.filter(MetricHistory.server_id.in_(active_ids), MetricHistory.timestamp >= cutoff)
+    cutoff = datetime.utcnow() - timedelta(hours=1)
+    
+    rows = db.session.query(
+        MetricHistory.server_id, MetricHistory.server_name, MetricHistory.timestamp,
+        MetricHistory.total_queries, MetricHistory.qps, MetricHistory.cache_hits,
+        MetricHistory.cache_misses, MetricHistory.avg_latency, MetricHistory.p95_latency,
+        MetricHistory.nxdomain_count, MetricHistory.servfail_count
+    ).filter(MetricHistory.server_id.in_(active_ids), MetricHistory.timestamp >= cutoff).order_by(MetricHistory.timestamp.asc()).all()
+    
     if server_id and server_id != 'all':
-        query = query.filter_by(server_id=server_id)
-    return query
+        rows = [r for r in rows if r.server_id == server_id]
+    return rows
 
 def _downsample_records_to_buckets(records, target_bucket_sec=10, pad_to_hours=1):
     """
