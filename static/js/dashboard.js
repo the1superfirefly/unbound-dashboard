@@ -820,9 +820,30 @@ function updateCharts(queryData, cacheData, latencyData, securityData, isInitial
     const localTimestamps = timestamps.map(ts => formatClientLocalTime(ts, spanOverMultipleDays));
     const updateMode = isInitial ? 'default' : 'none'; // 'none' mode prevents flash/animation on 1s refresh
 
+    // Calculate initial 24h window startIndex (last 24 hours of data)
+    let startIndex24h = 0;
+    if (timestamps.length > 0) {
+        const lastTs = new Date(timestamps[timestamps.length - 1]).getTime();
+        const cutoff24h = lastTs - (24 * 60 * 60 * 1000);
+        for (let i = 0; i < timestamps.length; i++) {
+            if (new Date(timestamps[i]).getTime() >= cutoff24h) {
+                startIndex24h = i;
+                break;
+            }
+        }
+    }
+
+    const apply24hZoomWindow = (chart) => {
+        if (isInitial && chart && localTimestamps.length > 0) {
+            chart.options.scales.x.min = localTimestamps[startIndex24h];
+            chart.options.scales.x.max = localTimestamps[localTimestamps.length - 1];
+        }
+    };
+
     if (queryChartInstance) {
         queryChartInstance.data.labels = localTimestamps;
         queryChartInstance.data.datasets[0].data = queryData.queries || [];
+        apply24hZoomWindow(queryChartInstance);
         queryChartInstance.update(updateMode);
     }
 
@@ -837,6 +858,7 @@ function updateCharts(queryData, cacheData, latencyData, securityData, isInitial
         latencyChartInstance.data.labels = localTimestamps;
         latencyChartInstance.data.datasets[0].data = latencyData.avg || [];
         latencyChartInstance.data.datasets[1].data = latencyData.p95 || [];
+        apply24hZoomWindow(latencyChartInstance);
         latencyChartInstance.update(updateMode);
     }
 
@@ -844,6 +866,7 @@ function updateCharts(queryData, cacheData, latencyData, securityData, isInitial
         securityChartInstance.data.labels = localTimestamps;
         securityChartInstance.data.datasets[0].data = securityData.nxdomains || [];
         securityChartInstance.data.datasets[1].data = securityData.servfails || [];
+        apply24hZoomWindow(securityChartInstance);
         securityChartInstance.update(updateMode);
     }
 }
