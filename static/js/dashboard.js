@@ -780,7 +780,20 @@ function initCharts() {
     const ctxQuery = document.getElementById('queryChart').getContext('2d');
     queryChartInstance = new Chart(ctxQuery, {
         type: 'line',
-        data: { labels: [], datasets: [{ label: 'Interval Query Delta', data: [], borderColor: '#3b82f6', backgroundColor: 'rgba(59, 130, 246, 0.15)', fill: true, tension: 0.3 }] },
+        data: {
+            labels: [],
+            datasets: [{
+                label: 'Interval Query Delta',
+                data: [],
+                borderColor: '#3b82f6',
+                backgroundColor: 'rgba(59, 130, 246, 0.15)',
+                fill: true,
+                tension: 0.35,
+                borderWidth: 2,
+                pointRadius: 0,
+                pointHoverRadius: 4
+            }]
+        },
         options: createIndependentChartConfig()
     });
 
@@ -797,8 +810,8 @@ function initCharts() {
         data: {
             labels: [],
             datasets: [
-                { label: 'Avg Latency (ms)', data: [], borderColor: '#f59e0b', tension: 0.3 },
-                { label: 'P95 Latency (ms)', data: [], borderColor: '#ef4444', borderDash: [5, 5], tension: 0.3 }
+                { label: 'Avg Latency (ms)', data: [], borderColor: '#f59e0b', tension: 0.35, borderWidth: 2, pointRadius: 0, pointHoverRadius: 4 },
+                { label: 'P95 Latency (ms)', data: [], borderColor: '#ef4444', borderDash: [4, 4], tension: 0.35, borderWidth: 1.5, pointRadius: 0, pointHoverRadius: 4 }
             ]
         },
         options: createIndependentChartConfig()

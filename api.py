@@ -14,7 +14,7 @@ def _get_time_coverage_info(records):
     """
     if not records:
         return {
-            'coverage_label': 'No Historical Metrics Available',
+            'coverage_label': 'Live 24h Window (Collecting data)',
             'sample_count': 0,
             'start_time': None,
             'end_time': None
@@ -26,17 +26,17 @@ def _get_time_coverage_info(records):
     hours = round(diff_sec / 3600.0, 1)
 
     if hours < 1:
-        time_str = f"{round(diff_sec / 60.0)} Minutes"
+        time_str = f"{max(1, round(diff_sec / 60.0))} Minutes"
     elif hours <= 48:
         time_str = f"{hours} Hours"
     else:
         time_str = f"{round(hours / 24.0, 1)} Days"
 
-    start_formatted = start_t.strftime('%Y-%m-%d %H:%M:%S UTC')
-    end_formatted = end_t.strftime('%Y-%m-%d %H:%M:%S UTC')
+    start_formatted = start_t.strftime('%m/%d %H:%M UTC')
+    end_formatted = end_t.strftime('%m/%d %H:%M UTC')
 
     return {
-        'coverage_label': f"Covering {time_str} ({start_formatted} to {end_formatted})",
+        'coverage_label': f"Active {time_str} ({start_formatted} to {end_formatted})",
         'sample_count': len(records),
         'start_time': start_t.isoformat() + 'Z',
         'end_time': end_t.isoformat() + 'Z'
@@ -234,29 +234,91 @@ def _get_48h_query_filter(server_id):
         query = query.filter_by(server_id=server_id)
     return query
 
+def _downsample_records_to_buckets(records, target_bucket_sec=10, pad_to_24h=True):
+    """
+    Downsamples dense 1-second records into target_bucket_sec (default 10s) buckets.
+    Pads timeline back to 24 hours ago with 0 values if historical data is short.
+    Returns: (timestamps, delta_queries, delta_qps, avg_latencies, p95_latencies, nxdomains, servfails)
+    """
+    now = datetime.utcnow()
+    start_24h = now - timedelta(hours=24)
+
+    if not records:
+        # Generate empty 24-hour timeline every 1 hour
+        ts_list = []
+        curr = start_24h
+        while curr <= now:
+            ts_list.append(curr.strftime('%Y-%m-%dT%H:%M:%SZ'))
+            curr += timedelta(minutes=30)
+        return ts_list, [0]*len(ts_list), [0.0]*len(ts_list), [0.0]*len(ts_list), [0.0]*len(ts_list), [0]*len(ts_list), [0]*len(ts_list)
+
+    # Sort records chronologically
+    records = sorted(records, key=lambda r: r.timestamp)
+    first_ts = records[0].timestamp
+
+    # If first record is within past 24h and padding requested, prepend initial padded points
+    prepended_ts = []
+    if pad_to_24h and first_ts > start_24h + timedelta(minutes=5):
+        curr = start_24h
+        while curr < first_ts - timedelta(minutes=5):
+            prepended_ts.append(curr.strftime('%Y-%m-%dT%H:%M:%SZ'))
+            curr += timedelta(hours=1)
+
+    # Bucket actual records by 10s intervals
+    buckets = []
+    current_bucket_start = None
+    current_bucket = []
+
+    for r in records:
+        if current_bucket_start is None or (r.timestamp - current_bucket_start).total_seconds() >= target_bucket_sec:
+            if current_bucket:
+                buckets.append((current_bucket_start, current_bucket))
+            current_bucket_start = r.timestamp
+            current_bucket = [r]
+        else:
+            current_bucket.append(r)
+            
+    if current_bucket:
+        buckets.append((current_bucket_start, current_bucket))
+
+    timestamps = list(prepended_ts)
+    queries = [0] * len(prepended_ts)
+    qps = [0.0] * len(prepended_ts)
+    avg_lat = [0.0] * len(prepended_ts)
+    p95_lat = [0.0] * len(prepended_ts)
+    nxdomains = [0] * len(prepended_ts)
+    servfails = [0] * len(prepended_ts)
+
+    for i in range(len(buckets)):
+        b_start, b_recs = buckets[i]
+        timestamps.append(b_start.strftime('%Y-%m-%dT%H:%M:%SZ'))
+
+        if i == 0:
+            q_diff = 0
+            qps_val = 0.0
+        else:
+            prev_total = buckets[i-1][1][-1].total_queries
+            curr_total = b_recs[-1].total_queries
+            q_diff = max(0, curr_total - prev_total)
+            time_diff = max(1.0, (b_start - buckets[i-1][0]).total_seconds())
+            qps_val = round(q_diff / time_diff, 3)
+
+        queries.append(q_diff)
+        qps.append(qps_val)
+        avg_lat.append(round(sum(r.avg_latency or 0.0 for r in b_recs) / len(b_recs), 3))
+        p95_lat.append(round(max(r.p95_latency or 0.0 for r in b_recs), 3))
+        nxdomains.append(int(b_recs[-1].nxdomain_count or 0))
+        servfails.append(int(b_recs[-1].servfail_count or 0))
+
+    return timestamps, queries, qps, avg_lat, p95_lat, nxdomains, servfails
+
 @api_bp.route('/query', methods=['GET'])
 def get_query_analytics():
     server_id = request.args.get('server_id')
     query = _get_48h_query_filter(server_id)
     records = query.order_by(MetricHistory.timestamp.asc()).all()
     
-    timestamps = [r.timestamp.strftime('%Y-%m-%dT%H:%M:%SZ') for r in records]
-    
-    delta_queries = []
-    delta_qps = []
-    for i in range(len(records)):
-        if i == 0:
-            delta_queries.append(0)
-            delta_qps.append(0.0)
-        else:
-            diff = max(0, records[i].total_queries - records[i-1].total_queries)
-            time_diff = (records[i].timestamp - records[i-1].timestamp).total_seconds() or 1.0
-            qps_val = round(diff / time_diff, 3)
-            delta_queries.append(diff)
-            delta_qps.append(qps_val)
-            
-    ipv4 = [r.ipv4_queries for r in records]
-    ipv6 = [r.ipv6_queries for r in records]
+    timestamps, delta_queries, delta_qps, avg_lat, p95_lat, nxdomains, servfails = _downsample_records_to_buckets(records, target_bucket_sec=10, pad_to_24h=True)
     
     latest = records[-1] if records else None
     qtypes = {
@@ -286,8 +348,6 @@ def get_query_analytics():
         'timestamps': timestamps,
         'queries': delta_queries,
         'qps': delta_qps,
-        'ipv4': ipv4,
-        'ipv6': ipv6,
         'total_sum': sum(delta_queries),
         'peak_qps': round(max(delta_qps), 3) if delta_qps else 0.0,
         'avg_qps': round(sum(delta_qps)/len(delta_qps), 3) if delta_qps else 0.0,
@@ -303,20 +363,13 @@ def get_cache_analytics():
     query = _get_48h_query_filter(server_id)
     records = query.order_by(MetricHistory.timestamp.asc()).all()
     
-    timestamps = [r.timestamp.strftime('%Y-%m-%dT%H:%M:%SZ') for r in records]
-    hits = [r.cache_hits for r in records]
-    misses = [r.cache_misses for r in records]
-    hit_rates = [r.cache_hit_rate for r in records]
-    prefetch = [r.prefetch_hits for r in records]
-    
     latest = records[-1] if records else None
-    
+    total_hits = latest.cache_hits if latest else 0
+    total_misses = latest.cache_misses if latest else 0
+
     return jsonify({
-        'timestamps': timestamps,
-        'hits': hits,
-        'misses': misses,
-        'hit_rates': hit_rates,
-        'prefetch': prefetch,
+        'hits': [total_hits],
+        'misses': [total_misses],
         'rrset_count': latest.rrset_cache_num if latest else 0,
         'msg_count': latest.msg_cache_num if latest else 0,
         'time_coverage': _get_time_coverage_info(records)
@@ -328,20 +381,12 @@ def get_latency_analytics():
     query = _get_48h_query_filter(server_id)
     records = query.order_by(MetricHistory.timestamp.asc()).all()
     
-    timestamps = [r.timestamp.strftime('%Y-%m-%dT%H:%M:%SZ') for r in records]
-    avg = [round(r.avg_latency or 0.0, 3) for r in records]
-    p50 = [round(r.median_latency or 0.0, 3) for r in records]
-    p90 = [round(r.p90_latency or 0.0, 3) for r in records]
-    p95 = [round(r.p95_latency or 0.0, 3) for r in records]
-    p99 = [round(r.p99_latency or 0.0, 3) for r in records]
+    timestamps, delta_queries, delta_qps, avg_lat, p95_lat, nxdomains, servfails = _downsample_records_to_buckets(records, target_bucket_sec=10, pad_to_24h=True)
     
     return jsonify({
         'timestamps': timestamps,
-        'avg': avg,
-        'p50': p50,
-        'p90': p90,
-        'p95': p95,
-        'p99': p99,
+        'avg': avg_lat,
+        'p95': p95_lat,
         'time_coverage': _get_time_coverage_info(records)
     })
 
@@ -351,18 +396,12 @@ def get_security_analytics():
     query = _get_48h_query_filter(server_id)
     records = query.order_by(MetricHistory.timestamp.asc()).all()
     
-    timestamps = [r.timestamp.strftime('%Y-%m-%dT%H:%M:%SZ') for r in records]
-    nxdomains = [r.nxdomain_count for r in records]
-    servfails = [r.servfail_count for r in records]
-    dnssec_bogus = [r.dnssec_failures for r in records]
-    txt_queries = [r.excessive_txt_queries for r in records]
+    timestamps, delta_queries, delta_qps, avg_lat, p95_lat, nxdomains, servfails = _downsample_records_to_buckets(records, target_bucket_sec=10, pad_to_24h=True)
     
     return jsonify({
         'timestamps': timestamps,
         'nxdomains': nxdomains,
         'servfails': servfails,
-        'dnssec_bogus': dnssec_bogus,
-        'txt_queries': txt_queries,
         'time_coverage': _get_time_coverage_info(records)
     })
 
