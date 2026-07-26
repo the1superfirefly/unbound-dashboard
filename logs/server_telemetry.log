@@ -1,17 +1,11 @@
-[2026-07-26 16:32:17,839] INFO in base: Job "run_log_sync_task (trigger: interval[0:00:30], next run at: 2026-07-26 16:32:46 IST)" executed successfully
-[2026-07-26 16:32:31,098] INFO in base: Running job "run_collector_task (trigger: interval[0:00:15], next run at: 2026-07-26 16:32:46 IST)" (scheduled at 2026-07-26 16:32:31.097523+05:30)
-[2026-07-26 16:32:31,102] INFO in collector: Polling unbound-control for server Unbound Local Resolver (127.0.0.1@8953)...
-[2026-07-26 16:32:31,119] INFO in collector: [METRIC TELEMETRY] Server 'Unbound Local Resolver' (127.0.0.1@8953) -> Total Queries: 310 | QPS: 5.17 | Hits: 2 | Misses: 308 | Hit Rate: 0.65% | Avg Latency: 0.227995ms | SERVFAIL: 0 | NXDOMAIN: 0
-[2026-07-26 16:32:31,119] INFO in collector: Polling unbound-control for server 192.168.3.111 (192.168.3.111@8953)...
-[2026-07-26 16:32:31,195] INFO in collector: [METRIC TELEMETRY] Server '192.168.3.111' (192.168.3.111@8953) -> Total Queries: 3191 | QPS: 53.18 | Hits: 89 | Misses: 3102 | Hit Rate: 2.79% | Avg Latency: 0.197996ms | SERVFAIL: 0 | NXDOMAIN: 0
-[2026-07-26 16:32:31,221] INFO in base: Job "run_collector_task (trigger: interval[0:00:15], next run at: 2026-07-26 16:32:46 IST)" executed successfully
-[2026-07-26 16:32:31,318] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 16:32:31] "GET /api/alerts?server_id=all HTTP/1.1" 200 -
-[2026-07-26 16:32:31,319] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 16:32:31] "GET /api/overview?server_id=all HTTP/1.1" 200 -
-[2026-07-26 16:32:31,862] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 16:32:31] "GET /api/cache?server_id=all HTTP/1.1" 200 -
-[2026-07-26 16:32:31,891] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 16:32:31] "GET /api/query?server_id=all HTTP/1.1" 200 -
-[2026-07-26 16:32:31,919] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 16:32:31] "GET /api/security?server_id=all HTTP/1.1" 200 -
-[2026-07-26 16:32:31,946] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 16:32:31] "GET /api/latency?server_id=all HTTP/1.1" 200 -
-[2026-07-26 16:32:46,099] INFO in base: Running job "run_collector_task (trigger: interval[0:00:15], next run at: 2026-07-26 16:33:01 IST)" (scheduled at 2026-07-26 16:32:46.097523+05:30)
-[2026-07-26 16:32:46,099] INFO in base: Running job "run_log_sync_task (trigger: interval[0:00:30], next run at: 2026-07-26 16:33:16 IST)" (scheduled at 2026-07-26 16:32:46.098116+05:30)
-[2026-07-26 16:32:46,102] INFO in collector: Starting automated 30s GitHub log upload & local purge cycle...
-[2026-07-26 16:32:46,103] INFO in collector: Polling unbound-control for server Unbound Local Resolver (127.0.0.1@8953)...
+[2026-07-26 16:32:47,815] INFO in base: Job "run_log_sync_task (trigger: interval[0:00:30], next run at: 2026-07-26 16:33:16 IST)" executed successfully
+[2026-07-26 16:33:01,098] INFO in base: Running job "run_collector_task (trigger: interval[0:00:15], next run at: 2026-07-26 16:33:16 IST)" (scheduled at 2026-07-26 16:33:01.097523+05:30)
+[2026-07-26 16:33:01,102] INFO in collector: Polling unbound-control for server Unbound Local Resolver (127.0.0.1@8953)...
+[2026-07-26 16:33:01,120] INFO in collector: [METRIC TELEMETRY] Server 'Unbound Local Resolver' (127.0.0.1@8953) -> Total Queries: 317 | QPS: 5.28 | Hits: 2 | Misses: 315 | Hit Rate: 0.63% | Avg Latency: 0.225554ms | SERVFAIL: 0 | NXDOMAIN: 0
+[2026-07-26 16:33:01,121] INFO in collector: Polling unbound-control for server 192.168.3.111 (192.168.3.111@8953)...
+[2026-07-26 16:33:01,198] INFO in collector: [METRIC TELEMETRY] Server '192.168.3.111' (192.168.3.111@8953) -> Total Queries: 3191 | QPS: 53.18 | Hits: 89 | Misses: 3102 | Hit Rate: 2.79% | Avg Latency: 0.197996ms | SERVFAIL: 0 | NXDOMAIN: 0
+[2026-07-26 16:33:01,238] INFO in base: Job "run_collector_task (trigger: interval[0:00:15], next run at: 2026-07-26 16:33:16 IST)" executed successfully
+[2026-07-26 16:33:16,099] INFO in base: Running job "run_collector_task (trigger: interval[0:00:15], next run at: 2026-07-26 16:33:31 IST)" (scheduled at 2026-07-26 16:33:16.097523+05:30)
+[2026-07-26 16:33:16,099] INFO in base: Running job "run_log_sync_task (trigger: interval[0:00:30], next run at: 2026-07-26 16:33:46 IST)" (scheduled at 2026-07-26 16:33:16.098116+05:30)
+[2026-07-26 16:33:16,102] INFO in collector: Starting automated 30s GitHub log upload & local purge cycle...
+[2026-07-26 16:33:16,103] INFO in collector: Polling unbound-control for server Unbound Local Resolver (127.0.0.1@8953)...
