@@ -170,9 +170,8 @@ def get_query_analytics():
     records = query.order_by(MetricHistory.timestamp.desc()).limit(30).all()
     records.reverse()
     
-    timestamps = [r.timestamp.strftime('%H:%M:%S') for r in records]
+    timestamps = [r.timestamp.isoformat() + 'Z' for r in records]
     
-    # Compute delta queries per sample interval for dynamic line chart visualization
     delta_queries = []
     delta_qps = []
     for i in range(len(records)):
@@ -211,7 +210,7 @@ def get_cache_analytics():
     records = query.order_by(MetricHistory.timestamp.desc()).limit(30).all()
     records.reverse()
     
-    timestamps = [r.timestamp.strftime('%H:%M:%S') for r in records]
+    timestamps = [r.timestamp.isoformat() + 'Z' for r in records]
     hits = [r.cache_hits for r in records]
     misses = [r.cache_misses for r in records]
     hit_rates = [r.cache_hit_rate for r in records]
@@ -240,7 +239,7 @@ def get_latency_analytics():
     records = query.order_by(MetricHistory.timestamp.desc()).limit(30).all()
     records.reverse()
     
-    timestamps = [r.timestamp.strftime('%H:%M:%S') for r in records]
+    timestamps = [r.timestamp.isoformat() + 'Z' for r in records]
     avg = [r.avg_latency for r in records]
     p50 = [r.median_latency for r in records]
     p90 = [r.p90_latency for r in records]
@@ -267,7 +266,7 @@ def get_security_analytics():
     records = query.order_by(MetricHistory.timestamp.desc()).limit(30).all()
     records.reverse()
     
-    timestamps = [r.timestamp.strftime('%H:%M:%S') for r in records]
+    timestamps = [r.timestamp.isoformat() + 'Z' for r in records]
     nxdomains = [r.nxdomain_count for r in records]
     servfails = [r.servfail_count for r in records]
     dnssec_bogus = [r.dnssec_failures for r in records]

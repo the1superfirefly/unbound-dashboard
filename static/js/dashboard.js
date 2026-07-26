@@ -46,6 +46,18 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
+function formatClientLocalTime(isoStr) {
+    if (!isoStr) return '';
+    try {
+        const hasZ = isoStr.endsWith('Z');
+        const d = new Date(hasZ ? isoStr : isoStr + 'Z');
+        if (isNaN(d.getTime())) return isoStr;
+        return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
+    } catch (e) {
+        return isoStr;
+    }
+}
+
 function initTheme() {
     const savedTheme = localStorage.getItem('uad_theme') || 'dark';
     document.documentElement.setAttribute('data-bs-theme', savedTheme);
@@ -246,7 +258,7 @@ async function fetchAlerts() {
         }
         alerts.forEach(a => {
             const tr = document.createElement('tr');
-            const dateStr = new Date(a.timestamp).toLocaleTimeString();
+            const dateStr = formatClientLocalTime(a.timestamp);
             let sevBadge = '<span class="badge bg-info">INFO</span>';
             if (a.severity === 'warning') sevBadge = '<span class="badge bg-warning text-dark">WARNING</span>';
             if (a.severity === 'critical') sevBadge = '<span class="badge bg-danger">CRITICAL</span>';
@@ -279,7 +291,7 @@ function initCharts() {
     const ctxQuery = document.getElementById('queryChart').getContext('2d');
     queryChartInstance = new Chart(ctxQuery, {
         type: 'line',
-        data: { labels: [], datasets: [{ label: 'Queries / min', data: [], borderColor: '#3b82f6', backgroundColor: 'rgba(59, 130, 246, 0.15)', fill: true, tension: 0.3 }] },
+        data: { labels: [], datasets: [{ label: 'Interval Query Delta', data: [], borderColor: '#3b82f6', backgroundColor: 'rgba(59, 130, 246, 0.15)', fill: true, tension: 0.3 }] },
         options: chartDefaults
     });
 
@@ -318,8 +330,10 @@ function initCharts() {
 }
 
 function updateCharts(queryData, cacheData, latencyData, securityData) {
+    const localTimestamps = (queryData.timestamps || []).map(formatClientLocalTime);
+
     if (queryChartInstance) {
-        queryChartInstance.data.labels = queryData.timestamps || [];
+        queryChartInstance.data.labels = localTimestamps;
         queryChartInstance.data.datasets[0].data = queryData.queries || [];
         queryChartInstance.update();
     }
@@ -332,14 +346,14 @@ function updateCharts(queryData, cacheData, latencyData, securityData) {
     }
 
     if (latencyChartInstance) {
-        latencyChartInstance.data.labels = latencyData.timestamps || [];
+        latencyChartInstance.data.labels = localTimestamps;
         latencyChartInstance.data.datasets[0].data = latencyData.avg || [];
         latencyChartInstance.data.datasets[1].data = latencyData.p95 || [];
         latencyChartInstance.update();
     }
 
     if (securityChartInstance) {
-        securityChartInstance.data.labels = securityData.timestamps || [];
+        securityChartInstance.data.labels = localTimestamps;
         securityChartInstance.data.datasets[0].data = securityData.nxdomains || [];
         securityChartInstance.data.datasets[1].data = securityData.servfails || [];
         securityChartInstance.update();
