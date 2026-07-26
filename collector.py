@@ -104,6 +104,14 @@ def fetch_and_record_metrics(app):
                 db.session.commit()
                 continue
 
+            logger.info(
+                f"[METRIC TELEMETRY] Server '{server_name}' ({host}@{port}) -> "
+                f"Total Queries: {stats_data['total_queries']} | QPS: {stats_data['qps']} | "
+                f"Hits: {stats_data['cache_hits']} | Misses: {stats_data['cache_misses']} | "
+                f"Hit Rate: {stats_data['cache_hit_rate']}% | Avg Latency: {stats_data['avg_latency']}ms | "
+                f"SERVFAIL: {stats_data['servfail_count']} | NXDOMAIN: {stats_data['nxdomain_count']}"
+            )
+
             record = MetricHistory(
                 server_id=server_id,
                 server_name=server_name,
