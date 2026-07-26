@@ -53,11 +53,13 @@
                     
                     <div class="dropdown">
                         <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
-                            <i class="bi bi-download me-1"></i> Export
+                            <i class="bi bi-gear me-1"></i> Actions
                         </button>
                         <ul class="dropdown-menu dropdown-menu-end shadow">
                             <li><a class="dropdown-menu-item dropdown-item" href="/api/export/csv"><i class="bi bi-filetype-csv me-2"></i> Export to CSV</a></li>
                             <li><a class="dropdown-menu-item dropdown-item" href="/api/export/json"><i class="bi bi-filetype-json me-2"></i> Export to JSON</a></li>
+                            <li><hr class="dropdown-divider border-secondary border-opacity-25"></li>
+                            <li><a class="dropdown-menu-item dropdown-item text-danger" href="#" onclick="clearHistoryData()"><i class="bi bi-trash me-2"></i> Clear History Data</a></li>
                         </ul>
                     </div>
                     

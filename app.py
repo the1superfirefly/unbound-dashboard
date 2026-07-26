@@ -3,7 +3,7 @@ import logging
 from flask import Flask, render_template, jsonify
 from database import init_db
 from api import api_bp
-from collector import fetch_and_record_metrics, sync_logs_to_github
+from collector import fetch_and_record_metrics, sync_logs_to_github, purge_orphan_metrics
 from apscheduler.schedulers.background import BackgroundScheduler
 
 app = Flask(__name__)
@@ -43,6 +43,7 @@ def run_log_sync_task():
         app.logger.error(f"Log sync task error: {e}")
 
 with app.app_context():
+    purge_orphan_metrics(app)
     fetch_and_record_metrics(app)
 
 scheduler.add_job(run_collector_task, 'interval', seconds=15)

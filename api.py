@@ -46,20 +46,55 @@ def handle_servers():
     servers = ServerConfig.query.filter_by(is_active=True).all()
     return jsonify([s.to_dict() for s in servers])
 
+@api_bp.route('/clear-history', methods=['POST'])
+def clear_history():
+    """
+    Clears historical metrics and alert logs from SQLite.
+    """
+    MetricHistory.query.delete()
+    AlertLog.query.delete()
+    db.session.commit()
+    return jsonify({'status': 'ok', 'message': 'Metric history and alerts cleared successfully.'})
+
 @api_bp.route('/overview', methods=['GET'])
 def get_overview():
     server_id = request.args.get('server_id')
-    server_count = ServerConfig.query.filter_by(is_active=True).count()
+    active_servers = ServerConfig.query.filter_by(is_active=True).all()
+    active_ids = [s.id for s in active_servers]
+    server_count = len(active_servers)
     
+    if not active_ids:
+        return jsonify({
+            'status': 'ok',
+            'server_count': 0,
+            'latest': {
+                'server_id': 'none', 'server_name': 'No Server Configured',
+                'total_queries': 0, 'qps': 0.0, 'cache_hits': 0, 'cache_misses': 0,
+                'cache_hit_rate': 0.0, 'avg_latency': 0.0, 'p95_latency': 0.0,
+                'p99_latency': 0.0, 'servfail_count': 0, 'nxdomain_count': 0,
+                'dnssec_failures': 0, 'active_clients': 0
+            }
+        })
+
     if server_id and server_id != 'all':
+        if server_id not in active_ids:
+            return jsonify({
+                'status': 'ok', 'server_count': server_count,
+                'latest': {
+                    'server_id': server_id, 'server_name': 'Unknown / Inactive Server',
+                    'total_queries': 0, 'qps': 0.0, 'cache_hits': 0, 'cache_misses': 0,
+                    'cache_hit_rate': 0.0, 'avg_latency': 0.0, 'p95_latency': 0.0,
+                    'p99_latency': 0.0, 'servfail_count': 0, 'nxdomain_count': 0,
+                    'dnssec_failures': 0, 'active_clients': 0
+                }
+            })
         latest = MetricHistory.query.filter_by(server_id=server_id).order_by(MetricHistory.timestamp.desc()).first()
         if not latest:
+            srv = db.session.get(ServerConfig, server_id)
             return jsonify({
-                'status': 'ok',
-                'server_count': server_count,
+                'status': 'ok', 'server_count': server_count,
                 'latest': {
-                    'server_id': server_id,
-                    'server_name': 'Selected Server',
+                    'server_id': server_id, 'server_name': srv.name if srv else 'Unbound Server',
                     'total_queries': 0, 'qps': 0.0, 'cache_hits': 0, 'cache_misses': 0,
                     'cache_hit_rate': 0.0, 'avg_latency': 0.0, 'p95_latency': 0.0,
                     'p99_latency': 0.0, 'servfail_count': 0, 'nxdomain_count': 0,
@@ -68,11 +103,11 @@ def get_overview():
             })
         return jsonify({'status': 'ok', 'server_count': server_count, 'latest': latest.to_dict()})
 
-    # Aggregated view across all active servers (latest metric per server)
+    # Aggregated view across active servers strictly
     subq = db.session.query(
         MetricHistory.server_id,
         func.max(MetricHistory.id).label('max_id')
-    ).group_by(MetricHistory.server_id).subquery()
+    ).filter(MetricHistory.server_id.in_(active_ids)).group_by(MetricHistory.server_id).subquery()
 
     latest_per_server = db.session.query(MetricHistory).join(
         subq, MetricHistory.id == subq.c.max_id
@@ -130,7 +165,8 @@ def get_overview():
 @api_bp.route('/query', methods=['GET'])
 def get_query_analytics():
     server_id = request.args.get('server_id')
-    query = MetricHistory.query
+    active_ids = [s.id for s in ServerConfig.query.filter_by(is_active=True).all()]
+    query = MetricHistory.query.filter(MetricHistory.server_id.in_(active_ids))
     if server_id and server_id != 'all':
         query = query.filter_by(server_id=server_id)
         
@@ -157,7 +193,8 @@ def get_query_analytics():
 @api_bp.route('/cache', methods=['GET'])
 def get_cache_analytics():
     server_id = request.args.get('server_id')
-    query = MetricHistory.query
+    active_ids = [s.id for s in ServerConfig.query.filter_by(is_active=True).all()]
+    query = MetricHistory.query.filter(MetricHistory.server_id.in_(active_ids))
     if server_id and server_id != 'all':
         query = query.filter_by(server_id=server_id)
         
@@ -185,7 +222,8 @@ def get_cache_analytics():
 @api_bp.route('/latency', methods=['GET'])
 def get_latency_analytics():
     server_id = request.args.get('server_id')
-    query = MetricHistory.query
+    active_ids = [s.id for s in ServerConfig.query.filter_by(is_active=True).all()]
+    query = MetricHistory.query.filter(MetricHistory.server_id.in_(active_ids))
     if server_id and server_id != 'all':
         query = query.filter_by(server_id=server_id)
         
@@ -211,7 +249,8 @@ def get_latency_analytics():
 @api_bp.route('/security', methods=['GET'])
 def get_security_analytics():
     server_id = request.args.get('server_id')
-    query = MetricHistory.query
+    active_ids = [s.id for s in ServerConfig.query.filter_by(is_active=True).all()]
+    query = MetricHistory.query.filter(MetricHistory.server_id.in_(active_ids))
     if server_id and server_id != 'all':
         query = query.filter_by(server_id=server_id)
         
@@ -236,8 +275,8 @@ def get_security_analytics():
 def get_history():
     server_id = request.args.get('server_id')
     limit = request.args.get('limit', 50, type=int)
-    
-    query = MetricHistory.query
+    active_ids = [s.id for s in ServerConfig.query.filter_by(is_active=True).all()]
+    query = MetricHistory.query.filter(MetricHistory.server_id.in_(active_ids))
     if server_id and server_id != 'all':
         query = query.filter_by(server_id=server_id)
         
@@ -247,7 +286,8 @@ def get_history():
 @api_bp.route('/alerts', methods=['GET'])
 def get_alerts():
     server_id = request.args.get('server_id')
-    query = AlertLog.query
+    active_ids = [s.id for s in ServerConfig.query.filter_by(is_active=True).all()]
+    query = AlertLog.query.filter(AlertLog.server_id.in_(active_ids))
     if server_id and server_id != 'all':
         query = query.filter_by(server_id=server_id)
     records = query.order_by(AlertLog.timestamp.desc()).limit(20).all()

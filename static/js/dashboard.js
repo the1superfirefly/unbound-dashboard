@@ -160,6 +160,17 @@ async function deleteServer(id, name) {
     }
 }
 
+async function clearHistoryData() {
+    if (!confirm('Are you sure you want to clear all historical metrics and alert logs?')) return;
+    try {
+        await fetch('/api/clear-history', { method: 'POST' });
+        fetchDashboardData();
+        fetchAlerts();
+    } catch (e) {
+        console.error('Failed to clear history data:', e);
+    }
+}
+
 async function saveServerBackend(server) {
     try {
         await fetch('/api/servers', {

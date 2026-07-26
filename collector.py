@@ -8,15 +8,32 @@ from parser import parse_unbound_stats
 
 logger = logging.getLogger('uad.collector')
 
+def purge_orphan_metrics(app):
+    """
+    Deletes legacy metric records for server IDs that no longer exist in ServerConfig.
+    """
+    with app.app_context():
+        active_ids = [s.id for s in ServerConfig.query.filter_by(is_active=True).all()]
+        if active_ids:
+            orphans = MetricHistory.query.filter(~MetricHistory.server_id.in_(active_ids)).delete(synchronize_session=False)
+            db.session.commit()
+            if orphans > 0:
+                logger.info(f"Purged {orphans} orphan metric records from database.")
+        else:
+            # If no active servers, clear all metrics history to prevent stale aggregations
+            MetricHistory.query.delete()
+            db.session.commit()
+
 def fetch_and_record_metrics(app):
     """
     Polls defined Unbound servers exclusively via unbound-control stats_noreset.
+    Supports direct local execution (like padd.sh) and remote control port 8953.
     """
     with app.app_context():
         servers = ServerConfig.query.filter_by(is_active=True).all()
         if not servers:
-            # Seed primary server if empty
-            default_srv = ServerConfig(id='srv-primary', name='Unbound Primary', host='127.0.0.1', port=8953)
+            # Default seed for localhost unbound resolver on port 8953
+            default_srv = ServerConfig(id='srv-localhost', name='Unbound Local Resolver', host='127.0.0.1', port=8953)
             db.session.add(default_srv)
             db.session.commit()
             servers = [default_srv]
@@ -25,28 +42,42 @@ def fetch_and_record_metrics(app):
             server_id = server.id
             server_name = server.name
             host = server.host
-            port = server.port
+            port = server.port or 8953
             
-            logger.info(f"Polling unbound-control on {host}:{port} for server {server_name} ({server_id})...")
+            logger.info(f"Polling unbound-control for server {server_name} ({host}:{port})...")
             stats_data = None
-            try:
-                cmd = ["unbound-control", "-s", f"{host}:{port}", "stats_noreset"]
-                res = subprocess.run(cmd, capture_output=True, text=True, timeout=5)
-                if res.returncode == 0 and res.stdout:
-                    stats_data = parse_unbound_stats(res.stdout)
-                else:
-                    logger.warning(f"Unbound-control returned code {res.returncode} for {host}:{port}: {res.stderr}")
-            except Exception as e:
-                logger.error(f"Failed to poll unbound-control on {host}:{port}: {e}")
+            
+            # Polling Strategy:
+            # 1. If localhost / 127.0.0.1, try running `unbound-control stats_noreset` directly (padd.sh standard)
+            if host in ['127.0.0.1', 'localhost']:
+                try:
+                    res = subprocess.run(["unbound-control", "stats_noreset"], capture_output=True, text=True, timeout=5)
+                    if res.returncode == 0 and res.stdout:
+                        stats_data = parse_unbound_stats(res.stdout)
+                except Exception as e:
+                    logger.debug(f"Direct unbound-control stats_noreset failed: {e}")
+                    
+            # 2. If not stats_data yet, try running unbound-control -s host:port stats_noreset
+            if not stats_data:
+                try:
+                    cmd = ["unbound-control", "-s", f"{host}:{port}", "stats_noreset"]
+                    res = subprocess.run(cmd, capture_output=True, text=True, timeout=5)
+                    if res.returncode == 0 and res.stdout:
+                        stats_data = parse_unbound_stats(res.stdout)
+                    else:
+                        logger.warning(f"Unbound-control returned code {res.returncode} for {host}:{port}: {res.stderr}")
+                except Exception as e:
+                    logger.error(f"Failed to poll unbound-control on {host}:{port}: {e}")
 
             if not stats_data:
                 # Record server offline alert
+                logger.warning(f"Server {server_name} ({host}:{port}) is offline or unbound-control unreachable.")
                 alert = AlertLog(
                     server_id=server_id,
                     server_name=server_name,
                     alert_type="Server Offline",
                     severity="critical",
-                    message=f"Could not connect to unbound-control on {host}:{port}"
+                    message=f"Could not connect to unbound-control on {host}:{port}. Ensure remote-control is enabled on port {port}."
                 )
                 db.session.add(alert)
                 db.session.commit()
@@ -105,11 +136,9 @@ def sync_logs_to_github(app):
 
     logger.info("Starting automated 30s GitHub log upload & local purge cycle...")
     try:
-        # Stage log file
         rel_log_path = 'logs/server_telemetry.log'
         timestamp = datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S UTC')
         
-        # Git commands execution
         cwd = app.root_path
         subprocess.run(["git", "add", rel_log_path], cwd=cwd, check=True)
         commit_res = subprocess.run(["git", "commit", "-m", f"Automated telemetry log sync [{timestamp}]"], cwd=cwd, capture_output=True, text=True)
@@ -118,7 +147,6 @@ def sync_logs_to_github(app):
             push_res = subprocess.run(["git", "push", "origin", "main"], cwd=cwd, capture_output=True, text=True, timeout=15)
             if push_res.returncode == 0:
                 logger.info("Successfully pushed telemetry log to GitHub! Truncating local log file.")
-                # Truncate local log file after successful upload
                 with open(log_path, 'w') as f:
                     f.truncate(0)
             else:
