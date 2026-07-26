@@ -74,7 +74,7 @@ def fetch_and_record_metrics(app):
             # 1. Direct local call if host is localhost
             if host in ['127.0.0.1', 'localhost']:
                 try:
-                    res = subprocess.run(["unbound-control", "stats_noreset"], capture_output=True, text=True, timeout=3)
+                    res = subprocess.run(["unbound-control", "stats_noreset"], capture_output=True, text=True, timeout=1)
                     if res.returncode == 0 and res.stdout:
                         stats_data = parse_unbound_stats(res.stdout)
                     else:
@@ -86,7 +86,7 @@ def fetch_and_record_metrics(app):
             if not stats_data and os.path.exists(custom_conf):
                 try:
                     cmd = ["unbound-control", "-c", custom_conf, "-s", f"{host}@{port}", "stats_noreset"]
-                    res = subprocess.run(cmd, capture_output=True, text=True, timeout=3)
+                    res = subprocess.run(cmd, capture_output=True, text=True, timeout=1)
                     if res.returncode == 0 and res.stdout:
                         stats_data = parse_unbound_stats(res.stdout)
                     else:
@@ -98,7 +98,7 @@ def fetch_and_record_metrics(app):
             if not stats_data:
                 try:
                     cmd = ["unbound-control", "-s", f"{host}@{port}", "stats_noreset"]
-                    res = subprocess.run(cmd, capture_output=True, text=True, timeout=3)
+                    res = subprocess.run(cmd, capture_output=True, text=True, timeout=1)
                     if res.returncode == 0 and res.stdout:
                         stats_data = parse_unbound_stats(res.stdout)
                     else:
