@@ -98,10 +98,18 @@ def fetch_and_record_metrics(app):
     with app.app_context():
         servers = ServerConfig.query.filter_by(is_active=True).all()
         if not servers:
-            default_srv = ServerConfig(id='srv-localhost', name='Unbound Local Resolver', host='127.0.0.1', port=8953)
-            db.session.add(default_srv)
-            db.session.commit()
-            servers = [default_srv]
+            existing = db.session.get(ServerConfig, 'srv-localhost')
+            if not existing:
+                try:
+                    default_srv = ServerConfig(id='srv-localhost', name='Unbound Local Resolver', host='127.0.0.1', port=8953)
+                    db.session.add(default_srv)
+                    db.session.commit()
+                    servers = [default_srv]
+                except Exception:
+                    db.session.rollback()
+                    servers = ServerConfig.query.filter_by(is_active=True).all()
+            else:
+                servers = [existing]
 
         with ThreadPoolExecutor(max_workers=min(10, len(servers))) as executor:
             futures = [executor.submit(_poll_single_server, s, app.root_path) for s in servers]
