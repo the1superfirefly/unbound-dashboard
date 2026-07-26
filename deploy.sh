@@ -20,10 +20,14 @@ ssh -o StrictHostKeyChecking=no -o ConnectTimeout=5 ${TARGET_USER}@${TARGET_HOST
 }
 
 echo "Syncing application code to ${TARGET_HOST}:${TARGET_DIR}..."
-rsync -avz --exclude 'database/*.db' --exclude '__pycache__' --exclude 'logs/*.log' ./ ${TARGET_USER}@${TARGET_HOST}:${TARGET_DIR}/ || \
+rsync -avz --delete --exclude 'database/*.db' --exclude '__pycache__' --exclude 'logs/*.log' ./ ${TARGET_USER}@${TARGET_HOST}:${TARGET_DIR}/ || \
 scp -r ./app.py ./api.py ./collector.py ./database.py ./parser.py ./requirements.txt ./templates ./static ${TARGET_USER}@${TARGET_HOST}:${TARGET_DIR}/
 
 echo "Setting up Git repository & Python environment on remote host..."
-ssh ${TARGET_USER}@${TARGET_HOST} "cd ${TARGET_DIR} && mkdir -p logs && git config --global --add safe.directory ${TARGET_DIR} && (git rev-parse --is-inside-work-tree >/dev/null 2>&1 || (git init && git remote add origin ${REPO_URL})) && git config user.name 'UAD Telemetry Bot' && git config user.email 'uad-bot@unbound-dashboard.local' && python3 -m venv venv && source venv/bin/activate && pip install -r requirements.txt && pkill -f 'python3 app.py' || true && nohup python3 app.py > logs/app.log 2>&1 &"
+ssh ${TARGET_USER}@${TARGET_HOST} "cd ${TARGET_DIR} && mkdir -p logs && git config --global --add safe.directory ${TARGET_DIR} && (git rev-parse --is-inside-work-tree >/dev/null 2>&1 || (git init && git remote add origin ${REPO_URL})) && git config user.name 'UAD Telemetry Bot' && git config user.email 'uad-bot@unbound-dashboard.local' && python3 -m venv venv && source venv/bin/activate && pip install -r requirements.txt && (fuser -k ${PORT}/tcp || kill -9 \$(lsof -t -i:${PORT}) || pkill -f 'python3 app.py' || true) && sleep 2 && nohup python3 app.py > logs/app.log 2>&1 &"
+
+echo "Checking service status..."
+sleep 3
+ssh ${TARGET_USER}@${TARGET_HOST} "cat ${TARGET_DIR}/logs/app.log"
 
 echo "Deployment finished! Service accessible at http://${TARGET_HOST}:${PORT}"
