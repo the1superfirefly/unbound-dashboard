@@ -732,6 +732,21 @@ async function fetchDashboardData(isInitial = false) {
                 if (elP99) elP99.textContent = (overviewRes.latest.p99_latency || 0).toFixed(3);
             }
 
+            if (overviewRes) {
+                const isAggregated = (serverId === 'all');
+                const elResolvers = document.getElementById('statActiveResolvers');
+                const elSubtext = document.getElementById('statResolverSubtext');
+
+                if (isAggregated) {
+                    if (elResolvers) elResolvers.textContent = `${overviewRes.server_count || 0} Active`;
+                    if (elSubtext) elSubtext.textContent = 'Healthy Network';
+                } else {
+                    const selectedName = overviewRes.latest ? overviewRes.latest.server_name : 'Selected Server';
+                    if (elResolvers) elResolvers.textContent = '1 Active';
+                    if (elSubtext) elSubtext.textContent = selectedName;
+                }
+            }
+
             if (overviewRes && overviewRes.top_used_server) {
                 const labelEl = document.getElementById('topServerLabel');
                 const nameEl = document.getElementById('topServerName');
