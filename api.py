@@ -159,16 +159,19 @@ def get_overview():
         }
     })
 
+def _get_48h_query_filter(server_id):
+    active_ids = [s.id for s in ServerConfig.query.filter_by(is_active=True).all()]
+    cutoff = datetime.utcnow() - timedelta(hours=48)
+    query = MetricHistory.query.filter(MetricHistory.server_id.in_(active_ids), MetricHistory.timestamp >= cutoff)
+    if server_id and server_id != 'all':
+        query = query.filter_by(server_id=server_id)
+    return query
+
 @api_bp.route('/query', methods=['GET'])
 def get_query_analytics():
     server_id = request.args.get('server_id')
-    active_ids = [s.id for s in ServerConfig.query.filter_by(is_active=True).all()]
-    query = MetricHistory.query.filter(MetricHistory.server_id.in_(active_ids))
-    if server_id and server_id != 'all':
-        query = query.filter_by(server_id=server_id)
-        
-    records = query.order_by(MetricHistory.timestamp.desc()).limit(30).all()
-    records.reverse()
+    query = _get_48h_query_filter(server_id)
+    records = query.order_by(MetricHistory.timestamp.asc()).all()
     
     timestamps = [r.timestamp.strftime('%Y-%m-%dT%H:%M:%SZ') for r in records]
     
@@ -202,13 +205,8 @@ def get_query_analytics():
 @api_bp.route('/cache', methods=['GET'])
 def get_cache_analytics():
     server_id = request.args.get('server_id')
-    active_ids = [s.id for s in ServerConfig.query.filter_by(is_active=True).all()]
-    query = MetricHistory.query.filter(MetricHistory.server_id.in_(active_ids))
-    if server_id and server_id != 'all':
-        query = query.filter_by(server_id=server_id)
-        
-    records = query.order_by(MetricHistory.timestamp.desc()).limit(30).all()
-    records.reverse()
+    query = _get_48h_query_filter(server_id)
+    records = query.order_by(MetricHistory.timestamp.asc()).all()
     
     timestamps = [r.timestamp.strftime('%Y-%m-%dT%H:%M:%SZ') for r in records]
     hits = [r.cache_hits for r in records]
@@ -231,13 +229,8 @@ def get_cache_analytics():
 @api_bp.route('/latency', methods=['GET'])
 def get_latency_analytics():
     server_id = request.args.get('server_id')
-    active_ids = [s.id for s in ServerConfig.query.filter_by(is_active=True).all()]
-    query = MetricHistory.query.filter(MetricHistory.server_id.in_(active_ids))
-    if server_id and server_id != 'all':
-        query = query.filter_by(server_id=server_id)
-        
-    records = query.order_by(MetricHistory.timestamp.desc()).limit(30).all()
-    records.reverse()
+    query = _get_48h_query_filter(server_id)
+    records = query.order_by(MetricHistory.timestamp.asc()).all()
     
     timestamps = [r.timestamp.strftime('%Y-%m-%dT%H:%M:%SZ') for r in records]
     avg = [r.avg_latency for r in records]
@@ -258,13 +251,8 @@ def get_latency_analytics():
 @api_bp.route('/security', methods=['GET'])
 def get_security_analytics():
     server_id = request.args.get('server_id')
-    active_ids = [s.id for s in ServerConfig.query.filter_by(is_active=True).all()]
-    query = MetricHistory.query.filter(MetricHistory.server_id.in_(active_ids))
-    if server_id and server_id != 'all':
-        query = query.filter_by(server_id=server_id)
-        
-    records = query.order_by(MetricHistory.timestamp.desc()).limit(30).all()
-    records.reverse()
+    query = _get_48h_query_filter(server_id)
+    records = query.order_by(MetricHistory.timestamp.asc()).all()
     
     timestamps = [r.timestamp.strftime('%Y-%m-%dT%H:%M:%SZ') for r in records]
     nxdomains = [r.nxdomain_count for r in records]
@@ -283,7 +271,7 @@ def get_security_analytics():
 @api_bp.route('/history', methods=['GET'])
 def get_history():
     server_id = request.args.get('server_id')
-    limit = request.args.get('limit', 50, type=int)
+    limit = request.args.get('limit', 100, type=int)
     active_ids = [s.id for s in ServerConfig.query.filter_by(is_active=True).all()]
     query = MetricHistory.query.filter(MetricHistory.server_id.in_(active_ids))
     if server_id and server_id != 'all':
@@ -304,7 +292,7 @@ def get_alerts():
 
 @api_bp.route('/export/<fmt>', methods=['GET'])
 def export_data(fmt):
-    records = MetricHistory.query.order_by(MetricHistory.timestamp.desc()).limit(500).all()
+    records = MetricHistory.query.order_by(MetricHistory.timestamp.desc()).limit(5000).all()
     data = [r.to_dict() for r in records]
     
     if fmt == 'json':

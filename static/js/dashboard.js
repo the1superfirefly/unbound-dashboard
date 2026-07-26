@@ -46,7 +46,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-function formatClientLocalTime(isoStr) {
+function formatClientLocalTime(isoStr, includeDate = false) {
     if (!isoStr) return '';
     try {
         let cleanStr = isoStr;
@@ -55,6 +55,14 @@ function formatClientLocalTime(isoStr) {
         }
         const d = new Date(cleanStr);
         if (isNaN(d.getTime())) return isoStr;
+
+        if (includeDate) {
+            const month = String(d.getMonth() + 1).padStart(2, '0');
+            const day = String(d.getDate()).padStart(2, '0');
+            const time = d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
+            return `${month}/${day} ${time}`;
+        }
+
         return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
     } catch (e) {
         return isoStr;
@@ -77,7 +85,7 @@ async function showMetricDetails(metricType) {
     modalEl.show();
 
     try {
-        const historyData = await fetch(`/api/history?server_id=${serverId}&limit=30`).then(r => r.json());
+        const historyData = await fetch(`/api/history?server_id=${serverId}&limit=50`).then(r => r.json());
 
         if (metricType === 'queries') {
             titleEl.innerHTML = '<i class="bi bi-bar-chart-line me-2 text-primary"></i> Granular Query Analytics & History';
@@ -105,7 +113,7 @@ function renderQueryDetails(container, history) {
 
     let rows = '';
     history.forEach(h => {
-        const timeStr = formatClientLocalTime(h.timestamp);
+        const timeStr = formatClientLocalTime(h.timestamp, true);
         rows += `
             <tr>
                 <td class="ps-3 font-monospace small text-secondary">${timeStr}</td>
@@ -176,7 +184,7 @@ function renderCacheDetails(container, history) {
     const latest = history[0];
     let rows = '';
     history.forEach(h => {
-        const timeStr = formatClientLocalTime(h.timestamp);
+        const timeStr = formatClientLocalTime(h.timestamp, true);
         rows += `
             <tr>
                 <td class="ps-3 font-monospace small text-secondary">${timeStr}</td>
@@ -249,7 +257,7 @@ function renderLatencyDetails(container, history) {
     const latest = history[0];
     let rows = '';
     history.forEach(h => {
-        const timeStr = formatClientLocalTime(h.timestamp);
+        const timeStr = formatClientLocalTime(h.timestamp, true);
         rows += `
             <tr>
                 <td class="ps-3 font-monospace small text-secondary">${timeStr}</td>
@@ -320,7 +328,7 @@ function renderSecurityDetails(container, history) {
     const latest = history[0];
     let rows = '';
     history.forEach(h => {
-        const timeStr = formatClientLocalTime(h.timestamp);
+        const timeStr = formatClientLocalTime(h.timestamp, true);
         rows += `
             <tr>
                 <td class="ps-3 font-monospace small text-secondary">${timeStr}</td>
@@ -580,7 +588,7 @@ async function fetchAlerts() {
         }
         alerts.forEach(a => {
             const tr = document.createElement('tr');
-            const dateStr = formatClientLocalTime(a.timestamp);
+            const dateStr = formatClientLocalTime(a.timestamp, true);
             let sevBadge = '<span class="badge bg-info">INFO</span>';
             if (a.severity === 'warning') sevBadge = '<span class="badge bg-warning text-dark">WARNING</span>';
             if (a.severity === 'critical') sevBadge = '<span class="badge bg-danger">CRITICAL</span>';
@@ -621,7 +629,7 @@ function initCharts() {
             x: {
                 ticks: {
                     color: '#64748b',
-                    maxTicksLimit: 8,
+                    maxTicksLimit: 10,
                     maxRotation: 0,
                     minRotation: 0
                 },
@@ -673,7 +681,12 @@ function initCharts() {
 }
 
 function updateCharts(queryData, cacheData, latencyData, securityData) {
-    const localTimestamps = (queryData.timestamps || []).map(formatClientLocalTime);
+    const timestamps = queryData.timestamps || [];
+    const spanOverMultipleDays = timestamps.length > 0 && (
+        new Date(timestamps[timestamps.length - 1]).getDate() !== new Date(timestamps[0]).getDate()
+    );
+
+    const localTimestamps = timestamps.map(ts => formatClientLocalTime(ts, spanOverMultipleDays));
 
     if (queryChartInstance) {
         queryChartInstance.data.labels = localTimestamps;
