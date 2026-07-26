@@ -26,7 +26,7 @@ ssh -o StrictHostKeyChecking=no -o ConnectTimeout=5 ${TARGET_USER}@${TARGET_HOST
 }
 
 echo "Syncing application code to ${TARGET_HOST}:${TARGET_DIR}..."
-rsync -avz --delete --exclude 'database/*.db' --exclude '__pycache__' --exclude 'logs/*.log' --exclude 'venv' ./ ${TARGET_USER}@${TARGET_HOST}:${TARGET_DIR}/ || \
+rsync -avz --delete --exclude 'database/*' --exclude '__pycache__' --exclude 'logs/*.log' --exclude 'venv' ./ ${TARGET_USER}@${TARGET_HOST}:${TARGET_DIR}/ || \
 scp -r ./app.py ./api.py ./collector.py ./database.py ./parser.py ./requirements.txt ./templates ./static ${TARGET_USER}@${TARGET_HOST}:${TARGET_DIR}/
 
 echo "Setting up Git repository & Authenticated Remote URL on target host..."

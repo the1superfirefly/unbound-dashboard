@@ -1107,7 +1107,7 @@ function updateCharts(queryData, cacheData, latencyData, securityData, isInitial
                 data: {
                     labels: qtLabels,
                     datasets: [{
-                        data: [120, 35, 12, 18, 25, 8, 5],
+                        data: [0, 0, 0, 0, 0, 0, 0],
                         backgroundColor: qtColors,
                         borderWidth: 0
                     }]
@@ -1132,11 +1132,8 @@ function updateCharts(queryData, cacheData, latencyData, securityData, isInitial
             qt.OTHER || 0
         ];
 
-        const sumVal = qtValues.reduce((a, b) => a + b, 0);
-        const renderValues = sumVal > 0 ? qtValues : [120, 35, 12, 18, 25, 8, 5];
-        
-        queryTypesChartInstance.data.datasets[0].data = renderValues;
+        queryTypesChartInstance.data.datasets[0].data = qtValues;
         queryTypesChartInstance.update();
-        renderCustomCheckboxLegend('queryTypesLegend', qtLabels, qtColors, renderValues);
+        renderCustomCheckboxLegend('queryTypesLegend', qtLabels, qtColors, qtValues);
     }
 }
