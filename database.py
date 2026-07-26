@@ -4,10 +4,20 @@ from datetime import datetime
 db = SQLAlchemy()
 
 def init_db(app):
-    """Initializes the database with Flask application context."""
+    """Initializes the database with Flask application context and auto-migrates columns."""
     db.init_app(app)
     with app.app_context():
         db.create_all()
+        try:
+            with db.engine.connect() as conn:
+                for col in ['qtype_srv', 'qtype_ptr']:
+                    try:
+                        conn.execute(db.text(f"ALTER TABLE metric_history ADD COLUMN {col} BIGINT DEFAULT 0"))
+                        conn.commit()
+                    except Exception:
+                        pass
+        except Exception:
+            pass
 
 class ServerConfig(db.Model):
     __tablename__ = 'server_configs'
