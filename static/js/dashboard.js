@@ -94,7 +94,7 @@ async function showMetricDetails(metricType) {
         const covInfo = queryRes.time_coverage || {};
         const coverageBadge = `
             <div class="alert alert-dark border border-secondary border-opacity-25 d-flex align-items-center justify-content-between mb-3 py-2 px-3">
-                <span class="small text-secondary"><i class="bi bi-clock me-1 text-info"></i> <strong>Time Window Covered:</strong> ${covInfo.coverage_label || '48 Hours'}</span>
+                <span class="small text-secondary"><i class="bi bi-clock me-1 text-info"></i> <strong>Time Window Covered:</strong> ${covInfo.coverage_label || '24 Hours'}</span>
                 <span class="badge bg-secondary bg-opacity-25 text-light">${covInfo.sample_count || 0} Data Snapshots</span>
             </div>
         `;
@@ -734,11 +734,8 @@ async function fetchAlerts() {
     }
 }
 
-function initCharts() {
-    Chart.defaults.font.family = "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif";
-    Chart.defaults.font.size = 11;
-
-    const chartDefaults = {
+function createIndependentChartConfig(extraOptions = {}) {
+    return {
         responsive: true,
         maintainAspectRatio: false,
         plugins: {
@@ -767,14 +764,20 @@ function initCharts() {
                 grid: { color: 'rgba(255,255,255,0.05)' }
             },
             y: { ticks: { color: '#64748b', font: { size: 10 } }, grid: { color: 'rgba(255,255,255,0.05)' } }
-        }
+        },
+        ...extraOptions
     };
+}
+
+function initCharts() {
+    Chart.defaults.font.family = "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif";
+    Chart.defaults.font.size = 11;
 
     const ctxQuery = document.getElementById('queryChart').getContext('2d');
     queryChartInstance = new Chart(ctxQuery, {
         type: 'line',
         data: { labels: [], datasets: [{ label: 'Interval Query Delta', data: [], borderColor: '#3b82f6', backgroundColor: 'rgba(59, 130, 246, 0.15)', fill: true, tension: 0.3 }] },
-        options: chartDefaults
+        options: createIndependentChartConfig()
     });
 
     const ctxCache = document.getElementById('cacheChart').getContext('2d');
@@ -794,7 +797,7 @@ function initCharts() {
                 { label: 'P95 Latency (ms)', data: [], borderColor: '#ef4444', borderDash: [5, 5], tension: 0.3 }
             ]
         },
-        options: chartDefaults
+        options: createIndependentChartConfig()
     });
 
     const ctxSec = document.getElementById('securityChart').getContext('2d');
@@ -807,7 +810,7 @@ function initCharts() {
                 { label: 'SERVFAIL', data: [], backgroundColor: '#a855f7' }
             ]
         },
-        options: chartDefaults
+        options: createIndependentChartConfig()
     });
 }
 
@@ -818,32 +821,11 @@ function updateCharts(queryData, cacheData, latencyData, securityData, isInitial
     );
 
     const localTimestamps = timestamps.map(ts => formatClientLocalTime(ts, spanOverMultipleDays));
-    const updateMode = isInitial ? 'default' : 'none'; // 'none' mode prevents flash/animation on 1s refresh
-
-    // Calculate initial 24h window startIndex (last 24 hours of data)
-    let startIndex24h = 0;
-    if (timestamps.length > 0) {
-        const lastTs = new Date(timestamps[timestamps.length - 1]).getTime();
-        const cutoff24h = lastTs - (24 * 60 * 60 * 1000);
-        for (let i = 0; i < timestamps.length; i++) {
-            if (new Date(timestamps[i]).getTime() >= cutoff24h) {
-                startIndex24h = i;
-                break;
-            }
-        }
-    }
-
-    const apply24hZoomWindow = (chart) => {
-        if (isInitial && chart && localTimestamps.length > 0) {
-            chart.options.scales.x.min = localTimestamps[startIndex24h];
-            chart.options.scales.x.max = localTimestamps[localTimestamps.length - 1];
-        }
-    };
+    const updateMode = isInitial ? 'default' : 'none';
 
     if (queryChartInstance) {
         queryChartInstance.data.labels = localTimestamps;
         queryChartInstance.data.datasets[0].data = queryData.queries || [];
-        apply24hZoomWindow(queryChartInstance);
         queryChartInstance.update(updateMode);
     }
 
@@ -858,7 +840,6 @@ function updateCharts(queryData, cacheData, latencyData, securityData, isInitial
         latencyChartInstance.data.labels = localTimestamps;
         latencyChartInstance.data.datasets[0].data = latencyData.avg || [];
         latencyChartInstance.data.datasets[1].data = latencyData.p95 || [];
-        apply24hZoomWindow(latencyChartInstance);
         latencyChartInstance.update(updateMode);
     }
 
@@ -866,7 +847,6 @@ function updateCharts(queryData, cacheData, latencyData, securityData, isInitial
         securityChartInstance.data.labels = localTimestamps;
         securityChartInstance.data.datasets[0].data = securityData.nxdomains || [];
         securityChartInstance.data.datasets[1].data = securityData.servfails || [];
-        apply24hZoomWindow(securityChartInstance);
         securityChartInstance.update(updateMode);
     }
 }
