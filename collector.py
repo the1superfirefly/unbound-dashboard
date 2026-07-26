@@ -43,9 +43,55 @@ def add_alert_if_not_duplicate(server_id, server_name, alert_type, severity, mes
             message=message
         ))
 
+from concurrent.futures import ThreadPoolExecutor
+
+def _poll_single_server(server, root_path):
+    server_id = server.id
+    server_name = server.name
+    host = server.host
+    port = server.port or 8953
+    
+    stats_data = None
+    last_error = ""
+    custom_conf = os.path.join(root_path, 'certs', host, 'unbound.conf')
+    
+    if host in ['127.0.0.1', 'localhost']:
+        try:
+            res = subprocess.run(["unbound-control", "stats_noreset"], capture_output=True, text=True, timeout=1)
+            if res.returncode == 0 and res.stdout:
+                stats_data = parse_unbound_stats(res.stdout)
+            else:
+                last_error = res.stderr.strip()
+        except Exception as e:
+            last_error = str(e)
+
+    if not stats_data and os.path.exists(custom_conf):
+        try:
+            cmd = ["unbound-control", "-c", custom_conf, "-s", f"{host}@{port}", "stats_noreset"]
+            res = subprocess.run(cmd, capture_output=True, text=True, timeout=1)
+            if res.returncode == 0 and res.stdout:
+                stats_data = parse_unbound_stats(res.stdout)
+            else:
+                last_error = res.stderr.strip()
+        except Exception as e:
+            last_error = str(e)
+
+    if not stats_data:
+        try:
+            cmd = ["unbound-control", "-s", f"{host}@{port}", "stats_noreset"]
+            res = subprocess.run(cmd, capture_output=True, text=True, timeout=1)
+            if res.returncode == 0 and res.stdout:
+                stats_data = parse_unbound_stats(res.stdout)
+            else:
+                last_error = res.stderr.strip() or f"Exit code {res.returncode}"
+        except Exception as e:
+            last_error = str(e)
+
+    return (server, stats_data, last_error)
+
 def fetch_and_record_metrics(app):
     """
-    Polls defined Unbound servers using unbound-control stats_noreset with correct @port syntax.
+    Multi-threaded parallel polling of defined Unbound servers using ThreadPoolExecutor.
     Supports per-server SSL cert configs in certs/<host>/unbound.conf.
     Enforces non-aggressive alert thresholds with 10-minute cooldown deduplication.
     """
@@ -57,54 +103,15 @@ def fetch_and_record_metrics(app):
             db.session.commit()
             servers = [default_srv]
 
-        for server in servers:
+        with ThreadPoolExecutor(max_workers=min(10, len(servers))) as executor:
+            futures = [executor.submit(_poll_single_server, s, app.root_path) for s in servers]
+            results = [f.result() for f in futures]
+
+        for server, stats_data, last_error in results:
             server_id = server.id
             server_name = server.name
             host = server.host
             port = server.port or 8953
-            
-            logger.info(f"Polling unbound-control for server {server_name} ({host}@{port})...")
-            stats_data = None
-            last_error = ""
-            
-            # Check if custom cert config exists for this host
-            custom_conf = os.path.join(app.root_path, 'certs', host, 'unbound.conf')
-            
-            # Polling Variants:
-            # 1. Direct local call if host is localhost
-            if host in ['127.0.0.1', 'localhost']:
-                try:
-                    res = subprocess.run(["unbound-control", "stats_noreset"], capture_output=True, text=True, timeout=1)
-                    if res.returncode == 0 and res.stdout:
-                        stats_data = parse_unbound_stats(res.stdout)
-                    else:
-                        last_error = res.stderr.strip()
-                except Exception as e:
-                    last_error = str(e)
-
-            # 2. Custom certificate config if present
-            if not stats_data and os.path.exists(custom_conf):
-                try:
-                    cmd = ["unbound-control", "-c", custom_conf, "-s", f"{host}@{port}", "stats_noreset"]
-                    res = subprocess.run(cmd, capture_output=True, text=True, timeout=1)
-                    if res.returncode == 0 and res.stdout:
-                        stats_data = parse_unbound_stats(res.stdout)
-                    else:
-                        last_error = res.stderr.strip()
-                except Exception as e:
-                    last_error = str(e)
-                    
-            # 3. Standard remote control with @port syntax (-s host@port)
-            if not stats_data:
-                try:
-                    cmd = ["unbound-control", "-s", f"{host}@{port}", "stats_noreset"]
-                    res = subprocess.run(cmd, capture_output=True, text=True, timeout=1)
-                    if res.returncode == 0 and res.stdout:
-                        stats_data = parse_unbound_stats(res.stdout)
-                    else:
-                        last_error = res.stderr.strip() or f"Exit code {res.returncode}"
-                except Exception as e:
-                    last_error = str(e)
 
             if not stats_data:
                 diag_msg = f"Connection failed to {host}@{port}: {last_error}."
@@ -113,7 +120,6 @@ def fetch_and_record_metrics(app):
                 elif "Connection refused" in last_error:
                     diag_msg += " Ensure 'control-enable: yes' & 'control-interface: 0.0.0.0' are in /etc/unbound/unbound.conf on target host."
                 
-                # logger.warning(diag_msg)
                 add_alert_if_not_duplicate(
                     server_id=server_id,
                     server_name=server_name,

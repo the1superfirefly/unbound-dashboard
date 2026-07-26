@@ -97,9 +97,18 @@ async function showMetricDetails(metricType) {
     container.innerHTML = '<div class="text-center py-4 text-muted"><div class="spinner-border spinner-border-sm me-2 text-primary"></div> Loading meaningful granular breakdown...</div>';
     modalEl.show();
 
+    const fetchWithTimeout = (url, fallback, ms = 3000) => {
+        return Promise.race([
+            safeFetchJson(url, fallback),
+            new Promise(resolve => setTimeout(() => resolve(fallback), ms))
+        ]);
+    };
+
     try {
-        const queryRes = await safeFetchJson(`/api/query?server_id=${serverId}`, {});
-        const historyData = await safeFetchJson(`/api/history?server_id=${serverId}&limit=50`, []);
+        const [queryRes, historyData] = await Promise.all([
+            fetchWithTimeout(`/api/query?server_id=${serverId}`, {}, 3000),
+            fetchWithTimeout(`/api/history?server_id=${serverId}&limit=50`, [], 3000)
+        ]);
 
         const covInfo = (queryRes && queryRes.time_coverage) || {};
         const coverageBadge = `

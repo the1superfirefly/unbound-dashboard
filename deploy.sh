@@ -30,7 +30,7 @@ rsync -avz --delete --exclude 'database/*.db' --exclude '__pycache__' --exclude 
 scp -r ./app.py ./api.py ./collector.py ./database.py ./parser.py ./requirements.txt ./templates ./static ${TARGET_USER}@${TARGET_HOST}:${TARGET_DIR}/
 
 echo "Setting up Git repository & Authenticated Remote URL on target host..."
-ssh ${TARGET_USER}@${TARGET_HOST} "cd ${TARGET_DIR} && mkdir -p logs && git config --global --add safe.directory ${TARGET_DIR} && (git rev-parse --is-inside-work-tree >/dev/null 2>&1 || (git init && git remote add origin ${REPO_URL})) && git remote set-url origin ${REPO_URL} && git config user.name 'UAD Telemetry Bot' && git config user.email 'uad-bot@unbound-dashboard.local' && python3 -m venv venv && source venv/bin/activate && pip install -r requirements.txt && (fuser -k ${PORT}/tcp || true) && sleep 2 && nohup python3 app.py > logs/app.log 2>&1 &"
+ssh ${TARGET_USER}@${TARGET_HOST} "cd ${TARGET_DIR} && mkdir -p logs && git config --global --add safe.directory ${TARGET_DIR} && (git rev-parse --is-inside-work-tree >/dev/null 2>&1 || (git init && git remote add origin ${REPO_URL})) && git remote set-url origin ${REPO_URL} && git config user.name 'UAD Telemetry Bot' && git config user.email 'uad-bot@unbound-dashboard.local' && python3 -m venv venv && source venv/bin/activate && pip install -r requirements.txt && (fuser -k ${PORT}/tcp || true) && sleep 2 && (nohup ./venv/bin/gunicorn --workers 4 --threads 4 --bind 0.0.0.0:${PORT} app:app > logs/app.log 2>&1 &)"
 
 echo "Checking service response..."
 sleep 3
