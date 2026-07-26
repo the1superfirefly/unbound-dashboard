@@ -14,7 +14,7 @@ def _get_time_coverage_info(records):
     """
     if not records:
         return {
-            'coverage_label': 'Live 24h Window (Collecting data)',
+            'coverage_label': 'Live 6h Window (Collecting data)',
             'sample_count': 0,
             'start_time': None,
             'end_time': None
@@ -394,7 +394,7 @@ def get_latency_analytics():
     query = _get_48h_query_filter(server_id)
     records = query.order_by(MetricHistory.timestamp.asc()).all()
     
-    timestamps, delta_queries, delta_qps, avg_lat, p95_lat, nxdomains, servfails = _downsample_records_to_buckets(records, target_bucket_sec=10, pad_to_24h=True)
+    timestamps, delta_queries, delta_qps, avg_lat, p95_lat, nxdomains, servfails = _downsample_records_to_buckets(records, target_bucket_sec=10, pad_to_hours=6)
     
     return jsonify({
         'timestamps': timestamps,
@@ -409,7 +409,7 @@ def get_security_analytics():
     query = _get_48h_query_filter(server_id)
     records = query.order_by(MetricHistory.timestamp.asc()).all()
     
-    timestamps, delta_queries, delta_qps, avg_lat, p95_lat, nxdomains, servfails = _downsample_records_to_buckets(records, target_bucket_sec=10, pad_to_24h=True)
+    timestamps, delta_queries, delta_qps, avg_lat, p95_lat, nxdomains, servfails = _downsample_records_to_buckets(records, target_bucket_sec=10, pad_to_hours=6)
     
     return jsonify({
         'timestamps': timestamps,

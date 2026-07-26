@@ -120,7 +120,7 @@ def fetch_and_record_metrics(app):
                     alert_type="Server Offline",
                     severity="critical",
                     message=diag_msg,
-                    cooldown_minutes=10
+                    cooldown_minutes=60
                 )
                 db.session.commit()
                 continue
@@ -164,26 +164,26 @@ def fetch_and_record_metrics(app):
             )
             db.session.add(record)
 
-            # High Latency Warning threshold raised to 150.0 ms with 10-minute cooldown
-            if stats_data['avg_latency'] > 150.0:
+            # High Latency Warning threshold raised to 250.0 ms with 60-minute cooldown
+            if stats_data['avg_latency'] > 250.0:
                 add_alert_if_not_duplicate(
                     server_id=server_id,
                     server_name=server_name,
                     alert_type="High Latency",
                     severity="warning",
                     message=f"Average latency elevated: {round(stats_data['avg_latency'], 3)} ms",
-                    cooldown_minutes=10
+                    cooldown_minutes=60
                 )
 
-            # SERVFAIL Spike Critical threshold raised to > 20 with 10-minute cooldown
-            if stats_data['servfail_count'] > 20:
+            # SERVFAIL Spike Critical threshold raised to > 50 with 60-minute cooldown
+            if stats_data['servfail_count'] > 50:
                 add_alert_if_not_duplicate(
                     server_id=server_id,
                     server_name=server_name,
                     alert_type="SERVFAIL Spike",
                     severity="critical",
                     message=f"Detected SERVFAIL spike: {stats_data['servfail_count']} failures",
-                    cooldown_minutes=10
+                    cooldown_minutes=60
                 )
 
         db.session.commit()
