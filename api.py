@@ -199,12 +199,41 @@ def get_overview():
     dnssec_failures = sum(m.dnssec_failures for m in latest_per_server)
     active_clients = sum(m.active_clients for m in latest_per_server)
 
-    top_server = max(latest_per_server, key=lambda m: m.total_queries or 0) if latest_per_server else None
-    top_server_info = {
-        'id': top_server.server_id,
-        'name': top_server.server_name,
-        'queries': top_server.total_queries or 0
-    } if top_server else {'id': 'none', 'name': 'N/A', 'queries': 0}
+    # Calculate 1-hour query volume per server for Top Resolver (1h) badge
+    one_hour_ago = datetime.utcnow() - timedelta(hours=1)
+    records_1h = MetricHistory.query.filter(
+        MetricHistory.server_id.in_(active_ids),
+        MetricHistory.timestamp >= one_hour_ago
+    ).order_by(MetricHistory.timestamp.asc()).all()
+
+    server_1h_deltas = {}
+    for s_id in active_ids:
+        srv_recs = [r for r in records_1h if r.server_id == s_id]
+        if len(srv_recs) >= 2:
+            delta_q = max(0, (srv_recs[-1].total_queries or 0) - (srv_recs[0].total_queries or 0))
+        elif len(srv_recs) == 1:
+            delta_q = srv_recs[0].total_queries or 0
+        else:
+            delta_q = 0
+        server_1h_deltas[s_id] = delta_q
+
+    top_s_id = max(server_1h_deltas, key=server_1h_deltas.get) if server_1h_deltas else None
+    if top_s_id and server_1h_deltas[top_s_id] > 0:
+        srv_obj = db.session.get(ServerConfig, top_s_id)
+        top_server_info = {
+            'id': top_s_id,
+            'name': srv_obj.name if srv_obj else top_s_id,
+            'queries': server_1h_deltas[top_s_id]
+        }
+    elif latest_per_server:
+        top_server = max(latest_per_server, key=lambda m: m.total_queries or 0)
+        top_server_info = {
+            'id': top_server.server_id,
+            'name': top_server.server_name,
+            'queries': top_server.total_queries or 0
+        }
+    else:
+        top_server_info = {'id': 'none', 'name': 'N/A', 'queries': 0}
 
     return jsonify({
         'status': 'ok',
