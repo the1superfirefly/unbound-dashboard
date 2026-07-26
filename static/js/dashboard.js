@@ -76,6 +76,18 @@ function resetZoom(chartType) {
     if (chartType === 'security' && securityChartInstance) securityChartInstance.resetZoom();
 }
 
+async function safeFetchJson(url, fallbackValue = {}) {
+    try {
+        const res = await fetch(url);
+        if (!res.ok) return fallbackValue;
+        const data = await res.json();
+        return data || fallbackValue;
+    } catch (e) {
+        console.error('Fetch failed for:', url, e);
+        return fallbackValue;
+    }
+}
+
 async function showMetricDetails(metricType) {
     const serverId = getSelectedServerId();
     const modalEl = new bootstrap.Modal(document.getElementById('metricDetailModal'));
@@ -86,12 +98,10 @@ async function showMetricDetails(metricType) {
     modalEl.show();
 
     try {
-        const [queryRes, historyData] = await Promise.all([
-            fetch(`/api/query?server_id=${serverId}`).then(r => r.json()),
-            fetch(`/api/history?server_id=${serverId}&limit=50`).then(r => r.json())
-        ]);
+        const queryRes = await safeFetchJson(`/api/query?server_id=${serverId}`, {});
+        const historyData = await safeFetchJson(`/api/history?server_id=${serverId}&limit=50`, []);
 
-        const covInfo = queryRes.time_coverage || {};
+        const covInfo = (queryRes && queryRes.time_coverage) || {};
         const coverageBadge = `
             <div class="alert alert-dark border border-secondary border-opacity-25 d-flex align-items-center justify-content-between mb-3 py-2 px-3">
                 <span class="small text-secondary"><i class="bi bi-clock me-1 text-info"></i> <strong>Time Window Covered:</strong> ${covInfo.coverage_label || '24 Hours'}</span>
@@ -101,16 +111,16 @@ async function showMetricDetails(metricType) {
 
         if (metricType === 'queries') {
             titleEl.innerHTML = '<i class="bi bi-bar-chart-line me-2 text-primary"></i> Granular Query Analytics & Top Requested Sites';
-            renderQueryDetails(container, historyData, queryRes, coverageBadge);
+            renderQueryDetails(container, Array.isArray(historyData) ? historyData : [], queryRes, coverageBadge);
         } else if (metricType === 'cache') {
             titleEl.innerHTML = '<i class="bi bi-pie-chart me-2 text-info"></i> Granular Cache Efficiency & Top Cached Sites';
-            renderCacheDetails(container, historyData, queryRes, coverageBadge);
+            renderCacheDetails(container, Array.isArray(historyData) ? historyData : [], queryRes, coverageBadge);
         } else if (metricType === 'latency') {
             titleEl.innerHTML = '<i class="bi bi-clock-history me-2 text-warning"></i> Granular Latency Percentiles & Response Distribution';
-            renderLatencyDetails(container, historyData, coverageBadge);
+            renderLatencyDetails(container, Array.isArray(historyData) ? historyData : [], coverageBadge);
         } else if (metricType === 'security') {
             titleEl.innerHTML = '<i class="bi bi-shield-exclamation me-2 text-danger"></i> Security Incidents & Anomaly Breakdown';
-            renderSecurityDetails(container, historyData, coverageBadge);
+            renderSecurityDetails(container, Array.isArray(historyData) ? historyData : [], coverageBadge);
         }
     } catch (e) {
         container.innerHTML = `<div class="alert alert-danger mb-0">Failed to load metric details: ${e.message}</div>`;
