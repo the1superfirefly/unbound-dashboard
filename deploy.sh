@@ -23,6 +23,6 @@ rsync -avz --exclude 'database/*.db' --exclude '__pycache__' --exclude '.git' ./
 scp -r ./app.py ./api.py ./collector.py ./database.py ./parser.py ./requirements.txt ./templates ./static ${TARGET_USER}@${TARGET_HOST}:${TARGET_DIR}/
 
 echo "Setting up Python environment and running service on Port ${PORT}..."
-ssh ${TARGET_USER}@${TARGET_HOST} "cd ${TARGET_DIR} && python3 -m venv venv && source venv/bin/activate && pip install -r requirements.txt && nohup python3 app.py > logs/app.log 2>&1 &"
+ssh ${TARGET_USER}@${TARGET_HOST} "cd ${TARGET_DIR} && mkdir -p logs && python3 -m venv venv && source venv/bin/activate && pip install -r requirements.txt && nohup python3 app.py > logs/app.log 2>&1 &"
 
 echo "Deployment finished! Service accessible at http://${TARGET_HOST}:${PORT}"
