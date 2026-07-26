@@ -87,6 +87,16 @@ def clear_history():
     db.session.commit()
     return jsonify({'status': 'ok', 'message': 'Metric history and alerts cleared successfully.'})
 
+@api_bp.route('/clear-metrics', methods=['POST'])
+def clear_metrics():
+    server_id = request.args.get('server_id')
+    if server_id and server_id != 'all':
+        MetricHistory.query.filter_by(server_id=server_id).delete()
+    else:
+        MetricHistory.query.delete()
+    db.session.commit()
+    return jsonify({'status': 'ok', 'message': 'Metric history cleared successfully.'})
+
 @api_bp.route('/clear-alerts', methods=['POST'])
 def clear_alerts():
     server_id = request.args.get('server_id')

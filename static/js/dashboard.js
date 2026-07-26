@@ -623,26 +623,30 @@ async function deleteServer(id, name) {
     }
 }
 
-async function clearHistoryData() {
-    if (!confirm('Are you sure you want to clear all historical metrics and alert logs?')) return;
+async function clearMetricsOnly() {
+    const serverId = getSelectedServerId();
+    if (!confirm('Are you sure you want to clear historical metric data?')) return;
     try {
-        await fetch('/api/clear-history', { method: 'POST' });
+        await fetch(`/api/clear-metrics?server_id=${serverId}`, { method: 'POST' });
         fetchDashboardData(true);
-        fetchAlerts();
     } catch (e) {
-        console.error('Failed to clear history data:', e);
+        console.error('Failed to clear historical metrics:', e);
     }
 }
 
-async function clearAlerts() {
-    if (!confirm('Are you sure you want to clear recent alert logs?')) return;
+async function clearAlertsOnly() {
     const serverId = getSelectedServerId();
+    if (!confirm('Are you sure you want to clear alert logs?')) return;
     try {
         await fetch(`/api/clear-alerts?server_id=${serverId}`, { method: 'POST' });
         fetchAlerts();
     } catch (e) {
-        console.error('Failed to clear alerts:', e);
+        console.error('Failed to clear alert logs:', e);
     }
+}
+
+async function clearAlerts() {
+    await clearAlertsOnly();
 }
 
 async function saveServerBackend(server) {
