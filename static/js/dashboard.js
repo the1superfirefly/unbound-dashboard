@@ -49,8 +49,12 @@ document.addEventListener('DOMContentLoaded', () => {
 function formatClientLocalTime(isoStr) {
     if (!isoStr) return '';
     try {
-        const hasZ = isoStr.endsWith('Z');
-        const d = new Date(hasZ ? isoStr : isoStr + 'Z');
+        // Handle ISO string or plain string
+        let cleanStr = isoStr;
+        if (!cleanStr.endsWith('Z') && !cleanStr.includes('+')) {
+            cleanStr += 'Z';
+        }
+        const d = new Date(cleanStr);
         if (isNaN(d.getTime())) return isoStr;
         return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
     } catch (e) {
@@ -283,7 +287,15 @@ function initCharts() {
         maintainAspectRatio: false,
         plugins: { legend: { labels: { color: '#94a3b8' } } },
         scales: {
-            x: { ticks: { color: '#64748b' }, grid: { color: 'rgba(255,255,255,0.05)' } },
+            x: {
+                ticks: {
+                    color: '#64748b',
+                    maxTicksLimit: 8,
+                    maxRotation: 0,
+                    minRotation: 0
+                },
+                grid: { color: 'rgba(255,255,255,0.05)' }
+            },
             y: { ticks: { color: '#64748b' }, grid: { color: 'rgba(255,255,255,0.05)' } }
         }
     };
