@@ -1,0 +1,200 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<!-- Metric Cards Overview -->
+<div class="row g-3 mb-4">
+    <div class="col-xl-3 col-md-6">
+        <div class="card metric-card border-0 shadow-sm bg-gradient-card">
+            <div class="card-body">
+                <div class="d-flex align-items-center justify-content-between">
+                    <div>
+                        <div class="text-uppercase text-secondary fw-semibold small mb-1">Total Queries</div>
+                        <h2 class="fw-bold mb-0 text-white" id="statTotalQueries">0</h2>
+                        <span class="text-success small fw-medium"><i class="bi bi-graph-up-arrow me-1"></i><span id="statQPS">0</span> QPS</span>
+                    </div>
+                    <div class="metric-icon bg-primary bg-opacity-15 text-primary rounded-3 p-3">
+                        <i class="bi bi-activity fs-3"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-xl-3 col-md-6">
+        <div class="card metric-card border-0 shadow-sm bg-gradient-card">
+            <div class="card-body">
+                <div class="d-flex align-items-center justify-content-between">
+                    <div>
+                        <div class="text-uppercase text-secondary fw-semibold small mb-1">Cache Hit Rate</div>
+                        <h2 class="fw-bold mb-0 text-info" id="statCacheHitRate">0%</h2>
+                        <span class="text-secondary small fw-medium" id="statCacheRatio">Hits: 0 | Miss: 0</span>
+                    </div>
+                    <div class="metric-icon bg-info bg-opacity-15 text-info rounded-3 p-3">
+                        <i class="bi bi-cpu fs-3"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6">
+        <div class="card metric-card border-0 shadow-sm bg-gradient-card">
+            <div class="card-body">
+                <div class="d-flex align-items-center justify-content-between">
+                    <div>
+                        <div class="text-uppercase text-secondary fw-semibold small mb-1">Avg Latency</div>
+                        <h2 class="fw-bold mb-0 text-warning" id="statAvgLatency">0 ms</h2>
+                        <span class="text-secondary small fw-medium">P95: <span id="statP95">0</span> ms | P99: <span id="statP99">0</span> ms</span>
+                    </div>
+                    <div class="metric-icon bg-warning bg-opacity-15 text-warning rounded-3 p-3">
+                        <i class="bi bi-speedometer2 fs-3"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6">
+        <div class="card metric-card border-0 shadow-sm bg-gradient-card">
+            <div class="card-body">
+                <div class="d-flex align-items-center justify-content-between">
+                    <div>
+                        <div class="text-uppercase text-secondary fw-semibold small mb-1">Security Anomalies</div>
+                        <h2 class="fw-bold mb-0 text-danger" id="statSecurityAnomalies">0</h2>
+                        <span class="text-secondary small fw-medium"><span id="statNXDOMAIN">0</span> NXDOMAIN | <span id="statSERVFAIL">0</span> SERVFAIL</span>
+                    </div>
+                    <div class="metric-icon bg-danger bg-opacity-15 text-danger rounded-3 p-3">
+                        <i class="bi bi-shield-exclamation fs-3"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Charts Section -->
+<div class="row g-4 mb-4">
+    <!-- Query Volume Chart -->
+    <div class="col-lg-8">
+        <div class="card border-0 shadow-sm h-100 bg-card">
+            <div class="card-header bg-transparent border-0 d-flex align-items-center justify-content-between pt-3 px-3">
+                <h6 class="fw-bold text-light mb-0"><i class="bi bi-graph-up me-2 text-primary"></i> Query Performance & Volume</h6>
+                <span class="badge bg-secondary bg-opacity-25 text-secondary">Real-time (15s)</span>
+            </div>
+            <div class="card-body">
+                <div class="chart-container" style="position: relative; height: 280px;">
+                    <canvas id="queryChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cache Analytics Chart -->
+    <div class="col-lg-4">
+        <div class="card border-0 shadow-sm h-100 bg-card">
+            <div class="card-header bg-transparent border-0 d-flex align-items-center justify-content-between pt-3 px-3">
+                <h6 class="fw-bold text-light mb-0"><i class="bi bi-pie-chart me-2 text-info"></i> Cache Hit / Miss Breakdown</h6>
+            </div>
+            <div class="card-body d-flex align-items-center justify-content-center">
+                <div class="chart-container" style="position: relative; height: 250px; width: 100%;">
+                    <canvas id="cacheChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Latency & Protocol Rows -->
+<div class="row g-4 mb-4">
+    <!-- Latency Distribution -->
+    <div class="col-lg-6">
+        <div class="card border-0 shadow-sm h-100 bg-card">
+            <div class="card-header bg-transparent border-0 d-flex align-items-center justify-content-between pt-3 px-3">
+                <h6 class="fw-bold text-light mb-0"><i class="bi bi-clock-history me-2 text-warning"></i> Latency Distribution (ms)</h6>
+            </div>
+            <div class="card-body">
+                <div class="chart-container" style="position: relative; height: 250px;">
+                    <canvas id="latencyChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Protocol & Security Trends -->
+    <div class="col-lg-6">
+        <div class="card border-0 shadow-sm h-100 bg-card">
+            <div class="card-header bg-transparent border-0 d-flex align-items-center justify-content-between pt-3 px-3">
+                <h6 class="fw-bold text-light mb-0"><i class="bi bi-shield-lock me-2 text-danger"></i> Security & Anomaly Indicators</h6>
+            </div>
+            <div class="card-body">
+                <div class="chart-container" style="position: relative; height: 250px;">
+                    <canvas id="securityChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Live Alert & Event Logs Table -->
+<div class="row g-4">
+    <div class="col-12">
+        <div class="card border-0 shadow-sm bg-card">
+            <div class="card-header bg-transparent border-0 d-flex align-items-center justify-content-between pt-3 px-3">
+                <h6 class="fw-bold text-light mb-0"><i class="bi bi-bell-fill me-2 text-warning"></i> Recent System Alerts & Events</h6>
+                <button class="btn btn-sm btn-outline-secondary" onclick="fetchAlerts()"><i class="bi bi-arrow-clockwise"></i> Refresh</button>
+            </div>
+            <div class="card-body px-0 py-0">
+                <div class="table-responsive">
+                    <table class="table table-dark table-hover align-middle mb-0" id="alertsTable">
+                        <thead>
+                            <tr class="text-secondary small">
+                                <th class="ps-3">Timestamp</th>
+                                <th>Server</th>
+                                <th>Alert Type</th>
+                                <th>Severity</th>
+                                <th>Details</th>
+                            </tr>
+                        </thead>
+                        <tbody id="alertsTableBody">
+                            <tr><td colspan="5" class="text-center text-muted py-3">Loading alerts...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add Server Modal -->
+<div class="modal fade" id="addServerModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content bg-dark text-light border-secondary">
+            <div class="modal-header border-secondary border-opacity-50">
+                <h5 class="modal-title"><i class="bi bi-server me-2"></i> Manage Unbound Server</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="addServerForm">
+                    <div class="mb-3">
+                        <label class="form-label">Server Display Name</label>
+                        <input type="text" class="form-control bg-body-tertiary text-light border-secondary" id="serverName" placeholder="e.g. Unbound Resolver 1" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Server IP / Hostname</label>
+                        <input type="text" class="form-control bg-body-tertiary text-light border-secondary" id="serverHost" placeholder="e.g. 192.168.4.86" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Unbound-control Port</label>
+                        <input type="number" class="form-control bg-body-tertiary text-light border-secondary" id="serverPort" value="8953" required>
+                    </div>
+                    <div class="form-check form-switch mb-3">
+                        <input class="form-check-input" type="checkbox" id="serverMockMode" checked>
+                        <label class="form-check-label" for="serverMockMode">Use Simulation / Mock Telemetry if Unreachable</label>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Save Server Configuration</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
