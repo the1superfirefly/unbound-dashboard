@@ -2,7 +2,7 @@ import subprocess
 import logging
 import os
 import time
-from datetime import datetime
+from datetime import datetime, timedelta
 from database import db, MetricHistory, AlertLog, ServerConfig
 from parser import parse_unbound_stats
 from apscheduler.schedulers.background import BackgroundScheduler
@@ -24,10 +24,30 @@ def purge_orphan_metrics(app):
             MetricHistory.query.delete()
             db.session.commit()
 
+def add_alert_if_not_duplicate(server_id, server_name, alert_type, severity, message, cooldown_minutes=10):
+    """
+    Deduplicates alerts by enforcing a cooldown window (default 10 minutes) per alert_type.
+    """
+    cutoff = datetime.utcnow() - timedelta(minutes=cooldown_minutes)
+    recent = AlertLog.query.filter(
+        AlertLog.server_id == server_id,
+        AlertLog.alert_type == alert_type,
+        AlertLog.timestamp >= cutoff
+    ).first()
+    if not recent:
+        db.session.add(AlertLog(
+            server_id=server_id,
+            server_name=server_name,
+            alert_type=alert_type,
+            severity=severity,
+            message=message
+        ))
+
 def fetch_and_record_metrics(app):
     """
     Polls defined Unbound servers using unbound-control stats_noreset with correct @port syntax.
     Supports per-server SSL cert configs in certs/<host>/unbound.conf.
+    Enforces non-aggressive alert thresholds with 10-minute cooldown deduplication.
     """
     with app.app_context():
         servers = ServerConfig.query.filter_by(is_active=True).all()
@@ -94,14 +114,14 @@ def fetch_and_record_metrics(app):
                     diag_msg += " Ensure 'control-enable: yes' & 'control-interface: 0.0.0.0' are in /etc/unbound/unbound.conf on target host."
                 
                 logger.warning(diag_msg)
-                alert = AlertLog(
+                add_alert_if_not_duplicate(
                     server_id=server_id,
                     server_name=server_name,
                     alert_type="Server Offline",
                     severity="critical",
-                    message=diag_msg
+                    message=diag_msg,
+                    cooldown_minutes=10
                 )
-                db.session.add(alert)
                 db.session.commit()
                 continue
 
@@ -144,19 +164,27 @@ def fetch_and_record_metrics(app):
             )
             db.session.add(record)
 
-            if stats_data['avg_latency'] > 30.0:
-                db.session.add(AlertLog(
-                    server_id=server_id, server_name=server_name,
-                    alert_type="High Latency", severity="warning",
-                    message=f"Average latency elevated: {round(stats_data['avg_latency'], 3)} ms"
-                ))
+            # High Latency Warning threshold raised to 150.0 ms with 10-minute cooldown
+            if stats_data['avg_latency'] > 150.0:
+                add_alert_if_not_duplicate(
+                    server_id=server_id,
+                    server_name=server_name,
+                    alert_type="High Latency",
+                    severity="warning",
+                    message=f"Average latency elevated: {round(stats_data['avg_latency'], 3)} ms",
+                    cooldown_minutes=10
+                )
 
-            if stats_data['servfail_count'] > 5:
-                db.session.add(AlertLog(
-                    server_id=server_id, server_name=server_name,
-                    alert_type="SERVFAIL Spike", severity="critical",
-                    message=f"Detected SERVFAIL spike: {stats_data['servfail_count']} failures"
-                ))
+            # SERVFAIL Spike Critical threshold raised to > 20 with 10-minute cooldown
+            if stats_data['servfail_count'] > 20:
+                add_alert_if_not_duplicate(
+                    server_id=server_id,
+                    server_name=server_name,
+                    alert_type="SERVFAIL Spike",
+                    severity="critical",
+                    message=f"Detected SERVFAIL spike: {stats_data['servfail_count']} failures",
+                    cooldown_minutes=10
+                )
 
         db.session.commit()
 

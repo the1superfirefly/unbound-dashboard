@@ -1,11 +1,27 @@
 import os
 import logging
+import subprocess
 from flask import Flask, render_template, jsonify
 from database import init_db
 from api import api_bp
 from collector import init_scheduler, purge_orphan_metrics, fetch_and_record_metrics
 
 app = Flask(__name__)
+
+# Dynamically compute application version based on git commit count & short hash
+def get_app_version():
+    try:
+        count = subprocess.check_output(["git", "rev-list", "--count", "HEAD"], text=True).strip()
+        short_hash = subprocess.check_output(["git", "rev-parse", "--short", "HEAD"], text=True).strip()
+        return f"v2.{count}.0-{short_hash}"
+    except Exception:
+        return "v2.1.0"
+
+APP_VERSION = get_app_version()
+
+@app.context_processor
+def inject_version():
+    return dict(version=APP_VERSION)
 
 # Configure SQLite database path inside database/ directory
 db_dir = os.path.join(app.root_path, 'database')
@@ -49,9 +65,9 @@ def index():
 
 @app.route('/health')
 def health():
-    return jsonify({'status': 'healthy', 'service': 'Unbound Analytics Dashboard', 'port': 81})
+    return jsonify({'status': 'healthy', 'service': 'Unbound Analytics Dashboard', 'version': APP_VERSION, 'port': 81})
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 81))
-    app.logger.info(f"Starting Unbound Analytics Dashboard on 0.0.0.0:{port}")
+    app.logger.info(f"Starting Unbound Analytics Dashboard {APP_VERSION} on 0.0.0.0:{port}")
     app.run(host='0.0.0.0', port=port, debug=False)
