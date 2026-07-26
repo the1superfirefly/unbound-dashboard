@@ -1,7 +1,7 @@
 __pycache__/
 *.pyc
 database/*.db
-logs/*.log
-!logs/server_telemetry.log
+logs/
+*.log
 venv/
 .DS_Store

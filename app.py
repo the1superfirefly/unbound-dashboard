@@ -34,20 +34,20 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 init_db(app)
 
 # Configure detailed file logging to logs/server_telemetry.log
-log_dir = os.path.join(app.root_path, 'logs')
-os.makedirs(log_dir, exist_ok=True)
-log_file = os.path.join(log_dir, 'server_telemetry.log')
-
-file_handler = logging.FileHandler(log_file)
-file_handler.setLevel(logging.INFO)
-file_handler.setFormatter(logging.Formatter('[%(asctime)s] %(levelname)s in %(module)s: %(message)s'))
-
-app.logger.setLevel(logging.INFO)
-app.logger.addHandler(file_handler)
-
-root_logger = logging.getLogger()
-root_logger.setLevel(logging.INFO)
-root_logger.addHandler(file_handler)
+# log_dir = os.path.join(app.root_path, 'logs')
+# os.makedirs(log_dir, exist_ok=True)
+# log_file = os.path.join(log_dir, 'server_telemetry.log')
+# 
+# file_handler = logging.FileHandler(log_file)
+# file_handler.setLevel(logging.INFO)
+# file_handler.setFormatter(logging.Formatter('[%(asctime)s] %(levelname)s in %(module)s: %(message)s'))
+# 
+# app.logger.setLevel(logging.INFO)
+# app.logger.addHandler(file_handler)
+# 
+# root_logger = logging.getLogger()
+# root_logger.setLevel(logging.INFO)
+# root_logger.addHandler(file_handler)
 
 # Register API routes
 app.register_blueprint(api_bp)

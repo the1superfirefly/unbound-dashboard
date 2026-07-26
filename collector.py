@@ -113,7 +113,7 @@ def fetch_and_record_metrics(app):
                 elif "Connection refused" in last_error:
                     diag_msg += " Ensure 'control-enable: yes' & 'control-interface: 0.0.0.0' are in /etc/unbound/unbound.conf on target host."
                 
-                logger.warning(diag_msg)
+                # logger.warning(diag_msg)
                 add_alert_if_not_duplicate(
                     server_id=server_id,
                     server_name=server_name,
@@ -125,13 +125,13 @@ def fetch_and_record_metrics(app):
                 db.session.commit()
                 continue
 
-            logger.info(
-                f"[METRIC TELEMETRY] Server '{server_name}' ({host}@{port}) -> "
-                f"Total Queries: {stats_data['total_queries']} | QPS: {stats_data['qps']} | "
-                f"Hits: {stats_data['cache_hits']} | Misses: {stats_data['cache_misses']} | "
-                f"Hit Rate: {stats_data['cache_hit_rate']}% | Avg Latency: {stats_data['avg_latency']}ms | "
-                f"SERVFAIL: {stats_data['servfail_count']} | NXDOMAIN: {stats_data['nxdomain_count']}"
-            )
+            # logger.info(
+            #     f"[METRIC TELEMETRY] Server '{server_name}' ({host}@{port}) -> "
+            #     f"Total Queries: {stats_data['total_queries']} | QPS: {stats_data['qps']} | "
+            #     f"Hits: {stats_data['cache_hits']} | Misses: {stats_data['cache_misses']} | "
+            #     f"Hit Rate: {stats_data['cache_hit_rate']}% | Avg Latency: {stats_data['avg_latency']}ms | "
+            #     f"SERVFAIL: {stats_data['servfail_count']} | NXDOMAIN: {stats_data['nxdomain_count']}"
+            # )
 
             record = MetricHistory(
                 server_id=server_id,
@@ -236,16 +236,16 @@ def init_scheduler(app):
         replace_existing=True
     )
 
-    # 30-second log sync cycle to GitHub
-    scheduler.add_job(
-        func=sync_logs_to_github,
-        trigger='interval',
-        seconds=30,
-        args=[app],
-        id='log_sync_job',
-        replace_existing=True
-    )
+    # 30-second log sync cycle to GitHub (Commented out per user directive)
+    # scheduler.add_job(
+    #     func=sync_logs_to_github,
+    #     trigger='interval',
+    #     seconds=30,
+    #     args=[app],
+    #     id='log_sync_job',
+    #     replace_existing=True
+    # )
     
     scheduler.start()
-    logger.info("APScheduler initialized: 1s polling cycle & 30s log sync actively running.")
+    # logger.info("APScheduler initialized: 1s polling cycle active.")
     return scheduler
