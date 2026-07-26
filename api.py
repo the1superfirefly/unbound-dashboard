@@ -234,35 +234,34 @@ def _get_48h_query_filter(server_id):
         query = query.filter_by(server_id=server_id)
     return query
 
-def _downsample_records_to_buckets(records, target_bucket_sec=10, pad_to_24h=True):
+def _downsample_records_to_buckets(records, target_bucket_sec=10, pad_to_hours=6):
     """
     Downsamples dense 1-second records into target_bucket_sec (default 10s) buckets.
-    Pads timeline back to 24 hours ago with 0 values if historical data is short.
+    Pads timeline back to 6 hours ago with 0 values if historical data is short.
     Returns: (timestamps, delta_queries, delta_qps, avg_latencies, p95_latencies, nxdomains, servfails)
     """
     now = datetime.utcnow()
-    start_24h = now - timedelta(hours=24)
+    start_pad = now - timedelta(hours=pad_to_hours)
 
     if not records:
-        # Generate empty 24-hour timeline every 1 hour
         ts_list = []
-        curr = start_24h
+        curr = start_pad
         while curr <= now:
             ts_list.append(curr.strftime('%Y-%m-%dT%H:%M:%SZ'))
-            curr += timedelta(minutes=30)
+            curr += timedelta(minutes=15)
         return ts_list, [0]*len(ts_list), [0.0]*len(ts_list), [0.0]*len(ts_list), [0.0]*len(ts_list), [0]*len(ts_list), [0]*len(ts_list)
 
     # Sort records chronologically
     records = sorted(records, key=lambda r: r.timestamp)
     first_ts = records[0].timestamp
 
-    # If first record is within past 24h and padding requested, prepend initial padded points
+    # If first record is within past 6h and padding requested, prepend initial padded points
     prepended_ts = []
-    if pad_to_24h and first_ts > start_24h + timedelta(minutes=5):
-        curr = start_24h
-        while curr < first_ts - timedelta(minutes=5):
+    if pad_to_hours and first_ts > start_pad + timedelta(minutes=2):
+        curr = start_pad
+        while curr < first_ts - timedelta(minutes=2):
             prepended_ts.append(curr.strftime('%Y-%m-%dT%H:%M:%SZ'))
-            curr += timedelta(hours=1)
+            curr += timedelta(minutes=15)
 
     # Bucket actual records by 10s intervals
     buckets = []

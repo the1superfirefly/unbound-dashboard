@@ -753,6 +753,9 @@ function createIndependentChartConfig(extraOptions = {}) {
                 pan: {
                     enabled: true,
                     mode: 'x'
+                },
+                limits: {
+                    x: { minRange: 6 }
                 }
             }
         },

@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
-<!-- Top Metrics Row (3 Equal Wide Clickable Tiles across 100% width) -->
+<!-- Top Metrics Row (3 Equal Wide Clickable Tiles across 100% width with 6h Window) -->
 <div class="row g-3 mb-4">
     <!-- Total Queries Tile -->
     <div class="col-lg-4 col-md-6">
@@ -10,7 +10,7 @@
                 <div>
                     <div class="d-flex align-items-center justify-content-between mb-1">
                         <span class="text-secondary small fw-semibold text-uppercase tracking-wider">Total Queries</span>
-                        <span class="badge bg-primary bg-opacity-25 text-primary ms-2" style="font-size: 0.65rem;"><i class="bi bi-clock me-1"></i>24h Window</span>
+                        <span class="badge bg-primary bg-opacity-25 text-primary ms-2" style="font-size: 0.65rem;"><i class="bi bi-clock me-1"></i>6h Window</span>
                     </div>
                     <h3 class="fw-bold mb-0 text-light mt-1" id="statTotalQueries">0</h3>
                     <small class="text-muted fs-7"><i class="bi bi-speedometer2 me-1"></i> Peak QPS: <span id="statQPS">0</span></small>
@@ -29,7 +29,7 @@
                 <div>
                     <div class="d-flex align-items-center justify-content-between mb-1">
                         <span class="text-secondary small fw-semibold text-uppercase tracking-wider">Cache Hit Rate</span>
-                        <span class="badge bg-info bg-opacity-25 text-info ms-2" style="font-size: 0.65rem;"><i class="bi bi-clock me-1"></i>24h Window</span>
+                        <span class="badge bg-info bg-opacity-25 text-info ms-2" style="font-size: 0.65rem;"><i class="bi bi-clock me-1"></i>6h Window</span>
                     </div>
                     <h3 class="fw-bold mb-0 text-light mt-1" id="statCacheHitRate">0%</h3>
                     <small class="text-muted fs-7" id="statCacheRatio">Hits: 0 | Miss: 0</small>
@@ -48,7 +48,7 @@
                 <div>
                     <div class="d-flex align-items-center justify-content-between mb-1">
                         <span class="text-secondary small fw-semibold text-uppercase tracking-wider">Average Latency</span>
-                        <span class="badge bg-warning bg-opacity-25 text-warning ms-2" style="font-size: 0.65rem;"><i class="bi bi-clock me-1"></i>24h Window</span>
+                        <span class="badge bg-warning bg-opacity-25 text-warning ms-2" style="font-size: 0.65rem;"><i class="bi bi-clock me-1"></i>6h Window</span>
                     </div>
                     <h3 class="fw-bold mb-0 text-light mt-1" id="statAvgLatency">0.000 ms</h3>
                     <small class="text-muted fs-7">P95: <span id="statP95">0.000</span> ms | P99: <span id="statP99">0.000</span> ms</small>
@@ -69,7 +69,7 @@
             <div class="card-header bg-transparent border-0 d-flex align-items-center justify-content-between pt-3 px-3">
                 <h6 class="fw-bold text-light mb-0"><i class="bi bi-graph-up me-2 text-primary"></i> Query Performance & Volume</h6>
                 <div class="d-flex align-items-center gap-2">
-                    <span class="badge bg-secondary bg-opacity-25 text-secondary">Default 24h view (Zoom out to 48h / in to min)</span>
+                    <span class="badge bg-secondary bg-opacity-25 text-secondary">Default 6h view (Zoom out to 48h / in to 1 min)</span>
                     <button class="btn btn-xs btn-outline-secondary py-1 px-2" onclick="resetZoom('query')" title="Reset Zoom"><i class="bi bi-zoom-out"></i> Reset Zoom</button>
                 </div>
             </div>
@@ -104,7 +104,7 @@
             <div class="card-header bg-transparent border-0 d-flex align-items-center justify-content-between pt-3 px-3">
                 <h6 class="fw-bold text-light mb-0"><i class="bi bi-clock-history me-2 text-warning"></i> Response Latency Distribution (ms)</h6>
                 <div class="d-flex align-items-center gap-2">
-                    <span class="badge bg-secondary bg-opacity-25 text-secondary">Default 24h view (Zoom out to 48h / in to min)</span>
+                    <span class="badge bg-secondary bg-opacity-25 text-secondary">Default 6h view (Zoom out to 48h / in to 1 min)</span>
                     <button class="btn btn-xs btn-outline-secondary py-1 px-2" onclick="resetZoom('latency')" title="Reset Zoom"><i class="bi bi-zoom-out"></i> Reset Zoom</button>
                 </div>
             </div>
