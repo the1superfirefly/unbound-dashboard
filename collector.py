@@ -134,7 +134,12 @@ def fetch_and_record_metrics(app):
                 excessive_txt_queries=stats_data['excessive_txt_queries'],
                 ipv4_queries=stats_data['ipv4_queries'],
                 ipv6_queries=stats_data['ipv6_queries'],
-                active_clients=stats_data['active_clients']
+                active_clients=stats_data['active_clients'],
+                qtype_a=stats_data.get('qtype_a', 0),
+                qtype_aaaa=stats_data.get('qtype_aaaa', 0),
+                qtype_txt=stats_data.get('qtype_txt', 0),
+                qtype_https=stats_data.get('qtype_https', 0),
+                qtype_other=stats_data.get('qtype_other', 0)
             )
             db.session.add(record)
 
