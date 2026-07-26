@@ -712,13 +712,21 @@ async function fetchDashboardData(isInitial = false) {
         ]);
 
         if (overviewRes.latest) {
-            document.getElementById('statTotalQueries').textContent = (overviewRes.latest.total_queries || 0).toLocaleString();
-            document.getElementById('statQPS').textContent = (overviewRes.latest.qps || 0).toFixed(3);
-            document.getElementById('statCacheHitRate').textContent = `${overviewRes.latest.cache_hit_rate || 0}%`;
-            document.getElementById('statCacheRatio').textContent = `Hits: ${(overviewRes.latest.cache_hits || 0).toLocaleString()} | Miss: ${(overviewRes.latest.cache_misses || 0).toLocaleString()}`;
-            document.getElementById('statAvgLatency').textContent = `${(overviewRes.latest.avg_latency || 0).toFixed(3)} ms`;
-            document.getElementById('statP95').textContent = (overviewRes.latest.p95_latency || 0).toFixed(3);
-            document.getElementById('statP99').textContent = (overviewRes.latest.p99_latency || 0).toFixed(3);
+            const elTotal = document.getElementById('statTotalQueries');
+            const elQps = document.getElementById('statQPS');
+            const elCacheRate = document.getElementById('statCacheHitRate');
+            const elCacheRatio = document.getElementById('statCacheRatio');
+            const elAvgLat = document.getElementById('statAvgLatency');
+            const elP95 = document.getElementById('statP95');
+            const elP99 = document.getElementById('statP99');
+
+            if (elTotal) elTotal.textContent = (overviewRes.latest.total_queries || 0).toLocaleString();
+            if (elQps) elQps.textContent = (overviewRes.latest.qps || 0).toFixed(3);
+            if (elCacheRate) elCacheRate.textContent = `${overviewRes.latest.cache_hit_rate || 0}%`;
+            if (elCacheRatio) elCacheRatio.textContent = `Hits: ${(overviewRes.latest.cache_hits || 0).toLocaleString()} | Miss: ${(overviewRes.latest.cache_misses || 0).toLocaleString()}`;
+            if (elAvgLat) elAvgLat.textContent = `${(overviewRes.latest.avg_latency || 0).toFixed(3)} ms`;
+            if (elP95) elP95.textContent = (overviewRes.latest.p95_latency || 0).toFixed(3);
+            if (elP99) elP99.textContent = (overviewRes.latest.p99_latency || 0).toFixed(3);
         }
 
         if (overviewRes.top_used_server) {
