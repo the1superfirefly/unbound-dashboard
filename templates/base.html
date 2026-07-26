@@ -3,76 +3,63 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Unbound Analytics Dashboard (UAD)</title>
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <title>Unbound Analytics Dashboard</title>
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Bootstrap Icons -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <!-- Custom CSS -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <!-- Chart.js Zoom Plugin -->
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@2.0.1/dist/chartjs-plugin-zoom.min.js"></script>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/static/css/style.css">
 </head>
 <body class="bg-body-tertiary">
-    <!-- Top Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark-glass sticky-top border-bottom border-secondary border-opacity-25 px-3">
-        <div class="container-fluid">
-            <a class="navbar-brand d-flex align-items-center gap-2 fw-bold" href="#">
-                <span class="brand-icon bg-primary bg-gradient text-white rounded p-1 d-inline-flex align-items-center justify-content-center">
-                    <i class="bi bi-dns-fill fs-5"></i>
-                </span>
-                <span>Unbound <span class="text-primary fs-6 fw-normal">Analytics</span></span>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg border-bottom border-secondary border-opacity-25 bg-dark sticky-top">
+        <div class="container-fluid px-4">
+            <a class="navbar-brand d-flex align-items-center gap-2 fw-bold text-light" href="#">
+                <i class="bi bi-shield-check text-primary fs-4"></i>
+                <span>Unbound Analytics</span>
+                <span class="badge bg-primary-subtle text-primary border border-primary-subtle rounded-pill fs-7 ms-1">v2.0</span>
             </a>
             
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            
-            <div class="collapse navbar-collapse" id="navbarContent">
+            <div class="d-flex align-items-center gap-3 ms-auto">
                 <!-- Server Selector -->
-                <div class="d-flex align-items-center gap-2 ms-auto me-3 my-2 my-lg-0">
-                    <label class="text-secondary small me-1"><i class="bi bi-server"></i> Server:</label>
-                    <select id="serverSelect" class="form-select form-select-sm bg-dark text-light border-secondary border-opacity-50" style="min-width: 180px;">
+                <div class="input-group input-group-sm">
+                    <span class="input-group-text bg-body-tertiary border-secondary text-secondary">
+                        <i class="bi bi-server"></i>
+                    </span>
+                    <select class="form-select bg-body-tertiary border-secondary text-light shadow-none" id="serverSelect">
                         <option value="all">All Servers (Aggregated)</option>
                     </select>
-                    <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#addServerModal" title="Manage / Add Server">
-                        <i class="bi bi-plus-lg"></i>
-                    </button>
                 </div>
 
-                <!-- Action Controls -->
-                <div class="d-flex align-items-center gap-2">
-                    <div class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 py-2 px-3 me-2 d-flex align-items-center gap-1">
-                        <span class="status-pulse bg-success"></span>
-                        <span class="small fw-semibold">Port 81 Live</span>
-                    </div>
-                    
-                    <div class="dropdown">
-                        <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
-                            <i class="bi bi-gear me-1"></i> Actions
-                        </button>
-                        <ul class="dropdown-menu dropdown-menu-end shadow">
-                            <li><a class="dropdown-menu-item dropdown-item" href="/api/export/csv"><i class="bi bi-filetype-csv me-2"></i> Export to CSV</a></li>
-                            <li><a class="dropdown-menu-item dropdown-item" href="/api/export/json"><i class="bi bi-filetype-json me-2"></i> Export to JSON</a></li>
-                            <li><hr class="dropdown-divider border-secondary border-opacity-25"></li>
-                            <li><a class="dropdown-menu-item dropdown-item text-danger" href="#" onclick="clearHistoryData()"><i class="bi bi-trash me-2"></i> Clear History Data</a></li>
-                        </ul>
-                    </div>
-                    
-                    <button class="btn btn-sm btn-outline-secondary" id="themeToggleBtn" title="Toggle Light/Dark Theme">
-                        <i class="bi bi-moon-stars-fill" id="themeIcon"></i>
+                <!-- Theme Toggle Button -->
+                <button class="btn btn-sm btn-outline-secondary" id="themeToggleBtn" title="Toggle Light/Dark Theme">
+                    <i class="bi bi-moon-stars-fill" id="themeIcon"></i>
+                </button>
+
+                <!-- Actions Dropdown -->
+                <div class="dropdown">
+                    <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                        <i class="bi bi-gear-fill me-1"></i> Actions
                     </button>
+                    <ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark shadow">
+                        <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#addServerModal"><i class="bi bi-server me-2"></i>Manage Servers</a></li>
+                        <li><a class="dropdown-item" href="/api/export/csv" target="_blank"><i class="bi bi-file-earmark-spreadsheet me-2"></i>Export CSV Data</a></li>
+                        <li><a class="dropdown-item" href="/api/export/json" target="_blank"><i class="bi bi-file-earmark-code me-2"></i>Export JSON Data</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item text-danger" href="#" onclick="clearHistoryData()"><i class="bi bi-trash me-2"></i>Clear Historical Data</a></li>
+                    </ul>
                 </div>
             </div>
         </div>
     </nav>
 
-    <!-- Main Content Container -->
-    <main class="container-fluid py-4 px-4">
+    <!-- Main Content Area -->
+    <main class="container-fluid px-4 py-4">
         {% block content %}{% endblock %}
     </main>
 
@@ -86,6 +73,6 @@
     <!-- Bootstrap 5 JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <!-- Custom JS -->
-    <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+    <script src="/static/js/dashboard.js"></script>
 </body>
 </html>

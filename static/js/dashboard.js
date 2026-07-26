@@ -49,7 +49,6 @@ document.addEventListener('DOMContentLoaded', () => {
 function formatClientLocalTime(isoStr) {
     if (!isoStr) return '';
     try {
-        // Handle ISO string or plain string
         let cleanStr = isoStr;
         if (!cleanStr.endsWith('Z') && !cleanStr.includes('+')) {
             cleanStr += 'Z';
@@ -60,6 +59,325 @@ function formatClientLocalTime(isoStr) {
     } catch (e) {
         return isoStr;
     }
+}
+
+function resetZoom(chartType) {
+    if (chartType === 'query' && queryChartInstance) queryChartInstance.resetZoom();
+    if (chartType === 'latency' && latencyChartInstance) latencyChartInstance.resetZoom();
+    if (chartType === 'security' && securityChartInstance) securityChartInstance.resetZoom();
+}
+
+async function showMetricDetails(metricType) {
+    const serverId = getSelectedServerId();
+    const modalEl = new bootstrap.Modal(document.getElementById('metricDetailModal'));
+    const titleEl = document.getElementById('metricDetailModalTitle');
+    const container = document.getElementById('metricDetailContent');
+
+    container.innerHTML = '<div class="text-center py-4 text-muted"><div class="spinner-border spinner-border-sm me-2"></div> Loading granular details...</div>';
+    modalEl.show();
+
+    try {
+        const historyData = await fetch(`/api/history?server_id=${serverId}&limit=30`).then(r => r.json());
+
+        if (metricType === 'queries') {
+            titleEl.innerHTML = '<i class="bi bi-bar-chart-line me-2 text-primary"></i> Granular Query Analytics & History';
+            renderQueryDetails(container, historyData);
+        } else if (metricType === 'cache') {
+            titleEl.innerHTML = '<i class="bi bi-pie-chart me-2 text-info"></i> Granular Cache Efficiency Breakdown';
+            renderCacheDetails(container, historyData);
+        } else if (metricType === 'latency') {
+            titleEl.innerHTML = '<i class="bi bi-clock-history me-2 text-warning"></i> Granular Latency Percentiles & Response Distribution';
+            renderLatencyDetails(container, historyData);
+        } else if (metricType === 'security') {
+            titleEl.innerHTML = '<i class="bi bi-shield-exclamation me-2 text-danger"></i> Security Incidents & Anomaly Breakdown';
+            renderSecurityDetails(container, historyData);
+        }
+    } catch (e) {
+        container.innerHTML = `<div class="alert alert-danger mb-0">Failed to load metric details: ${e.message}</div>`;
+    }
+}
+
+function renderQueryDetails(container, history) {
+    if (!history || history.length === 0) {
+        container.innerHTML = '<div class="text-center text-muted py-3">No query metric history recorded yet.</div>';
+        return;
+    }
+
+    let rows = '';
+    history.forEach(h => {
+        const timeStr = formatClientLocalTime(h.timestamp);
+        rows += `
+            <tr>
+                <td class="ps-3 font-monospace small text-secondary">${timeStr}</td>
+                <td><span class="badge bg-secondary bg-opacity-25">${h.server_name}</span></td>
+                <td class="fw-bold text-light">${h.total_queries.toLocaleString()}</td>
+                <td class="text-info">${h.qps}</td>
+                <td class="text-secondary">${h.ipv4_queries}</td>
+                <td class="text-secondary">${h.ipv6_queries}</td>
+                <td class="text-muted">${h.active_clients}</td>
+            </tr>
+        `;
+    });
+
+    container.innerHTML = `
+        <div class="row g-3 mb-3">
+            <div class="col-md-3">
+                <div class="p-3 rounded bg-body-tertiary border border-secondary border-opacity-25">
+                    <small class="text-secondary">Latest Total Queries</small>
+                    <h4 class="fw-bold text-light mb-0 mt-1">${(history[0].total_queries || 0).toLocaleString()}</h4>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="p-3 rounded bg-body-tertiary border border-secondary border-opacity-25">
+                    <small class="text-secondary">Current QPS</small>
+                    <h4 class="fw-bold text-primary mb-0 mt-1">${history[0].qps || 0}</h4>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="p-3 rounded bg-body-tertiary border border-secondary border-opacity-25">
+                    <small class="text-secondary">IPv4 Queries</small>
+                    <h4 class="fw-bold text-info mb-0 mt-1">${history[0].ipv4_queries || 0}</h4>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="p-3 rounded bg-body-tertiary border border-secondary border-opacity-25">
+                    <small class="text-secondary">IPv6 Queries</small>
+                    <h4 class="fw-bold text-warning mb-0 mt-1">${history[0].ipv6_queries || 0}</h4>
+                </div>
+            </div>
+        </div>
+
+        <h6 class="fw-bold text-light mt-4 mb-2"><i class="bi bi-list-columns me-1"></i> Historical Query Snapshots</h6>
+        <div class="table-responsive border border-secondary border-opacity-25 rounded" style="max-height: 350px;">
+            <table class="table table-dark table-hover align-middle mb-0">
+                <thead>
+                    <tr class="text-secondary small">
+                        <th class="ps-3">Timestamp</th>
+                        <th>Server</th>
+                        <th>Cumulative Queries</th>
+                        <th>QPS</th>
+                        <th>IPv4</th>
+                        <th>IPv6</th>
+                        <th>Active Clients</th>
+                    </tr>
+                </thead>
+                <tbody>${rows}</tbody>
+            </table>
+        </div>
+    `;
+}
+
+function renderCacheDetails(container, history) {
+    if (!history || history.length === 0) {
+        container.innerHTML = '<div class="text-center text-muted py-3">No cache metric history recorded yet.</div>';
+        return;
+    }
+
+    const latest = history[0];
+    let rows = '';
+    history.forEach(h => {
+        const timeStr = formatClientLocalTime(h.timestamp);
+        rows += `
+            <tr>
+                <td class="ps-3 font-monospace small text-secondary">${timeStr}</td>
+                <td><span class="badge bg-secondary bg-opacity-25">${h.server_name}</span></td>
+                <td class="text-success">${h.cache_hits.toLocaleString()}</td>
+                <td class="text-danger">${h.cache_misses.toLocaleString()}</td>
+                <td class="fw-bold text-info">${h.cache_hit_rate}%</td>
+                <td class="text-secondary">${h.prefetch_hits}</td>
+                <td class="text-muted">${h.rrset_cache_num}</td>
+                <td class="text-muted">${h.msg_cache_num}</td>
+            </tr>
+        `;
+    });
+
+    container.innerHTML = `
+        <div class="row g-3 mb-3">
+            <div class="col-md-3">
+                <div class="p-3 rounded bg-body-tertiary border border-secondary border-opacity-25">
+                    <small class="text-secondary">Hit Rate</small>
+                    <h4 class="fw-bold text-info mb-0 mt-1">${latest.cache_hit_rate}%</h4>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="p-3 rounded bg-body-tertiary border border-secondary border-opacity-25">
+                    <small class="text-secondary">Total Hits</small>
+                    <h4 class="fw-bold text-success mb-0 mt-1">${latest.cache_hits.toLocaleString()}</h4>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="p-3 rounded bg-body-tertiary border border-secondary border-opacity-25">
+                    <small class="text-secondary">Total Misses</small>
+                    <h4 class="fw-bold text-danger mb-0 mt-1">${latest.cache_misses.toLocaleString()}</h4>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="p-3 rounded bg-body-tertiary border border-secondary border-opacity-25">
+                    <small class="text-secondary">Prefetch Hits</small>
+                    <h4 class="fw-bold text-warning mb-0 mt-1">${latest.prefetch_hits}</h4>
+                </div>
+            </div>
+        </div>
+
+        <h6 class="fw-bold text-light mt-4 mb-2"><i class="bi bi-list-columns me-1"></i> Historical Cache Performance</h6>
+        <div class="table-responsive border border-secondary border-opacity-25 rounded" style="max-height: 350px;">
+            <table class="table table-dark table-hover align-middle mb-0">
+                <thead>
+                    <tr class="text-secondary small">
+                        <th class="ps-3">Timestamp</th>
+                        <th>Server</th>
+                        <th>Hits</th>
+                        <th>Misses</th>
+                        <th>Hit Rate %</th>
+                        <th>Prefetch</th>
+                        <th>RRSet Cache</th>
+                        <th>Message Cache</th>
+                    </tr>
+                </thead>
+                <tbody>${rows}</tbody>
+            </table>
+        </div>
+    `;
+}
+
+function renderLatencyDetails(container, history) {
+    if (!history || history.length === 0) {
+        container.innerHTML = '<div class="text-center text-muted py-3">No latency metric history recorded yet.</div>';
+        return;
+    }
+
+    const latest = history[0];
+    let rows = '';
+    history.forEach(h => {
+        const timeStr = formatClientLocalTime(h.timestamp);
+        rows += `
+            <tr>
+                <td class="ps-3 font-monospace small text-secondary">${timeStr}</td>
+                <td><span class="badge bg-secondary bg-opacity-25">${h.server_name}</span></td>
+                <td class="fw-bold text-warning">${h.avg_latency} ms</td>
+                <td class="text-info">${h.median_latency} ms</td>
+                <td class="text-secondary">${h.p90_latency} ms</td>
+                <td class="text-danger">${h.p95_latency} ms</td>
+                <td class="text-danger">${h.p99_latency} ms</td>
+            </tr>
+        `;
+    });
+
+    container.innerHTML = `
+        <div class="row g-3 mb-3">
+            <div class="col-md-2.4">
+                <div class="p-3 rounded bg-body-tertiary border border-secondary border-opacity-25">
+                    <small class="text-secondary">Avg Latency</small>
+                    <h4 class="fw-bold text-warning mb-0 mt-1">${latest.avg_latency} ms</h4>
+                </div>
+            </div>
+            <div class="col-md-2.4">
+                <div class="p-3 rounded bg-body-tertiary border border-secondary border-opacity-25">
+                    <small class="text-secondary">P50 (Median)</small>
+                    <h4 class="fw-bold text-info mb-0 mt-1">${latest.median_latency} ms</h4>
+                </div>
+            </div>
+            <div class="col-md-2.4">
+                <div class="p-3 rounded bg-body-tertiary border border-secondary border-opacity-25">
+                    <small class="text-secondary">P95 Latency</small>
+                    <h4 class="fw-bold text-danger mb-0 mt-1">${latest.p95_latency} ms</h4>
+                </div>
+            </div>
+            <div class="col-md-2.4">
+                <div class="p-3 rounded bg-body-tertiary border border-secondary border-opacity-25">
+                    <small class="text-secondary">P99 Latency</small>
+                    <h4 class="fw-bold text-danger mb-0 mt-1">${latest.p99_latency} ms</h4>
+                </div>
+            </div>
+        </div>
+
+        <h6 class="fw-bold text-light mt-4 mb-2"><i class="bi bi-list-columns me-1"></i> Latency Percentile Distribution History</h6>
+        <div class="table-responsive border border-secondary border-opacity-25 rounded" style="max-height: 350px;">
+            <table class="table table-dark table-hover align-middle mb-0">
+                <thead>
+                    <tr class="text-secondary small">
+                        <th class="ps-3">Timestamp</th>
+                        <th>Server</th>
+                        <th>Avg (ms)</th>
+                        <th>P50 Median (ms)</th>
+                        <th>P90 (ms)</th>
+                        <th>P95 (ms)</th>
+                        <th>P99 (ms)</th>
+                    </tr>
+                </thead>
+                <tbody>${rows}</tbody>
+            </table>
+        </div>
+    `;
+}
+
+function renderSecurityDetails(container, history) {
+    if (!history || history.length === 0) {
+        container.innerHTML = '<div class="text-center text-muted py-3">No security incident history recorded yet.</div>';
+        return;
+    }
+
+    const latest = history[0];
+    let rows = '';
+    history.forEach(h => {
+        const timeStr = formatClientLocalTime(h.timestamp);
+        rows += `
+            <tr>
+                <td class="ps-3 font-monospace small text-secondary">${timeStr}</td>
+                <td><span class="badge bg-secondary bg-opacity-25">${h.server_name}</span></td>
+                <td class="text-danger fw-semibold">${h.nxdomain_count}</td>
+                <td class="text-purple fw-semibold">${h.servfail_count}</td>
+                <td class="text-warning">${h.dnssec_failures}</td>
+                <td class="text-secondary">${h.excessive_txt_queries}</td>
+            </tr>
+        `;
+    });
+
+    container.innerHTML = `
+        <div class="row g-3 mb-3">
+            <div class="col-md-3">
+                <div class="p-3 rounded bg-body-tertiary border border-secondary border-opacity-25">
+                    <small class="text-secondary">NXDOMAIN Count</small>
+                    <h4 class="fw-bold text-danger mb-0 mt-1">${latest.nxdomain_count}</h4>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="p-3 rounded bg-body-tertiary border border-secondary border-opacity-25">
+                    <small class="text-secondary">SERVFAIL Count</small>
+                    <h4 class="fw-bold text-warning mb-0 mt-1">${latest.servfail_count}</h4>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="p-3 rounded bg-body-tertiary border border-secondary border-opacity-25">
+                    <small class="text-secondary">DNSSEC Failures</small>
+                    <h4 class="fw-bold text-info mb-0 mt-1">${latest.dnssec_failures}</h4>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="p-3 rounded bg-body-tertiary border border-secondary border-opacity-25">
+                    <small class="text-secondary">TXT Query Spikes</small>
+                    <h4 class="fw-bold text-secondary mb-0 mt-1">${latest.excessive_txt_queries}</h4>
+                </div>
+            </div>
+        </div>
+
+        <h6 class="fw-bold text-light mt-4 mb-2"><i class="bi bi-list-columns me-1"></i> Security Anomaly Snapshots</h6>
+        <div class="table-responsive border border-secondary border-opacity-25 rounded" style="max-height: 350px;">
+            <table class="table table-dark table-hover align-middle mb-0">
+                <thead>
+                    <tr class="text-secondary small">
+                        <th class="ps-3">Timestamp</th>
+                        <th>Server</th>
+                        <th>NXDOMAIN</th>
+                        <th>SERVFAIL</th>
+                        <th>DNSSEC Bogus</th>
+                        <th>TXT Queries</th>
+                    </tr>
+                </thead>
+                <tbody>${rows}</tbody>
+            </table>
+        </div>
+    `;
 }
 
 function initTheme() {
@@ -285,7 +603,20 @@ function initCharts() {
     const chartDefaults = {
         responsive: true,
         maintainAspectRatio: false,
-        plugins: { legend: { labels: { color: '#94a3b8' } } },
+        plugins: {
+            legend: { labels: { color: '#94a3b8' } },
+            zoom: {
+                zoom: {
+                    wheel: { enabled: true },
+                    pinch: { enabled: true },
+                    mode: 'x'
+                },
+                pan: {
+                    enabled: true,
+                    mode: 'x'
+                }
+            }
+        },
         scales: {
             x: {
                 ticks: {

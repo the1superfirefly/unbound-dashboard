@@ -1,71 +1,67 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
 
 {% block content %}
-<!-- Metric Cards Overview -->
+<!-- Top Metrics Row (Clickable Overview Tiles) -->
 <div class="row g-3 mb-4">
+    <!-- Total Queries Tile -->
     <div class="col-xl-3 col-md-6">
-        <div class="card metric-card border-0 shadow-sm bg-gradient-card clickable-card" onclick="zoomToChart('queryChartCard')" title="Click to zoom into Query Performance chart">
-            <div class="card-body">
-                <div class="d-flex align-items-center justify-content-between">
-                    <div>
-                        <div class="text-uppercase text-secondary fw-semibold small mb-1">Total Queries</div>
-                        <h2 class="fw-bold mb-0 text-white" id="statTotalQueries">0</h2>
-                        <span class="text-success small fw-medium"><i class="bi bi-graph-up-arrow me-1"></i><span id="statQPS">0</span> QPS</span>
-                    </div>
-                    <div class="metric-icon bg-primary bg-opacity-15 text-primary rounded-3 p-3">
-                        <i class="bi bi-activity fs-3"></i>
-                    </div>
+        <div class="card border-0 shadow-sm h-100 bg-card clickable-card" onclick="showMetricDetails('queries')" title="Click to view granular query details & history">
+            <div class="card-body d-flex align-items-center justify-content-between">
+                <div>
+                    <span class="text-secondary small fw-semibold text-uppercase tracking-wider">Total Queries</span>
+                    <h3 class="fw-bold mb-0 text-light mt-1" id="statTotalQueries">0</h3>
+                    <small class="text-muted fs-7"><i class="bi bi-speedometer2 me-1"></i> Peak QPS: <span id="statQPS">0</span></small>
                 </div>
-            </div>
-        </div>
-    </div>
-    
-    <div class="col-xl-3 col-md-6">
-        <div class="card metric-card border-0 shadow-sm bg-gradient-card clickable-card" onclick="zoomToChart('cacheChartCard')" title="Click to zoom into Cache Hit/Miss breakdown chart">
-            <div class="card-body">
-                <div class="d-flex align-items-center justify-content-between">
-                    <div>
-                        <div class="text-uppercase text-secondary fw-semibold small mb-1">Cache Hit Rate</div>
-                        <h2 class="fw-bold mb-0 text-info" id="statCacheHitRate">0%</h2>
-                        <span class="text-secondary small fw-medium" id="statCacheRatio">Hits: 0 | Miss: 0</span>
-                    </div>
-                    <div class="metric-icon bg-info bg-opacity-15 text-info rounded-3 p-3">
-                        <i class="bi bi-cpu fs-3"></i>
-                    </div>
+                <div class="rounded-circle bg-primary bg-opacity-10 p-3 text-primary">
+                    <i class="bi bi-bar-chart-line fs-3"></i>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- Cache Hit Rate Tile -->
     <div class="col-xl-3 col-md-6">
-        <div class="card metric-card border-0 shadow-sm bg-gradient-card clickable-card" onclick="zoomToChart('latencyChartCard')" title="Click to zoom into Latency Distribution chart">
-            <div class="card-body">
-                <div class="d-flex align-items-center justify-content-between">
-                    <div>
-                        <div class="text-uppercase text-secondary fw-semibold small mb-1">Avg Latency</div>
-                        <h2 class="fw-bold mb-0 text-warning" id="statAvgLatency">0 ms</h2>
-                        <span class="text-secondary small fw-medium">P95: <span id="statP95">0</span> ms | P99: <span id="statP99">0</span> ms</span>
-                    </div>
-                    <div class="metric-icon bg-warning bg-opacity-15 text-warning rounded-3 p-3">
-                        <i class="bi bi-speedometer2 fs-3"></i>
-                    </div>
+        <div class="card border-0 shadow-sm h-100 bg-card clickable-card" onclick="showMetricDetails('cache')" title="Click to view granular cache details">
+            <div class="card-body d-flex align-items-center justify-content-between">
+                <div>
+                    <span class="text-secondary small fw-semibold text-uppercase tracking-wider">Cache Hit Rate</span>
+                    <h3 class="fw-bold mb-0 text-light mt-1" id="statCacheHitRate">0%</h3>
+                    <small class="text-muted fs-7" id="statCacheRatio">Hits: 0 | Miss: 0</small>
+                </div>
+                <div class="rounded-circle bg-info bg-opacity-10 p-3 text-info">
+                    <i class="bi bi-pie-chart fs-3"></i>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- Avg Latency Tile -->
     <div class="col-xl-3 col-md-6">
-        <div class="card metric-card border-0 shadow-sm bg-gradient-card clickable-card" onclick="zoomToChart('securityChartCard')" title="Click to zoom into Security & Anomaly chart">
-            <div class="card-body">
-                <div class="d-flex align-items-center justify-content-between">
-                    <div>
-                        <div class="text-uppercase text-secondary fw-semibold small mb-1">Security Anomalies</div>
-                        <h2 class="fw-bold mb-0 text-danger" id="statSecurityAnomalies">0</h2>
-                        <span class="text-secondary small fw-medium"><span id="statNXDOMAIN">0</span> NXDOMAIN | <span id="statSERVFAIL">0</span> SERVFAIL</span>
-                    </div>
-                    <div class="metric-icon bg-danger bg-opacity-15 text-danger rounded-3 p-3">
-                        <i class="bi bi-shield-exclamation fs-3"></i>
-                    </div>
+        <div class="card border-0 shadow-sm h-100 bg-card clickable-card" onclick="showMetricDetails('latency')" title="Click to view granular latency percentiles">
+            <div class="card-body d-flex align-items-center justify-content-between">
+                <div>
+                    <span class="text-secondary small fw-semibold text-uppercase tracking-wider">Average Latency</span>
+                    <h3 class="fw-bold mb-0 text-light mt-1" id="statAvgLatency">0 ms</h3>
+                    <small class="text-muted fs-7">P95: <span id="statP95">0</span> ms | P99: <span id="statP99">0</span> ms</small>
+                </div>
+                <div class="rounded-circle bg-warning bg-opacity-10 p-3 text-warning">
+                    <i class="bi bi-clock-history fs-3"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Security Anomalies Tile -->
+    <div class="col-xl-3 col-md-6">
+        <div class="card border-0 shadow-sm h-100 bg-card clickable-card" onclick="showMetricDetails('security')" title="Click to view granular security incident breakdown">
+            <div class="card-body d-flex align-items-center justify-content-between">
+                <div>
+                    <span class="text-secondary small fw-semibold text-uppercase tracking-wider">Security Anomalies</span>
+                    <h3 class="fw-bold mb-0 text-light mt-1" id="statSecurityAnomalies">0</h3>
+                    <small class="text-muted fs-7">NXDOMAIN: <span id="statNXDOMAIN">0</span> | SERVFAIL: <span id="statSERVFAIL">0</span></small>
+                </div>
+                <div class="rounded-circle bg-danger bg-opacity-10 p-3 text-danger">
+                    <i class="bi bi-shield-exclamation fs-3"></i>
                 </div>
             </div>
         </div>
@@ -74,29 +70,33 @@
 
 <!-- Charts Section -->
 <div class="row g-4 mb-4">
-    <!-- Query Volume Chart -->
+    <!-- Query Performance & Volume Chart -->
     <div class="col-lg-8">
         <div class="card border-0 shadow-sm h-100 bg-card" id="queryChartCard">
             <div class="card-header bg-transparent border-0 d-flex align-items-center justify-content-between pt-3 px-3">
                 <h6 class="fw-bold text-light mb-0"><i class="bi bi-graph-up me-2 text-primary"></i> Query Performance & Volume</h6>
-                <span class="badge bg-secondary bg-opacity-25 text-secondary">Real-time (15s)</span>
+                <div class="d-flex align-items-center gap-2">
+                    <span class="badge bg-secondary bg-opacity-25 text-secondary">Use mouse wheel / pinch to zoom</span>
+                    <button class="btn btn-xs btn-outline-secondary py-1 px-2" onclick="resetZoom('query')" title="Reset Zoom"><i class="bi bi-zoom-out"></i> Reset Zoom</button>
+                </div>
             </div>
             <div class="card-body">
-                <div class="chart-container" style="position: relative; height: 280px;">
+                <div class="chart-container" style="position: relative; height: 300px;">
                     <canvas id="queryChart"></canvas>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Cache Analytics Chart -->
+    <!-- Cache Efficiency Chart -->
     <div class="col-lg-4">
         <div class="card border-0 shadow-sm h-100 bg-card" id="cacheChartCard">
             <div class="card-header bg-transparent border-0 d-flex align-items-center justify-content-between pt-3 px-3">
-                <h6 class="fw-bold text-light mb-0"><i class="bi bi-pie-chart me-2 text-info"></i> Cache Hit / Miss Breakdown</h6>
+                <h6 class="fw-bold text-light mb-0"><i class="bi bi-pie-chart-fill me-2 text-info"></i> Cache Efficiency</h6>
+                <button class="btn btn-xs btn-outline-secondary py-1 px-2" onclick="zoomToChart('cacheChartCard')"><i class="bi bi-aspect-ratio"></i> Highlight</button>
             </div>
-            <div class="card-body d-flex align-items-center justify-content-center">
-                <div class="chart-container" style="position: relative; height: 250px; width: 100%;">
+            <div class="card-body">
+                <div class="chart-container" style="position: relative; height: 300px;">
                     <canvas id="cacheChart"></canvas>
                 </div>
             </div>
@@ -111,6 +111,7 @@
         <div class="card border-0 shadow-sm h-100 bg-card" id="latencyChartCard">
             <div class="card-header bg-transparent border-0 d-flex align-items-center justify-content-between pt-3 px-3">
                 <h6 class="fw-bold text-light mb-0"><i class="bi bi-clock-history me-2 text-warning"></i> Latency Distribution (ms)</h6>
+                <button class="btn btn-xs btn-outline-secondary py-1 px-2" onclick="resetZoom('latency')" title="Reset Zoom"><i class="bi bi-zoom-out"></i> Reset Zoom</button>
             </div>
             <div class="card-body">
                 <div class="chart-container" style="position: relative; height: 250px;">
@@ -125,6 +126,7 @@
         <div class="card border-0 shadow-sm h-100 bg-card" id="securityChartCard">
             <div class="card-header bg-transparent border-0 d-flex align-items-center justify-content-between pt-3 px-3">
                 <h6 class="fw-bold text-light mb-0"><i class="bi bi-shield-lock me-2 text-danger"></i> Security & Anomaly Indicators</h6>
+                <button class="btn btn-xs btn-outline-secondary py-1 px-2" onclick="resetZoom('security')" title="Reset Zoom"><i class="bi bi-zoom-out"></i> Reset Zoom</button>
             </div>
             <div class="card-body">
                 <div class="chart-container" style="position: relative; height: 250px;">
@@ -160,6 +162,26 @@
                         </tbody>
                     </table>
                 </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Granular Metric Details Modal -->
+<div class="modal fade" id="metricDetailModal" tabindex="-1">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content bg-dark text-light border-secondary">
+            <div class="modal-header border-secondary border-opacity-50">
+                <h5 class="modal-title" id="metricDetailModalTitle"><i class="bi bi-info-circle me-2 text-primary"></i> Granular Metric Breakdown</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div id="metricDetailContent">
+                    <!-- Dynamic breakdown table injected here -->
+                </div>
+            </div>
+            <div class="modal-footer border-secondary border-opacity-50">
+                <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Close</button>
             </div>
         </div>
     </div>
