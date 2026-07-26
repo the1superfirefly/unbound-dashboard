@@ -158,6 +158,8 @@ def fetch_and_record_metrics(app):
                 active_clients=stats_data['active_clients'],
                 qtype_a=stats_data.get('qtype_a', 0),
                 qtype_aaaa=stats_data.get('qtype_aaaa', 0),
+                qtype_srv=stats_data.get('qtype_srv', 0),
+                qtype_ptr=stats_data.get('qtype_ptr', 0),
                 qtype_txt=stats_data.get('qtype_txt', 0),
                 qtype_https=stats_data.get('qtype_https', 0),
                 qtype_other=stats_data.get('qtype_other', 0)

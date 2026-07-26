@@ -877,7 +877,54 @@ function initCharts() {
         options: createIndependentChartConfig()
     });
     enableClickToZoom(latencyChartInstance, 'latencyChart', 'latencyChartCard');
+
+    // Query Types Doughnut Chart
+    const ctxQT = document.getElementById('queryTypesChart');
+    if (ctxQT) {
+        queryTypesChartInstance = new Chart(ctxQT.getContext('2d'), {
+            type: 'doughnut',
+            data: {
+                labels: ['A', 'AAAA', 'SRV', 'PTR', 'HTTPS', 'TXT', 'OTHER'],
+                datasets: [{
+                    data: [1, 1, 1, 1, 1, 1, 1],
+                    backgroundColor: ['#f87171', '#38bdf8', '#06b6d4', '#3b82f6', '#334155', '#a855f7', '#f59e0b'],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                cutout: '65%'
+            }
+        });
+    }
+
+    // Upstream Servers Doughnut Chart
+    const ctxUS = document.getElementById('upstreamServersChart');
+    if (ctxUS) {
+        upstreamServersChartInstance = new Chart(ctxUS.getContext('2d'), {
+            type: 'doughnut',
+            data: {
+                labels: ['blocklist', 'cache', 'localhost#5335'],
+                datasets: [{
+                    data: [1, 1, 1],
+                    backgroundColor: ['#f87171', '#38bdf8', '#10b981'],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                cutout: '65%'
+            }
+        });
+    }
 }
+
+let queryTypesChartInstance = null;
+let upstreamServersChartInstance = null;
 
 const SERVER_COLORS = ['#10b981', '#8b5cf6', '#06b6d4', '#ec4899', '#f97316'];
 
@@ -901,6 +948,27 @@ function areLabelsEqual(l1, l2) {
         if (l1[i] !== l2[i]) return false;
     }
     return true;
+}
+
+function renderCustomCheckboxLegend(containerId, labels, colors, values) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+    let html = '<div class="d-flex flex-column gap-2 small">';
+    labels.forEach((label, idx) => {
+        const color = colors[idx % colors.length];
+        const val = (values && values[idx] !== undefined) ? values[idx] : 0;
+        html += `
+            <div class="d-flex align-items-center justify-content-between adaptive-text">
+                <div class="d-flex align-items-center gap-2">
+                    <i class="bi bi-check-square-fill" style="color: ${color}; font-size: 1rem;"></i>
+                    <span class="fw-semibold">${label}</span>
+                </div>
+                <span class="adaptive-muted small ms-2">${val.toLocaleString()}</span>
+            </div>
+        `;
+    });
+    html += '</div>';
+    container.innerHTML = html;
 }
 
 function updateCharts(queryData, cacheData, latencyData, securityData, isInitial = false) {
@@ -1026,5 +1094,40 @@ function updateCharts(queryData, cacheData, latencyData, securityData, isInitial
             latencyChartInstance.data.datasets = latencyDatasets;
             latencyChartInstance.update(updateMode);
         }
+    }
+
+    // Update Query Types Doughnut Chart
+    if (queryTypesChartInstance && queryData.qtypes) {
+        const qt = queryData.qtypes;
+        const qtLabels = ['A', 'AAAA', 'SRV', 'PTR', 'HTTPS', 'TXT', 'OTHER'];
+        const qtColors = ['#f87171', '#38bdf8', '#06b6d4', '#3b82f6', '#334155', '#a855f7', '#f59e0b'];
+        const qtValues = [
+            qt.A || 0,
+            qt.AAAA || 0,
+            qt.SRV || 0,
+            qt.PTR || 0,
+            qt.HTTPS || 0,
+            qt.TXT || 0,
+            qt.OTHER || 0
+        ];
+        
+        queryTypesChartInstance.data.datasets[0].data = qtValues;
+        queryTypesChartInstance.update(updateMode);
+        renderCustomCheckboxLegend('queryTypesLegend', qtLabels, qtColors, qtValues);
+    }
+
+    // Update Upstream Servers Doughnut Chart
+    if (upstreamServersChartInstance && cacheData) {
+        const totalHits = cacheData.hits ? cacheData.hits.reduce((a, b) => a + b, 0) : 0;
+        const totalMisses = cacheData.misses ? cacheData.misses.reduce((a, b) => a + b, 0) : 0;
+        const blocklistVal = securityData && securityData.nxdomains ? securityData.nxdomains.reduce((a, b) => a + b, 0) : 0;
+        
+        const usLabels = ['blocklist', 'cache', 'localhost#5335'];
+        const usColors = ['#f87171', '#38bdf8', '#10b981'];
+        const usValues = [blocklistVal, totalHits, totalMisses];
+
+        upstreamServersChartInstance.data.datasets[0].data = usValues;
+        upstreamServersChartInstance.update(updateMode);
+        renderCustomCheckboxLegend('upstreamServersLegend', usLabels, usColors, usValues);
     }
 }

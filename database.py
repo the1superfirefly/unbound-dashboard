@@ -70,6 +70,8 @@ class MetricHistory(db.Model):
     # Query Types
     qtype_a = db.Column(db.BigInteger, default=0)
     qtype_aaaa = db.Column(db.BigInteger, default=0)
+    qtype_srv = db.Column(db.BigInteger, default=0)
+    qtype_ptr = db.Column(db.BigInteger, default=0)
     qtype_txt = db.Column(db.BigInteger, default=0)
     qtype_https = db.Column(db.BigInteger, default=0)
     qtype_other = db.Column(db.BigInteger, default=0)
@@ -102,6 +104,8 @@ class MetricHistory(db.Model):
             'active_clients': self.active_clients,
             'qtype_a': self.qtype_a or 0,
             'qtype_aaaa': self.qtype_aaaa or 0,
+            'qtype_srv': self.qtype_srv or 0,
+            'qtype_ptr': self.qtype_ptr or 0,
             'qtype_txt': self.qtype_txt or 0,
             'qtype_https': self.qtype_https or 0,
             'qtype_other': self.qtype_other or 0

@@ -81,12 +81,14 @@ def parse_unbound_stats(raw_output):
     # Query Types
     stats['qtype_a'] = int(float(kv.get('num.query.type.A', 0)))
     stats['qtype_aaaa'] = int(float(kv.get('num.query.type.AAAA', 0)))
+    stats['qtype_srv'] = int(float(kv.get('num.query.type.SRV', 0)))
+    stats['qtype_ptr'] = int(float(kv.get('num.query.type.PTR', 0)))
     stats['qtype_txt'] = int(float(kv.get('num.query.type.TXT', 0)))
     stats['qtype_https'] = int(float(kv.get('num.query.type.HTTPS', kv.get('num.query.type.TYPE65', 0))))
     
     other_q = 0
     for k, v in kv.items():
-        if k.startswith('num.query.type.') and not any(k.endswith(t) for t in ['.A', '.AAAA', '.TXT', '.HTTPS', '.TYPE65']):
+        if k.startswith('num.query.type.') and not any(k.endswith(t) for t in ['.A', '.AAAA', '.SRV', '.PTR', '.TXT', '.HTTPS', '.TYPE65']):
             try:
                 other_q += int(float(v))
             except ValueError:
