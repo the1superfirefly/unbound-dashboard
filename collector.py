@@ -5,6 +5,7 @@ import time
 from datetime import datetime
 from database import db, MetricHistory, AlertLog, ServerConfig
 from parser import parse_unbound_stats
+from apscheduler.schedulers.background import BackgroundScheduler
 
 logger = logging.getLogger('uad.collector')
 
@@ -53,7 +54,7 @@ def fetch_and_record_metrics(app):
             # 1. Direct local call if host is localhost
             if host in ['127.0.0.1', 'localhost']:
                 try:
-                    res = subprocess.run(["unbound-control", "stats_noreset"], capture_output=True, text=True, timeout=5)
+                    res = subprocess.run(["unbound-control", "stats_noreset"], capture_output=True, text=True, timeout=3)
                     if res.returncode == 0 and res.stdout:
                         stats_data = parse_unbound_stats(res.stdout)
                     else:
@@ -65,7 +66,7 @@ def fetch_and_record_metrics(app):
             if not stats_data and os.path.exists(custom_conf):
                 try:
                     cmd = ["unbound-control", "-c", custom_conf, "-s", f"{host}@{port}", "stats_noreset"]
-                    res = subprocess.run(cmd, capture_output=True, text=True, timeout=5)
+                    res = subprocess.run(cmd, capture_output=True, text=True, timeout=3)
                     if res.returncode == 0 and res.stdout:
                         stats_data = parse_unbound_stats(res.stdout)
                     else:
@@ -77,7 +78,7 @@ def fetch_and_record_metrics(app):
             if not stats_data:
                 try:
                     cmd = ["unbound-control", "-s", f"{host}@{port}", "stats_noreset"]
-                    res = subprocess.run(cmd, capture_output=True, text=True, timeout=5)
+                    res = subprocess.run(cmd, capture_output=True, text=True, timeout=3)
                     if res.returncode == 0 and res.stdout:
                         stats_data = parse_unbound_stats(res.stdout)
                     else:
@@ -123,11 +124,11 @@ def fetch_and_record_metrics(app):
                 prefetch_hits=stats_data['prefetch_hits'],
                 rrset_cache_num=stats_data['rrset_cache_num'],
                 msg_cache_num=stats_data['msg_cache_num'],
-                avg_latency=stats_data['avg_latency'],
-                median_latency=stats_data['median_latency'],
-                p90_latency=stats_data['p90_latency'],
-                p95_latency=stats_data['p95_latency'],
-                p99_latency=stats_data['p99_latency'],
+                avg_latency=round(stats_data['avg_latency'], 3),
+                median_latency=round(stats_data['median_latency'], 3),
+                p90_latency=round(stats_data['p90_latency'], 3),
+                p95_latency=round(stats_data['p95_latency'], 3),
+                p99_latency=round(stats_data['p99_latency'], 3),
                 nxdomain_count=stats_data['nxdomain_count'],
                 servfail_count=stats_data['servfail_count'],
                 dnssec_failures=stats_data['dnssec_failures'],
@@ -147,7 +148,7 @@ def fetch_and_record_metrics(app):
                 db.session.add(AlertLog(
                     server_id=server_id, server_name=server_name,
                     alert_type="High Latency", severity="warning",
-                    message=f"Average latency elevated: {stats_data['avg_latency']} ms"
+                    message=f"Average latency elevated: {round(stats_data['avg_latency'], 3)} ms"
                 ))
 
             if stats_data['servfail_count'] > 5:
@@ -189,3 +190,34 @@ def sync_logs_to_github(app):
             logger.info("No new log changes to commit.")
     except Exception as e:
         logger.error(f"Error syncing logs to GitHub: {e}")
+
+def init_scheduler(app):
+    """
+    Initializes background scheduler for 1-second metric polling cycles
+    and 30-second automated GitHub telemetry log syncs.
+    """
+    scheduler = BackgroundScheduler(daemon=True)
+    
+    # 1-second metric collection cycle
+    scheduler.add_job(
+        func=fetch_and_record_metrics,
+        trigger='interval',
+        seconds=1,
+        args=[app],
+        id='metric_collector_job',
+        replace_existing=True
+    )
+
+    # 30-second log sync cycle to GitHub
+    scheduler.add_job(
+        func=sync_logs_to_github,
+        trigger='interval',
+        seconds=30,
+        args=[app],
+        id='log_sync_job',
+        replace_existing=True
+    )
+    
+    scheduler.start()
+    logger.info("APScheduler initialized: 1s polling cycle & 30s log sync actively running.")
+    return scheduler

@@ -3,6 +3,12 @@ from datetime import datetime
 
 db = SQLAlchemy()
 
+def init_db(app):
+    """Initializes the database with Flask application context."""
+    db.init_app(app)
+    with app.app_context():
+        db.create_all()
+
 class ServerConfig(db.Model):
     __tablename__ = 'server_configs'
     
@@ -43,7 +49,7 @@ class MetricHistory(db.Model):
     rrset_cache_num = db.Column(db.BigInteger, default=0)
     msg_cache_num = db.Column(db.BigInteger, default=0)
 
-    # Latency Percentiles (ms)
+    # Latency Percentiles (ms rounded to 3 decimal places)
     avg_latency = db.Column(db.Float, default=0.0)
     median_latency = db.Column(db.Float, default=0.0)
     p90_latency = db.Column(db.Float, default=0.0)
@@ -75,18 +81,18 @@ class MetricHistory(db.Model):
             'server_name': self.server_name,
             'timestamp': self.timestamp.isoformat() + 'Z' if self.timestamp else None,
             'total_queries': self.total_queries,
-            'qps': self.qps,
+            'qps': round(self.qps or 0.0, 3),
             'cache_hits': self.cache_hits,
             'cache_misses': self.cache_misses,
-            'cache_hit_rate': self.cache_hit_rate,
+            'cache_hit_rate': round(self.cache_hit_rate or 0.0, 2),
             'prefetch_hits': self.prefetch_hits,
             'rrset_cache_num': self.rrset_cache_num,
             'msg_cache_num': self.msg_cache_num,
-            'avg_latency': self.avg_latency,
-            'median_latency': self.median_latency,
-            'p90_latency': self.p90_latency,
-            'p95_latency': self.p95_latency,
-            'p99_latency': self.p99_latency,
+            'avg_latency': round(self.avg_latency or 0.0, 3),
+            'median_latency': round(self.median_latency or 0.0, 3),
+            'p90_latency': round(self.p90_latency or 0.0, 3),
+            'p95_latency': round(self.p95_latency or 0.0, 3),
+            'p99_latency': round(self.p99_latency or 0.0, 3),
             'nxdomain_count': self.nxdomain_count,
             'servfail_count': self.servfail_count,
             'dnssec_failures': self.dnssec_failures,

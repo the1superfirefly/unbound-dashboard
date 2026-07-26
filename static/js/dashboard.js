@@ -13,11 +13,11 @@ document.addEventListener('DOMContentLoaded', () => {
     fetchDashboardData(true);
     fetchAlerts();
 
-    // Flash-free silent auto-refresh every 15s
+    // Flash-free silent auto-refresh every 1 second
     setInterval(() => {
         fetchDashboardData(false);
         fetchAlerts();
-    }, 15000);
+    }, 1000);
 
     // Instant data refresh when server dropdown selection changes
     document.getElementById('serverSelect').addEventListener('change', () => {
@@ -664,12 +664,12 @@ async function fetchDashboardData(isInitial = false) {
 
         if (overviewRes.latest) {
             document.getElementById('statTotalQueries').textContent = (overviewRes.latest.total_queries || 0).toLocaleString();
-            document.getElementById('statQPS').textContent = overviewRes.latest.qps || 0;
+            document.getElementById('statQPS').textContent = (overviewRes.latest.qps || 0).toFixed(3);
             document.getElementById('statCacheHitRate').textContent = `${overviewRes.latest.cache_hit_rate || 0}%`;
             document.getElementById('statCacheRatio').textContent = `Hits: ${(overviewRes.latest.cache_hits || 0).toLocaleString()} | Miss: ${(overviewRes.latest.cache_misses || 0).toLocaleString()}`;
-            document.getElementById('statAvgLatency').textContent = `${overviewRes.latest.avg_latency || 0} ms`;
-            document.getElementById('statP95').textContent = overviewRes.latest.p95_latency || 0;
-            document.getElementById('statP99').textContent = overviewRes.latest.p99_latency || 0;
+            document.getElementById('statAvgLatency').textContent = `${(overviewRes.latest.avg_latency || 0).toFixed(3)} ms`;
+            document.getElementById('statP95').textContent = (overviewRes.latest.p95_latency || 0).toFixed(3);
+            document.getElementById('statP99').textContent = (overviewRes.latest.p99_latency || 0).toFixed(3);
             
             const totalAnomalies = (overviewRes.latest.nxdomain_count || 0) + (overviewRes.latest.servfail_count || 0) + (overviewRes.latest.dnssec_failures || 0);
             document.getElementById('statSecurityAnomalies').textContent = totalAnomalies;

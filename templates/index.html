@@ -1,14 +1,17 @@
 {% extends "base.html" %}
 
 {% block content %}
-<!-- Top Metrics Row (Clickable Overview Tiles) -->
+<!-- Top Metrics Row (Clickable Overview Tiles with Explicit 48h Time Coverage) -->
 <div class="row g-3 mb-4">
     <!-- Total Queries Tile -->
     <div class="col-xl-3 col-md-6">
-        <div class="card border-0 shadow-sm h-100 bg-card clickable-card" onclick="showMetricDetails('queries')" title="Click to view granular query details & history">
+        <div class="card border-0 shadow-sm h-100 bg-card clickable-card" onclick="showMetricDetails('queries')" title="Click to view top cached/fetched sites & query breakdown">
             <div class="card-body d-flex align-items-center justify-content-between">
                 <div>
-                    <span class="text-secondary small fw-semibold text-uppercase tracking-wider">Total Queries</span>
+                    <div class="d-flex align-items-center justify-content-between mb-1">
+                        <span class="text-secondary small fw-semibold text-uppercase tracking-wider">Total Queries</span>
+                        <span class="badge bg-primary bg-opacity-25 text-primary ms-2" style="font-size: 0.65rem;"><i class="bi bi-clock me-1"></i>48h Window</span>
+                    </div>
                     <h3 class="fw-bold mb-0 text-light mt-1" id="statTotalQueries">0</h3>
                     <small class="text-muted fs-7"><i class="bi bi-speedometer2 me-1"></i> Peak QPS: <span id="statQPS">0</span></small>
                 </div>
@@ -21,10 +24,13 @@
 
     <!-- Cache Hit Rate Tile -->
     <div class="col-xl-3 col-md-6">
-        <div class="card border-0 shadow-sm h-100 bg-card clickable-card" onclick="showMetricDetails('cache')" title="Click to view granular cache details">
+        <div class="card border-0 shadow-sm h-100 bg-card clickable-card" onclick="showMetricDetails('cache')" title="Click to view top cached sites & cache breakdown">
             <div class="card-body d-flex align-items-center justify-content-between">
                 <div>
-                    <span class="text-secondary small fw-semibold text-uppercase tracking-wider">Cache Hit Rate</span>
+                    <div class="d-flex align-items-center justify-content-between mb-1">
+                        <span class="text-secondary small fw-semibold text-uppercase tracking-wider">Cache Hit Rate</span>
+                        <span class="badge bg-info bg-opacity-25 text-info ms-2" style="font-size: 0.65rem;"><i class="bi bi-clock me-1"></i>48h Window</span>
+                    </div>
                     <h3 class="fw-bold mb-0 text-light mt-1" id="statCacheHitRate">0%</h3>
                     <small class="text-muted fs-7" id="statCacheRatio">Hits: 0 | Miss: 0</small>
                 </div>
@@ -40,9 +46,12 @@
         <div class="card border-0 shadow-sm h-100 bg-card clickable-card" onclick="showMetricDetails('latency')" title="Click to view granular latency percentiles">
             <div class="card-body d-flex align-items-center justify-content-between">
                 <div>
-                    <span class="text-secondary small fw-semibold text-uppercase tracking-wider">Average Latency</span>
-                    <h3 class="fw-bold mb-0 text-light mt-1" id="statAvgLatency">0 ms</h3>
-                    <small class="text-muted fs-7">P95: <span id="statP95">0</span> ms | P99: <span id="statP99">0</span> ms</small>
+                    <div class="d-flex align-items-center justify-content-between mb-1">
+                        <span class="text-secondary small fw-semibold text-uppercase tracking-wider">Average Latency</span>
+                        <span class="badge bg-warning bg-opacity-25 text-warning ms-2" style="font-size: 0.65rem;"><i class="bi bi-clock me-1"></i>48h Window</span>
+                    </div>
+                    <h3 class="fw-bold mb-0 text-light mt-1" id="statAvgLatency">0.000 ms</h3>
+                    <small class="text-muted fs-7">P95: <span id="statP95">0.000</span> ms | P99: <span id="statP99">0.000</span> ms</small>
                 </div>
                 <div class="rounded-circle bg-warning bg-opacity-10 p-3 text-warning">
                     <i class="bi bi-clock-history fs-3"></i>
@@ -56,7 +65,10 @@
         <div class="card border-0 shadow-sm h-100 bg-card clickable-card" onclick="showMetricDetails('security')" title="Click to view granular security incident breakdown">
             <div class="card-body d-flex align-items-center justify-content-between">
                 <div>
-                    <span class="text-secondary small fw-semibold text-uppercase tracking-wider">Security Anomalies</span>
+                    <div class="d-flex align-items-center justify-content-between mb-1">
+                        <span class="text-secondary small fw-semibold text-uppercase tracking-wider">Security Anomalies</span>
+                        <span class="badge bg-danger bg-opacity-25 text-danger ms-2" style="font-size: 0.65rem;"><i class="bi bi-clock me-1"></i>48h Window</span>
+                    </div>
                     <h3 class="fw-bold mb-0 text-light mt-1" id="statSecurityAnomalies">0</h3>
                     <small class="text-muted fs-7">NXDOMAIN: <span id="statNXDOMAIN">0</span> | SERVFAIL: <span id="statSERVFAIL">0</span></small>
                 </div>

@@ -4,6 +4,7 @@ def parse_unbound_stats(raw_output):
     """
     Parses key-value output from `unbound-control stats` or `stats_noreset`.
     Handles total metrics as well as thread metrics.
+    Rounds latency metrics strictly to 3 decimal places.
     """
     stats = {
         'total_queries': 0,
@@ -62,15 +63,15 @@ def parse_unbound_stats(raw_output):
     stats['rrset_cache_num'] = int(float(kv.get('num.rrset', kv.get('rrset.cache.num', 0))))
     stats['msg_cache_num'] = int(float(kv.get('num.msg', kv.get('msg.cache.num', 0))))
 
-    # Latencies (converted seconds to milliseconds if needed)
+    # Latencies (converted seconds to milliseconds, rounded to 3 decimal places)
     avg_sec = float(kv.get('total.recursion.time.avg', kv.get('time.recursion.avg', 0)))
     med_sec = float(kv.get('total.recursion.time.median', kv.get('time.recursion.median', 0)))
     
-    stats['avg_latency'] = round(avg_sec * 1000.0 if avg_sec < 10 else avg_sec, 2)
-    stats['median_latency'] = round(med_sec * 1000.0 if med_sec < 10 else med_sec, 2)
-    stats['p90_latency'] = round(stats['avg_latency'] * 1.3, 2)
-    stats['p95_latency'] = round(stats['avg_latency'] * 1.6, 2)
-    stats['p99_latency'] = round(stats['avg_latency'] * 2.1, 2)
+    stats['avg_latency'] = round(avg_sec * 1000.0 if avg_sec < 10 else avg_sec, 3)
+    stats['median_latency'] = round(med_sec * 1000.0 if med_sec < 10 else med_sec, 3)
+    stats['p90_latency'] = round(stats['avg_latency'] * 1.3, 3)
+    stats['p95_latency'] = round(stats['avg_latency'] * 1.6, 3)
+    stats['p99_latency'] = round(stats['avg_latency'] * 2.1, 3)
 
     # Anomalies and RCODEs
     stats['nxdomain_count'] = int(float(kv.get('num.answer.rcode.NXDOMAIN', 0)))
@@ -98,9 +99,9 @@ def parse_unbound_stats(raw_output):
     stats['active_clients'] = int(float(kv.get('total.requestlist.current.user', kv.get('num.query.tcp', 0))))
 
     # QPS calculation
-    elapsed = float(kv.get('time.elapsed', 15.0))
+    elapsed = float(kv.get('time.elapsed', 1.0))
     if elapsed > 0 and total_q > 0:
-        stats['qps'] = round(total_q / elapsed, 2)
+        stats['qps'] = round(total_q / elapsed, 3)
     else:
         stats['qps'] = 0.0
 
