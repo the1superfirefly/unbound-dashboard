@@ -897,6 +897,7 @@ function initCharts() {
                 plugins: { legend: { display: false } },
                 cutout: '65%'
             }
+        });
     }
 }
 
