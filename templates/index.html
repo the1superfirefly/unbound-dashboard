@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
-<!-- Top Metrics Row (3 Equal Wide Clickable Tiles across 100% width with 6h Window) -->
+<!-- Top Metrics Row (3 Equal Wide Clickable Tiles across 100% width with 1h Window) -->
 <div class="row g-3 mb-4">
     <!-- Total Queries Tile -->
     <div class="col-lg-4 col-md-6">
@@ -9,11 +9,11 @@
             <div class="card-body d-flex align-items-center justify-content-between">
                 <div>
                     <div class="d-flex align-items-center justify-content-between mb-1">
-                        <span class="text-secondary small fw-semibold text-uppercase tracking-wider">Total Queries</span>
-                        <span class="badge bg-primary bg-opacity-25 text-primary ms-2" style="font-size: 0.65rem;"><i class="bi bi-clock me-1"></i>6h Window</span>
+                        <span class="adaptive-muted small fw-semibold text-uppercase tracking-wider">Total Queries</span>
+                        <span class="badge bg-primary bg-opacity-25 text-primary ms-2" style="font-size: 0.65rem;"><i class="bi bi-clock me-1"></i>1h Window</span>
                     </div>
-                    <h3 class="fw-bold mb-0 text-light mt-1" id="statTotalQueries">0</h3>
-                    <small class="text-muted fs-7"><i class="bi bi-speedometer2 me-1"></i> Peak QPS: <span id="statQPS">0</span></small>
+                    <h3 class="fw-bold mb-0 adaptive-text mt-1" id="statTotalQueries">0</h3>
+                    <small class="adaptive-muted fs-7"><i class="bi bi-speedometer2 me-1"></i> Peak QPS: <span id="statQPS">0</span></small>
                 </div>
                 <div class="rounded-circle bg-primary bg-opacity-10 p-3 text-primary">
                     <i class="bi bi-bar-chart-line fs-3"></i>
@@ -28,11 +28,11 @@
             <div class="card-body d-flex align-items-center justify-content-between">
                 <div>
                     <div class="d-flex align-items-center justify-content-between mb-1">
-                        <span class="text-secondary small fw-semibold text-uppercase tracking-wider">Cache Hit Rate</span>
-                        <span class="badge bg-info bg-opacity-25 text-info ms-2" style="font-size: 0.65rem;"><i class="bi bi-clock me-1"></i>6h Window</span>
+                        <span class="adaptive-muted small fw-semibold text-uppercase tracking-wider">Cache Hit Rate</span>
+                        <span class="badge bg-info bg-opacity-25 text-info ms-2" style="font-size: 0.65rem;"><i class="bi bi-clock me-1"></i>1h Window</span>
                     </div>
-                    <h3 class="fw-bold mb-0 text-light mt-1" id="statCacheHitRate">0%</h3>
-                    <small class="text-muted fs-7" id="statCacheRatio">Hits: 0 | Miss: 0</small>
+                    <h3 class="fw-bold mb-0 adaptive-text mt-1" id="statCacheHitRate">0%</h3>
+                    <small class="adaptive-muted fs-7" id="statCacheRatio">Hits: 0 | Miss: 0</small>
                 </div>
                 <div class="rounded-circle bg-info bg-opacity-10 p-3 text-info">
                     <i class="bi bi-pie-chart fs-3"></i>
@@ -47,11 +47,11 @@
             <div class="card-body d-flex align-items-center justify-content-between">
                 <div>
                     <div class="d-flex align-items-center justify-content-between mb-1">
-                        <span class="text-secondary small fw-semibold text-uppercase tracking-wider">Average Latency</span>
-                        <span class="badge bg-warning bg-opacity-25 text-warning ms-2" style="font-size: 0.65rem;"><i class="bi bi-clock me-1"></i>6h Window</span>
+                        <span class="adaptive-muted small fw-semibold text-uppercase tracking-wider">Average Latency</span>
+                        <span class="badge bg-warning bg-opacity-25 text-warning ms-2" style="font-size: 0.65rem;"><i class="bi bi-clock me-1"></i>1h Window</span>
                     </div>
-                    <h3 class="fw-bold mb-0 text-light mt-1" id="statAvgLatency">0.000 ms</h3>
-                    <small class="text-muted fs-7">P95: <span id="statP95">0.000</span> ms | P99: <span id="statP99">0.000</span> ms</small>
+                    <h3 class="fw-bold mb-0 adaptive-text mt-1" id="statAvgLatency">0.000 ms</h3>
+                    <small class="adaptive-muted fs-7">P95: <span id="statP95">0.000</span> ms | P99: <span id="statP99">0.000</span> ms</small>
                 </div>
                 <div class="rounded-circle bg-warning bg-opacity-10 p-3 text-warning">
                     <i class="bi bi-clock-history fs-3"></i>
@@ -67,9 +67,9 @@
     <div class="col-lg-8">
         <div class="card border-0 shadow-sm h-100 bg-card" id="queryChartCard">
             <div class="card-header bg-transparent border-0 d-flex align-items-center justify-content-between pt-3 px-3">
-                <h6 class="fw-bold text-light mb-0"><i class="bi bi-graph-up me-2 text-primary"></i> Query Performance & Volume</h6>
+                <h6 class="fw-bold adaptive-text mb-0"><i class="bi bi-graph-up me-2 text-primary"></i> Query Performance & Volume</h6>
                 <div class="d-flex align-items-center gap-2">
-                    <span class="badge bg-secondary bg-opacity-25 text-secondary">Default 6h view (Zoom out to 48h / in to 1 min)</span>
+                    <span class="badge bg-secondary bg-opacity-25 text-secondary">Default 1h view (Zoom out to 48h / in to 1 min)</span>
                     <button class="btn btn-xs btn-outline-secondary py-1 px-2" onclick="resetZoom('query')" title="Reset Zoom"><i class="bi bi-zoom-out"></i> Reset Zoom</button>
                 </div>
             </div>
@@ -85,7 +85,7 @@
     <div class="col-lg-4">
         <div class="card border-0 shadow-sm h-100 bg-card" id="cacheChartCard">
             <div class="card-header bg-transparent border-0 d-flex align-items-center justify-content-between pt-3 px-3">
-                <h6 class="fw-bold text-light mb-0"><i class="bi bi-pie-chart-fill me-2 text-info"></i> Cache Efficiency</h6>
+                <h6 class="fw-bold adaptive-text mb-0"><i class="bi bi-pie-chart-fill me-2 text-info"></i> Cache Efficiency</h6>
                 <button class="btn btn-xs btn-outline-secondary py-1 px-2" onclick="zoomToChart('cacheChartCard')"><i class="bi bi-aspect-ratio"></i> Highlight</button>
             </div>
             <div class="card-body">
@@ -102,9 +102,9 @@
     <div class="col-12">
         <div class="card border-0 shadow-sm bg-card" id="latencyChartCard">
             <div class="card-header bg-transparent border-0 d-flex align-items-center justify-content-between pt-3 px-3">
-                <h6 class="fw-bold text-light mb-0"><i class="bi bi-clock-history me-2 text-warning"></i> Response Latency Distribution (ms)</h6>
+                <h6 class="fw-bold adaptive-text mb-0"><i class="bi bi-clock-history me-2 text-warning"></i> Response Latency Distribution (ms)</h6>
                 <div class="d-flex align-items-center gap-2">
-                    <span class="badge bg-secondary bg-opacity-25 text-secondary">Default 6h view (Zoom out to 48h / in to 1 min)</span>
+                    <span class="badge bg-secondary bg-opacity-25 text-secondary">Default 1h view (Zoom out to 48h / in to 1 min)</span>
                     <button class="btn btn-xs btn-outline-secondary py-1 px-2" onclick="resetZoom('latency')" title="Reset Zoom"><i class="bi bi-zoom-out"></i> Reset Zoom</button>
                 </div>
             </div>
@@ -122,7 +122,7 @@
     <div class="col-12">
         <div class="card border-0 shadow-sm bg-card">
             <div class="card-header bg-transparent border-0 d-flex align-items-center justify-content-between pt-3 px-3">
-                <h6 class="fw-bold text-light mb-0"><i class="bi bi-bell-fill me-2 text-warning"></i> Recent System Alerts & Events</h6>
+                <h6 class="fw-bold adaptive-text mb-0"><i class="bi bi-bell-fill me-2 text-warning"></i> Recent System Alerts & Events</h6>
                 <div class="d-flex align-items-center gap-2">
                     <button class="btn btn-sm btn-outline-danger" onclick="clearAlerts()"><i class="bi bi-trash"></i> Clear Alerts</button>
                     <button class="btn btn-sm btn-outline-secondary" onclick="fetchAlerts()"><i class="bi bi-arrow-clockwise"></i> Refresh</button>
@@ -130,9 +130,9 @@
             </div>
             <div class="card-body px-0 py-0">
                 <div class="table-responsive">
-                    <table class="table table-dark table-hover align-middle mb-0" id="alertsTable">
+                    <table class="table table-hover align-middle mb-0" id="alertsTable">
                         <thead>
-                            <tr class="text-secondary small">
+                            <tr class="adaptive-muted small">
                                 <th class="ps-3">Timestamp</th>
                                 <th>Server</th>
                                 <th>Alert Type</th>
@@ -141,7 +141,7 @@
                             </tr>
                         </thead>
                         <tbody id="alertsTableBody">
-                            <tr><td colspan="5" class="text-center text-muted py-3">Loading alerts...</td></tr>
+                            <tr><td colspan="5" class="text-center adaptive-muted py-3">Loading alerts...</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -153,10 +153,10 @@
 <!-- Granular Metric Details Modal -->
 <div class="modal fade" id="metricDetailModal" tabindex="-1">
     <div class="modal-dialog modal-xl modal-dialog-centered">
-        <div class="modal-content bg-dark text-light border-secondary">
+        <div class="modal-content bg-body text-body border-secondary">
             <div class="modal-header border-secondary border-opacity-50">
                 <h5 class="modal-title" id="metricDetailModalTitle"><i class="bi bi-info-circle me-2 text-primary"></i> Granular Metric Breakdown</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
                 <div id="metricDetailContent">
@@ -173,18 +173,18 @@
 <!-- Server Management Modal -->
 <div class="modal fade" id="addServerModal" tabindex="-1">
     <div class="modal-dialog modal-lg">
-        <div class="modal-content bg-dark text-light border-secondary">
+        <div class="modal-content bg-body text-body border-secondary">
             <div class="modal-header border-secondary border-opacity-50">
                 <h5 class="modal-title"><i class="bi bi-server me-2"></i> Manage Unbound Servers</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
                 <!-- Configured Servers List -->
-                <h6 class="fw-bold text-secondary mb-3"><i class="bi bi-list-task me-1"></i> Configured Servers</h6>
+                <h6 class="fw-bold adaptive-muted mb-3"><i class="bi bi-list-task me-1"></i> Configured Servers</h6>
                 <div class="table-responsive mb-4 border border-secondary border-opacity-25 rounded">
-                    <table class="table table-dark table-hover align-middle mb-0" id="serverManagerTable">
+                    <table class="table table-hover align-middle mb-0" id="serverManagerTable">
                         <thead>
-                            <tr class="text-secondary small">
+                            <tr class="adaptive-muted small">
                                 <th class="ps-3">Name</th>
                                 <th>Host / IP</th>
                                 <th>Port</th>
@@ -192,7 +192,7 @@
                             </tr>
                         </thead>
                         <tbody id="serverManagerTableBody">
-                            <tr><td colspan="4" class="text-center text-muted py-3">Loading servers...</td></tr>
+                            <tr><td colspan="4" class="text-center adaptive-muted py-3">Loading servers...</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -200,21 +200,21 @@
                 <hr class="border-secondary border-opacity-50 my-4">
 
                 <!-- Add / Edit Server Form -->
-                <h6 class="fw-bold text-light mb-3" id="serverFormTitle"><i class="bi bi-plus-circle me-1 text-primary"></i> Add New Server</h6>
+                <h6 class="fw-bold adaptive-text mb-3" id="serverFormTitle"><i class="bi bi-plus-circle me-1 text-primary"></i> Add New Server</h6>
                 <form id="addServerForm">
                     <input type="hidden" id="serverIdHidden" value="">
                     <div class="row g-3 mb-3">
                         <div class="col-md-6">
-                            <label class="form-label small text-secondary">Server Display Name</label>
-                            <input type="text" class="form-control bg-body-tertiary text-light border-secondary" id="serverName" placeholder="e.g. Primary Resolver" required>
+                            <label class="form-label small adaptive-muted">Server Display Name</label>
+                            <input type="text" class="form-control bg-body-tertiary adaptive-text border-secondary" id="serverName" placeholder="e.g. Primary Resolver" required>
                         </div>
                         <div class="col-md-4">
-                            <label class="form-label small text-secondary">Server Host / IP</label>
-                            <input type="text" class="form-control bg-body-tertiary text-light border-secondary" id="serverHost" placeholder="e.g. 192.168.4.86" required>
+                            <label class="form-label small adaptive-muted">Server Host / IP</label>
+                            <input type="text" class="form-control bg-body-tertiary adaptive-text border-secondary" id="serverHost" placeholder="e.g. 192.168.4.86" required>
                         </div>
                         <div class="col-md-2">
-                            <label class="form-label small text-secondary">Port</label>
-                            <input type="number" class="form-control bg-body-tertiary text-light border-secondary" id="serverPort" value="8953" required>
+                            <label class="form-label small adaptive-muted">Port</label>
+                            <input type="number" class="form-control bg-body-tertiary adaptive-text border-secondary" id="serverPort" value="8953" required>
                         </div>
                     </div>
                     <div class="d-flex justify-content-end gap-2">

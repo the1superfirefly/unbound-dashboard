@@ -17,9 +17,9 @@
 </head>
 <body class="bg-body-tertiary">
     <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg border-bottom border-secondary border-opacity-25 bg-dark sticky-top">
+    <nav class="navbar navbar-expand-lg border-bottom border-secondary border-opacity-25 bg-body sticky-top shadow-sm">
         <div class="container-fluid px-4">
-            <a class="navbar-brand d-flex align-items-center gap-2 fw-bold text-light" href="#">
+            <a class="navbar-brand d-flex align-items-center gap-2 fw-bold adaptive-text" href="#">
                 <i class="bi bi-shield-check text-primary fs-4"></i>
                 <span>Unbound Analytics</span>
                 <span class="badge bg-primary-subtle text-primary border border-primary-subtle rounded-pill fs-7 ms-1" id="appVersionBadge">{{ version }}</span>
@@ -31,7 +31,7 @@
                     <span class="input-group-text bg-body-tertiary border-secondary text-secondary">
                         <i class="bi bi-server"></i>
                     </span>
-                    <select class="form-select bg-body-tertiary border-secondary text-light shadow-none" id="serverSelect">
+                    <select class="form-select bg-body-tertiary border-secondary adaptive-text shadow-none" id="serverSelect">
                         <option value="all">All Servers (Aggregated)</option>
                     </select>
                 </div>
@@ -46,7 +46,7 @@
                     <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
                         <i class="bi bi-gear-fill me-1"></i> Actions
                     </button>
-                    <ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark shadow">
+                    <ul class="dropdown-menu dropdown-menu-end shadow">
                         <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#addServerModal"><i class="bi bi-server me-2"></i>Manage Servers</a></li>
                         <li><a class="dropdown-item" href="/api/export/csv" target="_blank"><i class="bi bi-file-earmark-spreadsheet me-2"></i>Export CSV Data</a></li>
                         <li><a class="dropdown-item" href="/api/export/json" target="_blank"><i class="bi bi-file-earmark-code me-2"></i>Export JSON Data</a></li>
@@ -65,7 +65,7 @@
     </main>
 
     <!-- Footer -->
-    <footer class="footer mt-auto py-3 bg-dark border-top border-secondary border-opacity-25 text-center text-muted small">
+    <footer class="footer mt-auto py-3 bg-body border-top border-secondary border-opacity-25 text-center adaptive-muted small">
         <div class="container">
             <span>Unbound Analytics Dashboard &copy; 2026 | Monitoring Unbound DNS Resolvers on Port 81</span>
         </div>

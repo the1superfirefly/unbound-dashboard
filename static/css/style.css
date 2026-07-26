@@ -1,4 +1,4 @@
-/* Unbound Analytics Dashboard - Sharp & Compact Typography Design System */
+/* Unbound Analytics Dashboard - Sharp, Compact & Adaptive Dual-Theme Design System */
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
@@ -6,6 +6,28 @@
     --bs-body-font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     --bs-body-font-size: 0.8125rem; /* 13px baseline for compact high-density layout */
     --bs-body-line-height: 1.45;
+}
+
+/* Dark Theme Variables */
+[data-bs-theme="dark"] {
+    --app-card-bg: #1e293b;
+    --app-card-border: rgba(255, 255, 255, 0.08);
+    --app-text-main: #f8fafc;
+    --app-text-subtle: #94a3b8;
+    --app-table-border: rgba(255, 255, 255, 0.08);
+    --app-table-header-bg: rgba(255, 255, 255, 0.03);
+    --app-table-hover: rgba(255, 255, 255, 0.04);
+}
+
+/* Light (Day Mode) Theme Variables */
+[data-bs-theme="light"] {
+    --app-card-bg: #ffffff;
+    --app-card-border: rgba(0, 0, 0, 0.12);
+    --app-text-main: #0f172a;
+    --app-text-subtle: #475569;
+    --app-table-border: rgba(0, 0, 0, 0.08);
+    --app-table-header-bg: rgba(0, 0, 0, 0.04);
+    --app-table-hover: rgba(0, 0, 0, 0.03);
 }
 
 body {
@@ -17,11 +39,12 @@ body {
     letter-spacing: -0.01em;
 }
 
-/* Card Typography & Crisp Shadows */
+/* Card Typography & Adaptive Theme Support */
 .bg-card {
-    background-color: var(--bs-tertiary-bg);
-    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    background-color: var(--app-card-bg) !important;
+    border: 1px solid var(--app-card-border) !important;
     border-radius: 8px;
+    color: var(--app-text-main);
 }
 
 .clickable-card {
@@ -31,17 +54,26 @@ body {
 
 .clickable-card:hover {
     transform: translateY(-2px);
-    border-color: rgba(59, 130, 246, 0.4) !important;
-    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25) !important;
+    border-color: rgba(59, 130, 246, 0.5) !important;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15) !important;
+}
+
+/* Theme Adaptive Text Helper Classes */
+.adaptive-text {
+    color: var(--app-text-main) !important;
+}
+
+.adaptive-muted {
+    color: var(--app-text-subtle) !important;
 }
 
 /* Compact Headings */
-h1, .h1 { font-size: 1.35rem; font-weight: 700; letter-spacing: -0.02em; }
-h2, .h2 { font-size: 1.2rem; font-weight: 700; }
-h3, .h3 { font-size: 1.35rem; font-weight: 700; letter-spacing: -0.02em; }
-h4, .h4 { font-size: 1.05rem; font-weight: 600; }
-h5, .h5 { font-size: 0.95rem; font-weight: 600; }
-h6, .h6 { font-size: 0.825rem; font-weight: 600; letter-spacing: -0.01em; }
+h1, .h1 { font-size: 1.35rem; font-weight: 700; letter-spacing: -0.02em; color: var(--app-text-main); }
+h2, .h2 { font-size: 1.2rem; font-weight: 700; color: var(--app-text-main); }
+h3, .h3 { font-size: 1.35rem; font-weight: 700; letter-spacing: -0.02em; color: var(--app-text-main); }
+h4, .h4 { font-size: 1.05rem; font-weight: 600; color: var(--app-text-main); }
+h5, .h5 { font-size: 0.95rem; font-weight: 600; color: var(--app-text-main); }
+h6, .h6 { font-size: 0.825rem; font-weight: 600; letter-spacing: -0.01em; color: var(--app-text-main); }
 
 /* Small text & badges */
 small, .small { font-size: 0.75rem; }
@@ -55,9 +87,10 @@ small, .small { font-size: 0.75rem; }
     letter-spacing: 0.01em;
 }
 
-/* Compact Tables */
+/* Compact Theme Adaptive Tables */
 .table {
     font-size: 0.775rem;
+    color: var(--app-text-main) !important;
 }
 
 .table th {
@@ -66,10 +99,19 @@ small, .small { font-size: 0.75rem; }
     font-size: 0.675rem;
     letter-spacing: 0.04em;
     padding: 0.5rem 0.6rem;
+    color: var(--app-text-subtle) !important;
+    background-color: var(--app-table-header-bg) !important;
+    border-bottom: 1px solid var(--app-table-border) !important;
 }
 
 .table td {
     padding: 0.45rem 0.6rem;
+    border-bottom: 1px solid var(--app-table-border) !important;
+    color: var(--app-text-main);
+}
+
+.table-hover tbody tr:hover {
+    background-color: var(--app-table-hover) !important;
 }
 
 /* Chart Canvas Container */
@@ -78,8 +120,8 @@ small, .small { font-size: 0.75rem; }
 }
 
 @keyframes highlightPulse {
-    0% { border-color: rgba(59, 130, 246, 0.8) !important; box-shadow: 0 0 15px rgba(59, 130, 246, 0.5); }
-    100% { border-color: rgba(255, 255, 255, 0.08) !important; box-shadow: none; }
+    0% { border-color: rgba(59, 130, 246, 0.8) !important; box-shadow: 0 0 15px rgba(59, 130, 246, 0.4); }
+    100% { border-color: var(--app-card-border) !important; box-shadow: none; }
 }
 
 /* Button & Form Control Compact Tuning */

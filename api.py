@@ -234,10 +234,10 @@ def _get_48h_query_filter(server_id):
         query = query.filter_by(server_id=server_id)
     return query
 
-def _downsample_records_to_buckets(records, target_bucket_sec=10, pad_to_hours=6):
+def _downsample_records_to_buckets(records, target_bucket_sec=10, pad_to_hours=1):
     """
     Downsamples dense 1-second records into target_bucket_sec (default 10s) buckets.
-    Pads timeline back to 6 hours ago with 0 values if historical data is short.
+    Pads timeline back to 1 hour ago with 0 values if historical data is short.
     Returns: (timestamps, delta_queries, delta_qps, avg_latencies, p95_latencies, nxdomains, servfails)
     """
     now = datetime.utcnow()
@@ -248,20 +248,20 @@ def _downsample_records_to_buckets(records, target_bucket_sec=10, pad_to_hours=6
         curr = start_pad
         while curr <= now:
             ts_list.append(curr.strftime('%Y-%m-%dT%H:%M:%SZ'))
-            curr += timedelta(minutes=15)
+            curr += timedelta(minutes=5)
         return ts_list, [0]*len(ts_list), [0.0]*len(ts_list), [0.0]*len(ts_list), [0.0]*len(ts_list), [0]*len(ts_list), [0]*len(ts_list)
 
     # Sort records chronologically
     records = sorted(records, key=lambda r: r.timestamp)
     first_ts = records[0].timestamp
 
-    # If first record is within past 6h and padding requested, prepend initial padded points
+    # If first record is within past 1h and padding requested, prepend initial padded points
     prepended_ts = []
     if pad_to_hours and first_ts > start_pad + timedelta(minutes=2):
         curr = start_pad
         while curr < first_ts - timedelta(minutes=2):
             prepended_ts.append(curr.strftime('%Y-%m-%dT%H:%M:%SZ'))
-            curr += timedelta(minutes=15)
+            curr += timedelta(minutes=5)
 
     # Bucket actual records by 10s intervals
     buckets = []
@@ -317,7 +317,7 @@ def get_query_analytics():
     query = _get_48h_query_filter(server_id)
     records = query.order_by(MetricHistory.timestamp.asc()).all()
     
-    timestamps, delta_queries, delta_qps, avg_lat, p95_lat, nxdomains, servfails = _downsample_records_to_buckets(records, target_bucket_sec=10, pad_to_hours=6)
+    timestamps, delta_queries, delta_qps, avg_lat, p95_lat, nxdomains, servfails = _downsample_records_to_buckets(records, target_bucket_sec=10, pad_to_hours=1)
     
     per_server_data = {}
     if not server_id or server_id == 'all':
@@ -325,7 +325,7 @@ def get_query_analytics():
         for srv in active_servers:
             srv_records = [r for r in records if r.server_id == srv.id]
             if srv_records:
-                _, srv_queries, _, srv_avg_lat, _, _, _ = _downsample_records_to_buckets(srv_records, target_bucket_sec=10, pad_to_hours=6)
+                _, srv_queries, _, srv_avg_lat, _, _, _ = _downsample_records_to_buckets(srv_records, target_bucket_sec=10, pad_to_hours=1)
                 per_server_data[srv.id] = {
                     'name': srv.name,
                     'queries': srv_queries,
@@ -394,7 +394,7 @@ def get_latency_analytics():
     query = _get_48h_query_filter(server_id)
     records = query.order_by(MetricHistory.timestamp.asc()).all()
     
-    timestamps, delta_queries, delta_qps, avg_lat, p95_lat, nxdomains, servfails = _downsample_records_to_buckets(records, target_bucket_sec=10, pad_to_hours=6)
+    timestamps, delta_queries, delta_qps, avg_lat, p95_lat, nxdomains, servfails = _downsample_records_to_buckets(records, target_bucket_sec=10, pad_to_hours=1)
     
     return jsonify({
         'timestamps': timestamps,
@@ -409,7 +409,7 @@ def get_security_analytics():
     query = _get_48h_query_filter(server_id)
     records = query.order_by(MetricHistory.timestamp.asc()).all()
     
-    timestamps, delta_queries, delta_qps, avg_lat, p95_lat, nxdomains, servfails = _downsample_records_to_buckets(records, target_bucket_sec=10, pad_to_hours=6)
+    timestamps, delta_queries, delta_qps, avg_lat, p95_lat, nxdomains, servfails = _downsample_records_to_buckets(records, target_bucket_sec=10, pad_to_hours=1)
     
     return jsonify({
         'timestamps': timestamps,

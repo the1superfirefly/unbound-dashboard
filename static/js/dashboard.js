@@ -508,6 +508,37 @@ function toggleTheme() {
     document.documentElement.setAttribute('data-bs-theme', next);
     localStorage.setItem('uad_theme', next);
     updateThemeIcon(next);
+    updateAllChartThemes();
+}
+
+function getThemeColors() {
+    const theme = document.documentElement.getAttribute('data-bs-theme') || 'dark';
+    return {
+        textColor: theme === 'dark' ? '#94a3b8' : '#475569',
+        gridColor: theme === 'dark' ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)',
+        legendColor: theme === 'dark' ? '#94a3b8' : '#334155'
+    };
+}
+
+function updateAllChartThemes() {
+    const colors = getThemeColors();
+    [queryChartInstance, cacheChartInstance, latencyChartInstance].forEach(chart => {
+        if (!chart) return;
+        if (chart.options.plugins && chart.options.plugins.legend && chart.options.plugins.legend.labels) {
+            chart.options.plugins.legend.labels.color = colors.legendColor;
+        }
+        if (chart.options.scales) {
+            if (chart.options.scales.x) {
+                if (chart.options.scales.x.ticks) chart.options.scales.x.ticks.color = colors.textColor;
+                if (chart.options.scales.x.grid) chart.options.scales.x.grid.color = colors.gridColor;
+            }
+            if (chart.options.scales.y) {
+                if (chart.options.scales.y.ticks) chart.options.scales.y.ticks.color = colors.textColor;
+                if (chart.options.scales.y.grid) chart.options.scales.y.grid.color = colors.gridColor;
+            }
+        }
+        chart.update('none');
+    });
 }
 
 function zoomToChart(cardId) {
@@ -739,11 +770,12 @@ async function fetchAlerts() {
 }
 
 function createIndependentChartConfig(extraOptions = {}) {
+    const colors = getThemeColors();
     return {
         responsive: true,
         maintainAspectRatio: false,
         plugins: {
-            legend: { labels: { color: '#94a3b8', font: { size: 11 } } },
+            legend: { labels: { color: colors.legendColor, font: { size: 11 } } },
             zoom: {
                 zoom: {
                     wheel: { enabled: true },
@@ -762,15 +794,15 @@ function createIndependentChartConfig(extraOptions = {}) {
         scales: {
             x: {
                 ticks: {
-                    color: '#64748b',
+                    color: colors.textColor,
                     font: { size: 10 },
                     maxTicksLimit: 10,
                     maxRotation: 0,
                     minRotation: 0
                 },
-                grid: { color: 'rgba(255,255,255,0.05)' }
+                grid: { color: colors.gridColor }
             },
-            y: { ticks: { color: '#64748b', font: { size: 10 } }, grid: { color: 'rgba(255,255,255,0.05)' } }
+            y: { ticks: { color: colors.textColor, font: { size: 10 } }, grid: { color: colors.gridColor } }
         },
         ...extraOptions
     };
