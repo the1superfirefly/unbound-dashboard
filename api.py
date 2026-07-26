@@ -317,8 +317,21 @@ def get_query_analytics():
     query = _get_48h_query_filter(server_id)
     records = query.order_by(MetricHistory.timestamp.asc()).all()
     
-    timestamps, delta_queries, delta_qps, avg_lat, p95_lat, nxdomains, servfails = _downsample_records_to_buckets(records, target_bucket_sec=10, pad_to_24h=True)
+    timestamps, delta_queries, delta_qps, avg_lat, p95_lat, nxdomains, servfails = _downsample_records_to_buckets(records, target_bucket_sec=10, pad_to_hours=6)
     
+    per_server_data = {}
+    if not server_id or server_id == 'all':
+        active_servers = ServerConfig.query.filter_by(is_active=True).all()
+        for srv in active_servers:
+            srv_records = [r for r in records if r.server_id == srv.id]
+            if srv_records:
+                _, srv_queries, _, srv_avg_lat, _, _, _ = _downsample_records_to_buckets(srv_records, target_bucket_sec=10, pad_to_hours=6)
+                per_server_data[srv.id] = {
+                    'name': srv.name,
+                    'queries': srv_queries,
+                    'avg_latency': srv_avg_lat
+                }
+
     latest = records[-1] if records else None
     qtypes = {
         'A': latest.qtype_a if latest else 0,
@@ -353,7 +366,8 @@ def get_query_analytics():
         'time_coverage': _get_time_coverage_info(records),
         'qtypes': qtypes,
         'top_cached_domains': top_cached_domains,
-        'top_fetched_domains': top_fetched_domains
+        'top_fetched_domains': top_fetched_domains,
+        'per_server': per_server_data
     })
 
 @api_bp.route('/cache', methods=['GET'])

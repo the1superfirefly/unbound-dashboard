@@ -821,6 +821,8 @@ function initCharts() {
     });
 }
 
+const SERVER_COLORS = ['#10b981', '#8b5cf6', '#06b6d4', '#ec4899', '#f97316'];
+
 function updateCharts(queryData, cacheData, latencyData, securityData, isInitial = false) {
     const timestamps = queryData.timestamps || [];
     const spanOverMultipleDays = timestamps.length > 0 && (
@@ -829,10 +831,42 @@ function updateCharts(queryData, cacheData, latencyData, securityData, isInitial
 
     const localTimestamps = timestamps.map(ts => formatClientLocalTime(ts, spanOverMultipleDays));
     const updateMode = isInitial ? 'default' : 'none';
+    const perServer = queryData.per_server || {};
+    const serverKeys = Object.keys(perServer);
 
     if (queryChartInstance) {
         queryChartInstance.data.labels = localTimestamps;
-        queryChartInstance.data.datasets[0].data = queryData.queries || [];
+        const queryDatasets = [{
+            label: 'Aggregated Total Queries',
+            data: queryData.queries || [],
+            borderColor: '#3b82f6',
+            backgroundColor: 'rgba(59, 130, 246, 0.12)',
+            fill: true,
+            tension: 0.35,
+            borderWidth: 2.5,
+            pointRadius: 0,
+            pointHoverRadius: 4
+        }];
+
+        if (serverKeys.length > 1) {
+            serverKeys.forEach((key, idx) => {
+                const srv = perServer[key];
+                const color = SERVER_COLORS[idx % SERVER_COLORS.length];
+                queryDatasets.push({
+                    label: `${srv.name} Queries`,
+                    data: srv.queries || [],
+                    borderColor: color,
+                    borderDash: [5, 5],
+                    fill: false,
+                    tension: 0.35,
+                    borderWidth: 1.5,
+                    pointRadius: 0,
+                    pointHoverRadius: 4
+                });
+            });
+        }
+
+        queryChartInstance.data.datasets = queryDatasets;
         queryChartInstance.update(updateMode);
     }
 
@@ -845,8 +879,29 @@ function updateCharts(queryData, cacheData, latencyData, securityData, isInitial
 
     if (latencyChartInstance) {
         latencyChartInstance.data.labels = localTimestamps;
-        latencyChartInstance.data.datasets[0].data = latencyData.avg || [];
-        latencyChartInstance.data.datasets[1].data = latencyData.p95 || [];
+        const latencyDatasets = [
+            { label: 'Aggregated Avg Latency (ms)', data: latencyData.avg || [], borderColor: '#f59e0b', tension: 0.35, borderWidth: 2.5, pointRadius: 0, pointHoverRadius: 4 },
+            { label: 'Aggregated P95 Latency (ms)', data: latencyData.p95 || [], borderColor: '#ef4444', borderDash: [4, 4], tension: 0.35, borderWidth: 1.5, pointRadius: 0, pointHoverRadius: 4 }
+        ];
+
+        if (serverKeys.length > 1) {
+            serverKeys.forEach((key, idx) => {
+                const srv = perServer[key];
+                const color = SERVER_COLORS[idx % SERVER_COLORS.length];
+                latencyDatasets.push({
+                    label: `${srv.name} Avg (ms)`,
+                    data: srv.avg_latency || [],
+                    borderColor: color,
+                    borderDash: [3, 3],
+                    tension: 0.35,
+                    borderWidth: 1.5,
+                    pointRadius: 0,
+                    pointHoverRadius: 4
+                });
+            });
+        }
+
+        latencyChartInstance.data.datasets = latencyDatasets;
         latencyChartInstance.update(updateMode);
     }
 }
