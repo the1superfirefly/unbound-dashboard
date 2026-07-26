@@ -3,10 +3,18 @@ import logging
 from flask import Flask, render_template, jsonify
 from database import init_db
 from api import api_bp
-from collector import fetch_and_record_metrics, sync_logs_to_github, purge_orphan_metrics
-from apscheduler.schedulers.background import BackgroundScheduler
+from collector import init_scheduler, purge_orphan_metrics, fetch_and_record_metrics
 
 app = Flask(__name__)
+
+# Configure SQLite database path inside database/ directory
+db_dir = os.path.join(app.root_path, 'database')
+os.makedirs(db_dir, exist_ok=True)
+db_path = os.path.join(db_dir, 'unbound_dashboard.db')
+app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{db_path}'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+# Initialize database schema
 init_db(app)
 
 # Configure detailed file logging to logs/server_telemetry.log
@@ -25,30 +33,15 @@ root_logger = logging.getLogger()
 root_logger.setLevel(logging.INFO)
 root_logger.addHandler(file_handler)
 
+# Register API routes
 app.register_blueprint(api_bp)
-
-# Background scheduler for polling metrics (15s) and syncing telemetry logs to GitHub (30s)
-scheduler = BackgroundScheduler(daemon=True)
-
-def run_collector_task():
-    try:
-        fetch_and_record_metrics(app)
-    except Exception as e:
-        app.logger.error(f"Collector task error: {e}")
-
-def run_log_sync_task():
-    try:
-        sync_logs_to_github(app)
-    except Exception as e:
-        app.logger.error(f"Log sync task error: {e}")
 
 with app.app_context():
     purge_orphan_metrics(app)
     fetch_and_record_metrics(app)
 
-scheduler.add_job(run_collector_task, 'interval', seconds=15)
-scheduler.add_job(run_log_sync_task, 'interval', seconds=30)
-scheduler.start()
+# Start 1-second metric collection cycle & 30-second GitHub log sync
+scheduler = init_scheduler(app)
 
 @app.route('/')
 def index():
