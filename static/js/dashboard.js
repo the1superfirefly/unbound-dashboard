@@ -722,8 +722,16 @@ async function fetchDashboardData(isInitial = false) {
         }
 
         if (overviewRes.top_used_server) {
+            const labelEl = document.getElementById('topServerLabel');
             const nameEl = document.getElementById('topServerName');
             const qEl = document.getElementById('topServerQueries');
+
+            if (serverId !== 'all') {
+                if (labelEl) labelEl.textContent = 'Selected Resolver (1h):';
+            } else {
+                if (labelEl) labelEl.textContent = 'Top Resolver (1h):';
+            }
+
             if (nameEl) nameEl.textContent = overviewRes.top_used_server.name || 'N/A';
             if (qEl) qEl.textContent = `${(overviewRes.top_used_server.queries || 0).toLocaleString()} queries`;
         }
@@ -780,7 +788,7 @@ function createIndependentChartConfig(extraOptions = {}) {
             legend: { labels: { color: colors.legendColor, font: { size: 11 } } },
             zoom: {
                 zoom: {
-                    wheel: { enabled: true },
+                    wheel: { enabled: false }, // Only enabled when chart is clicked/focused
                     pinch: { enabled: true },
                     mode: 'x'
                 },
@@ -810,6 +818,25 @@ function createIndependentChartConfig(extraOptions = {}) {
     };
 }
 
+function enableClickToZoom(chartInstance, canvasId, containerId) {
+    const canvas = document.getElementById(canvasId);
+    const container = document.getElementById(containerId);
+    if (!canvas || !container || !chartInstance) return;
+
+    canvas.addEventListener('click', (e) => {
+        e.stopPropagation();
+        chartInstance.options.plugins.zoom.zoom.wheel.enabled = true;
+        container.style.boxShadow = '0 0 0 2px #3b82f6';
+    });
+
+    document.addEventListener('click', (e) => {
+        if (!container.contains(e.target)) {
+            chartInstance.options.plugins.zoom.zoom.wheel.enabled = false;
+            container.style.boxShadow = 'none';
+        }
+    });
+}
+
 function initCharts() {
     Chart.defaults.font.family = "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif";
     Chart.defaults.font.size = 11;
@@ -833,6 +860,7 @@ function initCharts() {
         },
         options: createIndependentChartConfig()
     });
+    enableClickToZoom(queryChartInstance, 'queryChart', 'queryChartCard');
 
     const ctxCache = document.getElementById('cacheChart').getContext('2d');
     cacheChartInstance = new Chart(ctxCache, {
@@ -853,6 +881,7 @@ function initCharts() {
         },
         options: createIndependentChartConfig()
     });
+    enableClickToZoom(latencyChartInstance, 'latencyChart', 'latencyChartCard');
 }
 
 const SERVER_COLORS = ['#10b981', '#8b5cf6', '#06b6d4', '#ec4899', '#f97316'];

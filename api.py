@@ -149,11 +149,20 @@ def get_overview():
                     'dnssec_failures': 0, 'active_clients': 0
                 }
             })
+        one_hour_ago = datetime.utcnow() - timedelta(hours=1)
+        recs_1h = [r for r in records_coverage if r.timestamp >= one_hour_ago]
+        if len(recs_1h) >= 2:
+            delta_1h = max(0, (recs_1h[-1].total_queries or 0) - (recs_1h[0].total_queries or 0))
+        elif len(recs_1h) == 1:
+            delta_1h = recs_1h[0].total_queries or 0
+        else:
+            delta_1h = latest.total_queries or 0
+
         return jsonify({
             'status': 'ok',
             'server_count': server_count,
             'time_coverage': _get_time_coverage_info(records_coverage),
-            'top_used_server': {'id': latest.server_id, 'name': latest.server_name, 'queries': latest.total_queries},
+            'top_used_server': {'id': latest.server_id, 'name': latest.server_name, 'queries': delta_1h},
             'latest': latest.to_dict()
         })
 
