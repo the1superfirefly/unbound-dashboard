@@ -97,13 +97,54 @@ def clear_alerts():
     db.session.commit()
     return jsonify({'status': 'ok', 'message': 'Alert logs cleared successfully.'})
 
+def _get_global_top_server_1h(active_ids):
+    one_hour_ago = datetime.utcnow() - timedelta(hours=1)
+    records_1h = MetricHistory.query.filter(
+        MetricHistory.server_id.in_(active_ids),
+        MetricHistory.timestamp >= one_hour_ago
+    ).order_by(MetricHistory.timestamp.asc()).all()
+
+    server_1h_deltas = {}
+    for s_id in active_ids:
+        srv_recs = [r for r in records_1h if r.server_id == s_id]
+        if len(srv_recs) >= 2:
+            delta_q = max(0, (srv_recs[-1].total_queries or 0) - (srv_recs[0].total_queries or 0))
+        elif len(srv_recs) == 1:
+            delta_q = srv_recs[0].total_queries or 0
+        else:
+            delta_q = 0
+        server_1h_deltas[s_id] = delta_q
+
+    top_s_id = max(server_1h_deltas, key=server_1h_deltas.get) if server_1h_deltas else None
+    if top_s_id and server_1h_deltas[top_s_id] > 0:
+        srv_obj = db.session.get(ServerConfig, top_s_id)
+        return {
+            'id': top_s_id,
+            'name': srv_obj.name if srv_obj else top_s_id,
+            'queries': server_1h_deltas[top_s_id]
+        }
+    
+    subq = db.session.query(
+        MetricHistory.server_id,
+        func.max(MetricHistory.id).label('max_id')
+    ).filter(MetricHistory.server_id.in_(active_ids)).group_by(MetricHistory.server_id).subquery()
+    latest_per_server = db.session.query(MetricHistory).join(subq, MetricHistory.id == subq.c.max_id).all()
+    if latest_per_server:
+        top_server = max(latest_per_server, key=lambda m: m.total_queries or 0)
+        return {
+            'id': top_server.server_id,
+            'name': top_server.server_name,
+            'queries': top_server.total_queries or 0
+        }
+    return {'id': 'none', 'name': 'N/A', 'queries': 0}
+
 @api_bp.route('/overview', methods=['GET'])
 def get_overview():
-    server_id = request.args.get('server_id')
-    active_servers = ServerConfig.query.filter_by(is_active=True).all()
-    active_ids = [s.id for s in active_servers]
-    server_count = len(active_servers)
-    
+    server_id = request.args.get('server_id', 'all')
+    active_ids = [s.id for s in ServerConfig.query.filter_by(is_active=True).all()]
+    server_count = len(active_ids)
+    global_top_server = _get_global_top_server_1h(active_ids)
+
     if not active_ids:
         return jsonify({
             'status': 'ok',
@@ -111,7 +152,8 @@ def get_overview():
             'time_coverage': _get_time_coverage_info([]),
             'top_used_server': {'id': 'none', 'name': 'N/A', 'queries': 0},
             'latest': {
-                'server_id': 'none', 'server_name': 'No Server Configured',
+                'server_id': 'all',
+                'server_name': 'All Servers (Aggregated)',
                 'total_queries': 0, 'qps': 0.0, 'cache_hits': 0, 'cache_misses': 0,
                 'cache_hit_rate': 0.0, 'avg_latency': 0.0, 'p95_latency': 0.0,
                 'p99_latency': 0.0, 'servfail_count': 0, 'nxdomain_count': 0,
@@ -124,7 +166,7 @@ def get_overview():
             return jsonify({
                 'status': 'ok', 'server_count': server_count,
                 'time_coverage': _get_time_coverage_info([]),
-                'top_used_server': {'id': 'none', 'name': 'N/A', 'queries': 0},
+                'top_used_server': global_top_server,
                 'latest': {
                     'server_id': server_id, 'server_name': 'Unknown / Inactive Server',
                     'total_queries': 0, 'qps': 0.0, 'cache_hits': 0, 'cache_misses': 0,
@@ -140,7 +182,7 @@ def get_overview():
             return jsonify({
                 'status': 'ok', 'server_count': server_count,
                 'time_coverage': _get_time_coverage_info([]),
-                'top_used_server': {'id': 'none', 'name': 'N/A', 'queries': 0},
+                'top_used_server': global_top_server,
                 'latest': {
                     'server_id': server_id, 'server_name': srv.name if srv else 'Unbound Server',
                     'total_queries': 0, 'qps': 0.0, 'cache_hits': 0, 'cache_misses': 0,
@@ -179,20 +221,11 @@ def get_overview():
             p99_lat_24h = latest.p99_latency or 0.0
             peak_qps = latest.qps or 0.0
 
-        one_hour_ago = datetime.utcnow() - timedelta(hours=1)
-        recs_1h = [r for r in records_coverage if r.timestamp >= one_hour_ago]
-        if len(recs_1h) >= 2:
-            delta_1h = max(0, (recs_1h[-1].total_queries or 0) - (recs_1h[0].total_queries or 0))
-        elif len(recs_1h) == 1:
-            delta_1h = recs_1h[0].total_queries or 0
-        else:
-            delta_1h = q_24h
-
         return jsonify({
             'status': 'ok',
             'server_count': server_count,
             'time_coverage': _get_time_coverage_info(records_coverage),
-            'top_used_server': {'id': latest.server_id, 'name': latest.server_name, 'queries': delta_1h},
+            'top_used_server': global_top_server,
             'latest': {
                 'server_id': latest.server_id,
                 'server_name': latest.server_name,
@@ -211,7 +244,6 @@ def get_overview():
             }
         })
 
-    # Aggregated view across active servers strictly
     subq = db.session.query(
         MetricHistory.server_id,
         func.max(MetricHistory.id).label('max_id')
@@ -228,7 +260,7 @@ def get_overview():
             'status': 'ok',
             'server_count': server_count,
             'time_coverage': _get_time_coverage_info([]),
-            'top_used_server': {'id': 'none', 'name': 'N/A', 'queries': 0},
+            'top_used_server': global_top_server,
             'latest': {
                 'server_id': 'all',
                 'server_name': 'All Servers (Aggregated)',
@@ -253,47 +285,11 @@ def get_overview():
     dnssec_failures = sum(m.dnssec_failures for m in latest_per_server)
     active_clients = sum(m.active_clients for m in latest_per_server)
 
-    # Calculate 1-hour query volume per server for Top Resolver (1h) badge
-    one_hour_ago = datetime.utcnow() - timedelta(hours=1)
-    records_1h = MetricHistory.query.filter(
-        MetricHistory.server_id.in_(active_ids),
-        MetricHistory.timestamp >= one_hour_ago
-    ).order_by(MetricHistory.timestamp.asc()).all()
-
-    server_1h_deltas = {}
-    for s_id in active_ids:
-        srv_recs = [r for r in records_1h if r.server_id == s_id]
-        if len(srv_recs) >= 2:
-            delta_q = max(0, (srv_recs[-1].total_queries or 0) - (srv_recs[0].total_queries or 0))
-        elif len(srv_recs) == 1:
-            delta_q = srv_recs[0].total_queries or 0
-        else:
-            delta_q = 0
-        server_1h_deltas[s_id] = delta_q
-
-    top_s_id = max(server_1h_deltas, key=server_1h_deltas.get) if server_1h_deltas else None
-    if top_s_id and server_1h_deltas[top_s_id] > 0:
-        srv_obj = db.session.get(ServerConfig, top_s_id)
-        top_server_info = {
-            'id': top_s_id,
-            'name': srv_obj.name if srv_obj else top_s_id,
-            'queries': server_1h_deltas[top_s_id]
-        }
-    elif latest_per_server:
-        top_server = max(latest_per_server, key=lambda m: m.total_queries or 0)
-        top_server_info = {
-            'id': top_server.server_id,
-            'name': top_server.server_name,
-            'queries': top_server.total_queries or 0
-        }
-    else:
-        top_server_info = {'id': 'none', 'name': 'N/A', 'queries': 0}
-
     return jsonify({
         'status': 'ok',
         'server_count': server_count,
         'time_coverage': _get_time_coverage_info(all_records),
-        'top_used_server': top_server_info,
+        'top_used_server': global_top_server,
         'latest': {
             'server_id': 'all',
             'server_name': 'All Servers (Aggregated)',

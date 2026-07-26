@@ -726,12 +726,7 @@ async function fetchDashboardData(isInitial = false) {
             const nameEl = document.getElementById('topServerName');
             const qEl = document.getElementById('topServerQueries');
 
-            if (serverId !== 'all') {
-                if (labelEl) labelEl.textContent = 'Selected Resolver (1h):';
-            } else {
-                if (labelEl) labelEl.textContent = 'Top Resolver (1h):';
-            }
-
+            if (labelEl) labelEl.textContent = 'Top Resolver (1h):';
             if (nameEl) nameEl.textContent = overviewRes.top_used_server.name || 'N/A';
             if (qEl) qEl.textContent = `${(overviewRes.top_used_server.queries || 0).toLocaleString()} queries`;
         }
