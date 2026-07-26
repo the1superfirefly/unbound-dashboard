@@ -18,28 +18,29 @@ document.addEventListener('DOMContentLoaded', () => {
         fetchAlerts();
     }, 15000);
 
+    // Instant data refresh when server dropdown selection changes
     document.getElementById('serverSelect').addEventListener('change', () => {
+        console.log('Server selected:', getSelectedServerId());
         fetchDashboardData();
+        fetchAlerts();
     });
 
     document.getElementById('themeToggleBtn').addEventListener('click', toggleTheme);
 
-    document.getElementById('addServerForm').addEventListener('submit', (e) => {
+    document.getElementById('addServerForm').addEventListener('submit', async (e) => {
         e.preventDefault();
         const name = document.getElementById('serverName').value;
         const host = document.getElementById('serverHost').value;
-        const port = document.getElementById('serverPort').value;
-        const useMock = document.getElementById('serverMockMode').checked;
+        const port = parseInt(document.getElementById('serverPort').value);
 
         const newServer = {
             id: 'srv-' + Date.now(),
             name: name,
             host: host,
-            port: port,
-            useMock: useMock
+            port: port
         };
 
-        saveServer(newServer);
+        await saveServerBackend(newServer);
         bootstrap.Modal.getInstance(document.getElementById('addServerModal')).hide();
         document.getElementById('addServerForm').reset();
     });
@@ -68,30 +69,36 @@ function updateThemeIcon(theme) {
     }
 }
 
-function initServerStorage() {
-    let servers = JSON.parse(localStorage.getItem('uad_servers') || '[]');
-    if (servers.length === 0) {
-        servers = [
-            { id: 'srv-primary', name: 'Primary Unbound Resolver', host: '192.168.4.86', port: 8953, useMock: true }
-        ];
-        localStorage.setItem('uad_servers', JSON.stringify(servers));
-    }
-
+async function initServerStorage() {
     const select = document.getElementById('serverSelect');
     select.innerHTML = '<option value="all">All Servers (Aggregated)</option>';
-    servers.forEach(s => {
-        const opt = document.createElement('option');
-        opt.value = s.id;
-        opt.textContent = `${s.name} (${s.host})`;
-        select.appendChild(opt);
-    });
+    
+    try {
+        const servers = await fetch('/api/servers').then(r => r.json());
+        servers.forEach(s => {
+            const opt = document.createElement('option');
+            opt.value = s.id;
+            opt.textContent = `${s.name} (${s.host})`;
+            select.appendChild(opt);
+        });
+    } catch (e) {
+        console.error('Failed to load servers from backend:', e);
+    }
 }
 
-function saveServer(server) {
-    let servers = JSON.parse(localStorage.getItem('uad_servers') || '[]');
-    servers.push(server);
-    localStorage.setItem('uad_servers', JSON.stringify(servers));
-    initServerStorage();
+async function saveServerBackend(server) {
+    try {
+        await fetch('/api/servers', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(server)
+        });
+        await initServerStorage();
+        document.getElementById('serverSelect').value = server.id;
+        fetchDashboardData();
+    } catch (e) {
+        console.error('Failed to save server:', e);
+    }
 }
 
 function getSelectedServerId() {
@@ -110,18 +117,18 @@ async function fetchDashboardData() {
         ]);
 
         if (overviewRes.latest) {
-            document.getElementById('statTotalQueries').textContent = overviewRes.latest.total_queries.toLocaleString();
-            document.getElementById('statQPS').textContent = overviewRes.latest.qps;
-            document.getElementById('statCacheHitRate').textContent = `${overviewRes.latest.cache_hit_rate}%`;
-            document.getElementById('statCacheRatio').textContent = `Hits: ${overviewRes.latest.cache_hits.toLocaleString()} | Miss: ${overviewRes.latest.cache_misses.toLocaleString()}`;
-            document.getElementById('statAvgLatency').textContent = `${overviewRes.latest.avg_latency} ms`;
-            document.getElementById('statP95').textContent = overviewRes.latest.p95_latency;
-            document.getElementById('statP99').textContent = overviewRes.latest.p99_latency;
+            document.getElementById('statTotalQueries').textContent = (overviewRes.latest.total_queries || 0).toLocaleString();
+            document.getElementById('statQPS').textContent = overviewRes.latest.qps || 0;
+            document.getElementById('statCacheHitRate').textContent = `${overviewRes.latest.cache_hit_rate || 0}%`;
+            document.getElementById('statCacheRatio').textContent = `Hits: ${(overviewRes.latest.cache_hits || 0).toLocaleString()} | Miss: ${(overviewRes.latest.cache_misses || 0).toLocaleString()}`;
+            document.getElementById('statAvgLatency').textContent = `${overviewRes.latest.avg_latency || 0} ms`;
+            document.getElementById('statP95').textContent = overviewRes.latest.p95_latency || 0;
+            document.getElementById('statP99').textContent = overviewRes.latest.p99_latency || 0;
             
-            const totalAnomalies = overviewRes.latest.nxdomain_count + overviewRes.latest.servfail_count + overviewRes.latest.dnssec_failures;
+            const totalAnomalies = (overviewRes.latest.nxdomain_count || 0) + (overviewRes.latest.servfail_count || 0) + (overviewRes.latest.dnssec_failures || 0);
             document.getElementById('statSecurityAnomalies').textContent = totalAnomalies;
-            document.getElementById('statNXDOMAIN').textContent = overviewRes.latest.nxdomain_count;
-            document.getElementById('statSERVFAIL').textContent = overviewRes.latest.servfail_count;
+            document.getElementById('statNXDOMAIN').textContent = overviewRes.latest.nxdomain_count || 0;
+            document.getElementById('statSERVFAIL').textContent = overviewRes.latest.servfail_count || 0;
         }
 
         updateCharts(queryRes, cacheRes, latencyRes, securityRes);
@@ -131,12 +138,13 @@ async function fetchDashboardData() {
 }
 
 async function fetchAlerts() {
+    const serverId = getSelectedServerId();
     try {
-        const alerts = await fetch('/api/alerts').then(r => r.json());
+        const alerts = await fetch(`/api/alerts?server_id=${serverId}`).then(r => r.json());
         const tbody = document.getElementById('alertsTableBody');
         tbody.innerHTML = '';
-        if (alerts.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="5" class="text-center text-muted py-3">No active alerts recorded. System healthy.</td></tr>';
+        if (!alerts || alerts.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="5" class="text-center text-muted py-3">No active alerts recorded for selected server.</td></tr>';
             return;
         }
         alerts.forEach(a => {
@@ -171,7 +179,6 @@ function initCharts() {
         }
     };
 
-    // Query Chart
     const ctxQuery = document.getElementById('queryChart').getContext('2d');
     queryChartInstance = new Chart(ctxQuery, {
         type: 'line',
@@ -179,15 +186,13 @@ function initCharts() {
         options: chartDefaults
     });
 
-    // Cache Chart (Doughnut)
     const ctxCache = document.getElementById('cacheChart').getContext('2d');
     cacheChartInstance = new Chart(ctxCache, {
         type: 'doughnut',
-        data: { labels: ['Cache Hits', 'Cache Misses'], datasets: [{ data: [90, 10], backgroundColor: ['#06b6d4', '#f43f5e'], borderWidth: 0 }] },
+        data: { labels: ['Cache Hits', 'Cache Misses'], datasets: [{ data: [0, 0], backgroundColor: ['#06b6d4', '#f43f5e'], borderWidth: 0 }] },
         options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { color: '#94a3b8' } } } }
     });
 
-    // Latency Chart
     const ctxLatency = document.getElementById('latencyChart').getContext('2d');
     latencyChartInstance = new Chart(ctxLatency, {
         type: 'line',
@@ -201,7 +206,6 @@ function initCharts() {
         options: chartDefaults
     });
 
-    // Security Chart
     const ctxSec = document.getElementById('securityChart').getContext('2d');
     securityChartInstance = new Chart(ctxSec, {
         type: 'bar',
@@ -217,30 +221,30 @@ function initCharts() {
 }
 
 function updateCharts(queryData, cacheData, latencyData, securityData) {
-    if (queryChartInstance && queryData.timestamps) {
-        queryChartInstance.data.labels = queryData.timestamps;
-        queryChartInstance.data.datasets[0].data = queryData.queries;
+    if (queryChartInstance) {
+        queryChartInstance.data.labels = queryData.timestamps || [];
+        queryChartInstance.data.datasets[0].data = queryData.queries || [];
         queryChartInstance.update();
     }
 
-    if (cacheChartInstance && cacheData.hits) {
-        const totalHits = cacheData.hits.reduce((a, b) => a + b, 0);
-        const totalMisses = cacheData.misses.reduce((a, b) => a + b, 0);
+    if (cacheChartInstance) {
+        const totalHits = cacheData.hits ? cacheData.hits.reduce((a, b) => a + b, 0) : 0;
+        const totalMisses = cacheData.misses ? cacheData.misses.reduce((a, b) => a + b, 0) : 0;
         cacheChartInstance.data.datasets[0].data = [totalHits, totalMisses];
         cacheChartInstance.update();
     }
 
-    if (latencyChartInstance && latencyData.timestamps) {
-        latencyChartInstance.data.labels = latencyData.timestamps;
-        latencyChartInstance.data.datasets[0].data = latencyData.avg;
-        latencyChartInstance.data.datasets[1].data = latencyData.p95;
+    if (latencyChartInstance) {
+        latencyChartInstance.data.labels = latencyData.timestamps || [];
+        latencyChartInstance.data.datasets[0].data = latencyData.avg || [];
+        latencyChartInstance.data.datasets[1].data = latencyData.p95 || [];
         latencyChartInstance.update();
     }
 
-    if (securityChartInstance && securityData.timestamps) {
-        securityChartInstance.data.labels = securityData.timestamps;
-        securityChartInstance.data.datasets[0].data = securityData.nxdomains;
-        securityChartInstance.data.datasets[1].data = securityData.servfails;
+    if (securityChartInstance) {
+        securityChartInstance.data.labels = securityData.timestamps || [];
+        securityChartInstance.data.datasets[0].data = securityData.nxdomains || [];
+        securityChartInstance.data.datasets[1].data = securityData.servfails || [];
         securityChartInstance.update();
     }
 }

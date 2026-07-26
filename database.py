@@ -4,6 +4,24 @@ from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
 
+class ServerConfig(db.Model):
+    __tablename__ = 'server_config'
+    
+    id = db.Column(db.String(64), primary_key=True)
+    name = db.Column(db.String(128), nullable=False)
+    host = db.Column(db.String(128), nullable=False)
+    port = db.Column(db.Integer, default=8953)
+    is_active = db.Column(db.Boolean, default=True)
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'host': self.host,
+            'port': self.port,
+            'is_active': self.is_active
+        }
+
 class MetricHistory(db.Model):
     __tablename__ = 'metric_history'
     
@@ -77,8 +95,8 @@ class AlertLog(db.Model):
     timestamp = db.Column(db.DateTime, default=datetime.utcnow, index=True)
     server_id = db.Column(db.String(64))
     server_name = db.Column(db.String(128))
-    alert_type = db.Column(db.String(64)) # High Latency, Low Cache Hit, Server Offline, SERVFAIL Spike, etc.
-    severity = db.Column(db.String(32)) # info, warning, critical
+    alert_type = db.Column(db.String(64))
+    severity = db.Column(db.String(32))
     message = db.Column(db.Text)
 
     def to_dict(self):

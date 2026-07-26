@@ -1,11 +1,47 @@
 from flask import Blueprint, jsonify, request, Response
-from database import db, MetricHistory, AlertLog
+from database import db, MetricHistory, AlertLog, ServerConfig
 from datetime import datetime, timedelta
 import json
 import csv
 import io
 
 api_bp = Blueprint('api', __name__, url_prefix='/api')
+
+@api_bp.route('/servers', methods=['GET', 'POST', 'DELETE'])
+def handle_servers():
+    if request.method == 'POST':
+        data = request.json or {}
+        server_id = data.get('id')
+        if not server_id:
+            return jsonify({'error': 'Server ID required'}), 400
+        
+        srv = db.session.get(ServerConfig, server_id)
+        if not srv:
+            srv = ServerConfig(
+                id=server_id,
+                name=data.get('name', 'Unbound Server'),
+                host=data.get('host', '127.0.0.1'),
+                port=data.get('port', 8953)
+            )
+            db.session.add(srv)
+        else:
+            srv.name = data.get('name', srv.name)
+            srv.host = data.get('host', srv.host)
+            srv.port = data.get('port', srv.port)
+        db.session.commit()
+        return jsonify({'status': 'ok', 'server': srv.to_dict()})
+
+    elif request.method == 'DELETE':
+        server_id = request.args.get('id')
+        if server_id:
+            srv = db.session.get(ServerConfig, server_id)
+            if srv:
+                db.session.delete(srv)
+                db.session.commit()
+        return jsonify({'status': 'ok'})
+        
+    servers = ServerConfig.query.filter_by(is_active=True).all()
+    return jsonify([s.to_dict() for s in servers])
 
 @api_bp.route('/overview', methods=['GET'])
 def get_overview():
@@ -16,24 +52,32 @@ def get_overview():
         
     latest_metrics = query.order_by(MetricHistory.timestamp.desc()).first()
     if not latest_metrics:
-        # Fallback empty metrics structure
+        srv = db.session.get(ServerConfig, server_id) if server_id and server_id != 'all' else None
+        srv_name = srv.name if srv else "Unbound Server"
         return jsonify({
             'status': 'ok',
-            'server_count': 1,
+            'server_count': ServerConfig.query.count(),
             'latest': {
+                'server_id': server_id or 'none',
+                'server_name': srv_name,
                 'total_queries': 0,
-                'qps': 0,
-                'cache_hit_rate': 94.2,
-                'avg_latency': 12.4,
+                'qps': 0.0,
+                'cache_hits': 0,
+                'cache_misses': 0,
+                'cache_hit_rate': 0.0,
+                'avg_latency': 0.0,
+                'p95_latency': 0.0,
+                'p99_latency': 0.0,
                 'servfail_count': 0,
                 'nxdomain_count': 0,
-                'active_clients': 42
+                'dnssec_failures': 0,
+                'active_clients': 0
             }
         })
         
     return jsonify({
         'status': 'ok',
-        'server_count': MetricHistory.query.with_entities(MetricHistory.server_id).distinct().count(),
+        'server_count': ServerConfig.query.count(),
         'latest': latest_metrics.to_dict()
     })
 
@@ -60,8 +104,8 @@ def get_query_analytics():
         'ipv4': ipv4,
         'ipv6': ipv6,
         'total_sum': sum(queries),
-        'peak_qps': max(qps) if qps else 0,
-        'avg_qps': round(sum(qps)/len(qps), 2) if qps else 0
+        'peak_qps': max(qps) if qps else 0.0,
+        'avg_qps': round(sum(qps)/len(qps), 2) if qps else 0.0
     })
 
 @api_bp.route('/cache', methods=['GET'])
@@ -88,8 +132,8 @@ def get_cache_analytics():
         'misses': misses,
         'hit_rates': hit_rates,
         'prefetch': prefetch,
-        'rrset_count': latest.rrset_cache_num if latest else 14500,
-        'msg_count': latest.msg_cache_num if latest else 28900
+        'rrset_count': latest.rrset_cache_num if latest else 0,
+        'msg_count': latest.msg_cache_num if latest else 0
     })
 
 @api_bp.route('/latency', methods=['GET'])
@@ -156,7 +200,11 @@ def get_history():
 
 @api_bp.route('/alerts', methods=['GET'])
 def get_alerts():
-    records = AlertLog.query.order_by(AlertLog.timestamp.desc()).limit(20).all()
+    server_id = request.args.get('server_id')
+    query = AlertLog.query
+    if server_id and server_id != 'all':
+        query = query.filter_by(server_id=server_id)
+    records = query.order_by(AlertLog.timestamp.desc()).limit(20).all()
     return jsonify([r.to_dict() for r in records])
 
 @api_bp.route('/export/<fmt>', methods=['GET'])

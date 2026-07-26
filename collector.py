@@ -1,41 +1,57 @@
 import subprocess
 import logging
+import os
+import time
 from datetime import datetime
-from database import db, MetricHistory, AlertLog
-from parser import parse_unbound_stats, generate_mock_stats
+from database import db, MetricHistory, AlertLog, ServerConfig
+from parser import parse_unbound_stats
 
 logger = logging.getLogger('uad.collector')
 
-def fetch_and_record_metrics(app, servers=None):
+def fetch_and_record_metrics(app):
     """
-    Polls defined Unbound servers or generates simulated metrics if unreachable/mock.
+    Polls defined Unbound servers exclusively via unbound-control stats_noreset.
     """
     with app.app_context():
+        servers = ServerConfig.query.filter_by(is_active=True).all()
         if not servers:
-            servers = [
-                {'id': 'srv-default-1', 'name': 'Unbound Resolver Core', 'host': '127.0.0.1', 'port': 8953, 'use_mock': True},
-                {'id': 'srv-default-2', 'name': 'Unbound Secondary Gateway', 'host': '192.168.4.86', 'port': 8953, 'use_mock': True}
-            ]
-            
+            # Seed primary server if empty
+            default_srv = ServerConfig(id='srv-primary', name='Unbound Primary', host='127.0.0.1', port=8953)
+            db.session.add(default_srv)
+            db.session.commit()
+            servers = [default_srv]
+
         for server in servers:
-            server_id = server.get('id', 'srv-unknown')
-            server_name = server.get('name', 'Unbound Node')
-            use_mock = server.get('use_mock', True)
-            host = server.get('host', '127.0.0.1')
+            server_id = server.id
+            server_name = server.name
+            host = server.host
+            port = server.port
             
+            logger.info(f"Polling unbound-control on {host}:{port} for server {server_name} ({server_id})...")
             stats_data = None
-            if not use_mock:
-                try:
-                    cmd = ["unbound-control", "-s", f"{host}:{server.get('port', 8953)}", "stats_noreset"]
-                    res = subprocess.run(cmd, capture_output=True, text=True, timeout=5)
-                    if res.returncode == 0 and res.stdout:
-                        stats_data = parse_unbound_stats(res.stdout)
-                except Exception as e:
-                    logger.warning(f"Failed to poll unbound-control on {host}: {e}")
-                    
+            try:
+                cmd = ["unbound-control", "-s", f"{host}:{port}", "stats_noreset"]
+                res = subprocess.run(cmd, capture_output=True, text=True, timeout=5)
+                if res.returncode == 0 and res.stdout:
+                    stats_data = parse_unbound_stats(res.stdout)
+                else:
+                    logger.warning(f"Unbound-control returned code {res.returncode} for {host}:{port}: {res.stderr}")
+            except Exception as e:
+                logger.error(f"Failed to poll unbound-control on {host}:{port}: {e}")
+
             if not stats_data:
-                stats_data = generate_mock_stats(server_id, server_name)
-                
+                # Record server offline alert
+                alert = AlertLog(
+                    server_id=server_id,
+                    server_name=server_name,
+                    alert_type="Server Offline",
+                    severity="critical",
+                    message=f"Could not connect to unbound-control on {host}:{port}"
+                )
+                db.session.add(alert)
+                db.session.commit()
+                continue
+
             record = MetricHistory(
                 server_id=server_id,
                 server_name=server_name,
@@ -61,36 +77,53 @@ def fetch_and_record_metrics(app, servers=None):
                 active_clients=stats_data['active_clients']
             )
             db.session.add(record)
-            
-            # Anomaly & Threshold Alert checks
+
             if stats_data['avg_latency'] > 30.0:
-                alert = AlertLog(
-                    server_id=server_id,
-                    server_name=server_name,
-                    alert_type="High Latency",
-                    severity="warning",
+                db.session.add(AlertLog(
+                    server_id=server_id, server_name=server_name,
+                    alert_type="High Latency", severity="warning",
                     message=f"Average latency elevated: {stats_data['avg_latency']} ms"
-                )
-                db.session.add(alert)
-                
-            if stats_data['cache_hit_rate'] < 80.0:
-                alert = AlertLog(
-                    server_id=server_id,
-                    server_name=server_name,
-                    alert_type="Low Cache Hit Rate",
-                    severity="warning",
-                    message=f"Cache hit rate dropped to {stats_data['cache_hit_rate']}%"
-                )
-                db.session.add(alert)
-                
-            if stats_data['servfail_count'] > 10:
-                alert = AlertLog(
-                    server_id=server_id,
-                    server_name=server_name,
-                    alert_type="SERVFAIL Spike",
-                    severity="critical",
+                ))
+
+            if stats_data['servfail_count'] > 5:
+                db.session.add(AlertLog(
+                    server_id=server_id, server_name=server_name,
+                    alert_type="SERVFAIL Spike", severity="critical",
                     message=f"Detected SERVFAIL spike: {stats_data['servfail_count']} failures"
-                )
-                db.session.add(alert)
-                
+                ))
+
         db.session.commit()
+
+def sync_logs_to_github(app):
+    """
+    Background job running every 30 seconds:
+    Commits and pushes logs/server_telemetry.log to GitHub, then purges local logs.
+    """
+    log_path = os.path.join(app.root_path, 'logs', 'server_telemetry.log')
+    if not os.path.exists(log_path) or os.path.getsize(log_path) == 0:
+        return
+
+    logger.info("Starting automated 30s GitHub log upload & local purge cycle...")
+    try:
+        # Stage log file
+        rel_log_path = 'logs/server_telemetry.log'
+        timestamp = datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S UTC')
+        
+        # Git commands execution
+        cwd = app.root_path
+        subprocess.run(["git", "add", rel_log_path], cwd=cwd, check=True)
+        commit_res = subprocess.run(["git", "commit", "-m", f"Automated telemetry log sync [{timestamp}]"], cwd=cwd, capture_output=True, text=True)
+        
+        if commit_res.returncode == 0:
+            push_res = subprocess.run(["git", "push", "origin", "main"], cwd=cwd, capture_output=True, text=True, timeout=15)
+            if push_res.returncode == 0:
+                logger.info("Successfully pushed telemetry log to GitHub! Truncating local log file.")
+                # Truncate local log file after successful upload
+                with open(log_path, 'w') as f:
+                    f.truncate(0)
+            else:
+                logger.warning(f"Git push failed: {push_res.stderr}")
+        else:
+            logger.info("No new log changes to commit.")
+    except Exception as e:
+        logger.error(f"Error syncing logs to GitHub: {e}")
