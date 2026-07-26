@@ -29,6 +29,7 @@ os.makedirs(db_dir, exist_ok=True)
 db_path = os.path.join(db_dir, 'unbound_dashboard.db')
 app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{db_path}'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {'timeout': 30}
 
 # Initialize database schema
 init_db(app)

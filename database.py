@@ -10,6 +10,11 @@ def init_db(app):
         db.create_all()
         try:
             with db.engine.connect() as conn:
+                try:
+                    conn.execute(db.text("PRAGMA journal_mode=WAL"))
+                    conn.execute(db.text("PRAGMA synchronous=NORMAL"))
+                except Exception:
+                    pass
                 for col in ['qtype_srv', 'qtype_ptr']:
                     try:
                         conn.execute(db.text(f"ALTER TABLE metric_history ADD COLUMN {col} BIGINT DEFAULT 0"))

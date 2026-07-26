@@ -194,32 +194,14 @@ def get_overview():
         twenty_four_hours_ago = datetime.utcnow() - timedelta(hours=24)
         recs_24h = [r for r in records_coverage if r.timestamp >= twenty_four_hours_ago]
 
-        if recs_24h:
-            if len(recs_24h) >= 2:
-                q_24h = max(0, (recs_24h[-1].total_queries or 0) - (recs_24h[0].total_queries or 0))
-                hits_24h = max(0, (recs_24h[-1].cache_hits or 0) - (recs_24h[0].cache_hits or 0))
-                miss_24h = max(0, (recs_24h[-1].cache_misses or 0) - (recs_24h[0].cache_misses or 0))
-            else:
-                q_24h = recs_24h[0].total_queries or 0
-                hits_24h = recs_24h[0].cache_hits or 0
-                miss_24h = recs_24h[0].cache_misses or 0
-            
-            tot_cache = hits_24h + miss_24h
-            hit_rate_24h = round((hits_24h / tot_cache * 100), 2) if tot_cache > 0 else 0.0
-            
-            avg_lat_24h = round(sum(r.avg_latency for r in recs_24h) / len(recs_24h), 3)
-            p95_lat_24h = round(max(r.p95_latency for r in recs_24h), 3)
-            p99_lat_24h = round(max(r.p99_latency for r in recs_24h), 3)
-            peak_qps = round(max(r.qps for r in recs_24h), 3)
-        else:
-            q_24h = latest.total_queries or 0
-            hits_24h = latest.cache_hits or 0
-            miss_24h = latest.cache_misses or 0
-            hit_rate_24h = latest.cache_hit_rate or 0.0
-            avg_lat_24h = latest.avg_latency or 0.0
-            p95_lat_24h = latest.p95_latency or 0.0
-            p99_lat_24h = latest.p99_latency or 0.0
-            peak_qps = latest.qps or 0.0
+        q_24h = latest.total_queries or 0
+        hits_24h = latest.cache_hits or 0
+        miss_24h = latest.cache_misses or 0
+        hit_rate_24h = latest.cache_hit_rate or 0.0
+        avg_lat_24h = latest.avg_latency or 0.0
+        p95_lat_24h = latest.p95_latency or 0.0
+        p99_lat_24h = latest.p99_latency or 0.0
+        peak_qps = latest.qps or 0.0
 
         return jsonify({
             'status': 'ok',
