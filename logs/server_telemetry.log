@@ -1,22 +1,61 @@
-[2026-07-26 14:35:29,864] INFO in base: Job "run_log_sync_task (trigger: interval[0:00:30], next run at: 2026-07-26 14:35:58 IST)" executed successfully
-[2026-07-26 14:35:36,938] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 14:35:36] "GET /api/alerts?server_id=srv-localhost HTTP/1.1" 200 -
-[2026-07-26 14:35:36,946] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 14:35:36] "GET /api/overview?server_id=srv-localhost HTTP/1.1" 200 -
-[2026-07-26 14:35:36,962] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 14:35:36] "GET /api/cache?server_id=srv-localhost HTTP/1.1" 200 -
-[2026-07-26 14:35:36,964] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 14:35:36] "GET /api/latency?server_id=srv-localhost HTTP/1.1" 200 -
-[2026-07-26 14:35:36,966] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 14:35:36] "GET /api/security?server_id=srv-localhost HTTP/1.1" 200 -
-[2026-07-26 14:35:36,967] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 14:35:36] "GET /api/query?server_id=srv-localhost HTTP/1.1" 200 -
-[2026-07-26 14:35:43,215] INFO in base: Running job "run_collector_task (trigger: interval[0:00:15], next run at: 2026-07-26 14:35:58 IST)" (scheduled at 2026-07-26 14:35:43.214329+05:30)
-[2026-07-26 14:35:43,218] INFO in collector: Polling unbound-control for server Unbound Local Resolver (127.0.0.1@8953)...
-[2026-07-26 14:35:43,236] INFO in collector: Polling unbound-control for server 192.168.3.111 (192.168.3.111@8953)...
-[2026-07-26 14:35:43,269] WARNING in collector: Connection failed to 192.168.3.111@8953: [1785056743] unbound-control[12258:0] fatal error: could not recv: Connection reset by peer.
-[2026-07-26 14:35:43,307] INFO in base: Job "run_collector_task (trigger: interval[0:00:15], next run at: 2026-07-26 14:35:58 IST)" executed successfully
-[2026-07-26 14:35:51,970] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 14:35:51] "GET /api/overview?server_id=srv-localhost HTTP/1.1" 200 -
-[2026-07-26 14:35:51,973] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 14:35:51] "GET /api/query?server_id=srv-localhost HTTP/1.1" 200 -
-[2026-07-26 14:35:51,986] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 14:35:51] "GET /api/alerts?server_id=srv-localhost HTTP/1.1" 200 -
-[2026-07-26 14:35:51,989] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 14:35:51] "GET /api/cache?server_id=srv-localhost HTTP/1.1" 200 -
-[2026-07-26 14:35:51,992] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 14:35:51] "GET /api/security?server_id=srv-localhost HTTP/1.1" 200 -
-[2026-07-26 14:35:51,993] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 14:35:51] "GET /api/latency?server_id=srv-localhost HTTP/1.1" 200 -
-[2026-07-26 14:35:58,215] INFO in base: Running job "run_collector_task (trigger: interval[0:00:15], next run at: 2026-07-26 14:36:13 IST)" (scheduled at 2026-07-26 14:35:58.214329+05:30)
-[2026-07-26 14:35:58,216] INFO in base: Running job "run_log_sync_task (trigger: interval[0:00:30], next run at: 2026-07-26 14:36:28 IST)" (scheduled at 2026-07-26 14:35:58.214788+05:30)
-[2026-07-26 14:35:58,219] INFO in collector: Starting automated 30s GitHub log upload & local purge cycle...
-[2026-07-26 14:35:58,220] INFO in collector: Polling unbound-control for server Unbound Local Resolver (127.0.0.1@8953)...
+[2026-07-26 14:35:59,861] INFO in base: Job "run_log_sync_task (trigger: interval[0:00:30], next run at: 2026-07-26 14:36:28 IST)" executed successfully
+[2026-07-26 14:36:06,973] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 14:36:06] "GET /api/overview?server_id=srv-localhost HTTP/1.1" 200 -
+[2026-07-26 14:36:06,984] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 14:36:06] "GET /api/alerts?server_id=srv-localhost HTTP/1.1" 200 -
+[2026-07-26 14:36:06,988] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 14:36:06] "GET /api/cache?server_id=srv-localhost HTTP/1.1" 200 -
+[2026-07-26 14:36:06,992] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 14:36:06] "GET /api/query?server_id=srv-localhost HTTP/1.1" 200 -
+[2026-07-26 14:36:06,994] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 14:36:06] "GET /api/security?server_id=srv-localhost HTTP/1.1" 200 -
+[2026-07-26 14:36:06,996] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 14:36:06] "GET /api/latency?server_id=srv-localhost HTTP/1.1" 200 -
+[2026-07-26 14:36:13,731] INFO in collector: Polling unbound-control for server Unbound Local Resolver (127.0.0.1@8953)...
+[2026-07-26 14:36:13,744] INFO in collector: Polling unbound-control for server 192.168.3.111 (192.168.3.111@8953)...
+[2026-07-26 14:36:13,759] WARNING in collector: Connection failed to 192.168.3.111@8953: [1785056773] unbound-control[12666:0] fatal error: could not recv: Connection reset by peer. SSL cert mismatch. Copy /etc/unbound/unbound_*.pem from target host to certs/192.168.3.111/.
+[2026-07-26 14:36:13,796] INFO in base: Adding job tentatively -- it will be properly scheduled when the scheduler starts
+[2026-07-26 14:36:13,797] INFO in base: Adding job tentatively -- it will be properly scheduled when the scheduler starts
+[2026-07-26 14:36:13,798] INFO in base: Added job "run_collector_task" to job store "default"
+[2026-07-26 14:36:13,798] INFO in base: Added job "run_log_sync_task" to job store "default"
+[2026-07-26 14:36:13,798] INFO in base: Scheduler started
+[2026-07-26 14:36:13,800] INFO in app: Starting Unbound Analytics Dashboard on 0.0.0.0:81
+[2026-07-26 14:36:13,800] INFO in app: Starting Unbound Analytics Dashboard on 0.0.0.0:81
+[2026-07-26 14:36:13,806] INFO in _internal: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:81
+ * Running on http://192.168.4.86:81
+[2026-07-26 14:36:13,806] INFO in _internal: [33mPress CTRL+C to quit[0m
+[2026-07-26 14:36:14,049] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 14:36:14] "GET /health HTTP/1.1" 200 -
+[2026-07-26 14:36:17,913] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 14:36:17] "GET /health HTTP/1.1" 200 -
+[2026-07-26 14:36:21,989] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 14:36:21] "GET /api/overview?server_id=srv-localhost HTTP/1.1" 200 -
+[2026-07-26 14:36:22,004] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 14:36:22] "GET /api/alerts?server_id=srv-localhost HTTP/1.1" 200 -
+[2026-07-26 14:36:22,017] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 14:36:22] "GET /api/latency?server_id=srv-localhost HTTP/1.1" 200 -
+[2026-07-26 14:36:22,019] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 14:36:22] "GET /api/cache?server_id=srv-localhost HTTP/1.1" 200 -
+[2026-07-26 14:36:22,020] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 14:36:22] "GET /api/security?server_id=srv-localhost HTTP/1.1" 200 -
+[2026-07-26 14:36:22,021] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 14:36:22] "GET /api/query?server_id=srv-localhost HTTP/1.1" 200 -
+[2026-07-26 14:36:28,797] INFO in base: Running job "run_collector_task (trigger: interval[0:00:15], next run at: 2026-07-26 14:36:28 IST)" (scheduled at 2026-07-26 14:36:28.796621+05:30)
+[2026-07-26 14:36:28,799] INFO in collector: Polling unbound-control for server Unbound Local Resolver (127.0.0.1@8953)...
+[2026-07-26 14:36:28,813] INFO in collector: Polling unbound-control for server 192.168.3.111 (192.168.3.111@8953)...
+[2026-07-26 14:36:28,830] WARNING in collector: Connection failed to 192.168.3.111@8953: [1785056788] unbound-control[12679:0] fatal error: could not recv: Connection reset by peer. SSL cert mismatch. Copy /etc/unbound/unbound_*.pem from target host to certs/192.168.3.111/.
+[2026-07-26 14:36:28,855] INFO in base: Job "run_collector_task (trigger: interval[0:00:15], next run at: 2026-07-26 14:36:43 IST)" executed successfully
+[2026-07-26 14:36:32,229] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 14:36:32] "GET /api/query?server_id=srv-1785055939311 HTTP/1.1" 200 -
+[2026-07-26 14:36:32,234] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 14:36:32] "GET /api/overview?server_id=srv-1785055939311 HTTP/1.1" 200 -
+[2026-07-26 14:36:32,240] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 14:36:32] "GET /api/cache?server_id=srv-1785055939311 HTTP/1.1" 200 -
+[2026-07-26 14:36:32,242] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 14:36:32] "GET /api/security?server_id=srv-1785055939311 HTTP/1.1" 200 -
+[2026-07-26 14:36:32,244] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 14:36:32] "GET /api/latency?server_id=srv-1785055939311 HTTP/1.1" 200 -
+[2026-07-26 14:36:32,246] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 14:36:32] "GET /api/alerts?server_id=srv-1785055939311 HTTP/1.1" 200 -
+[2026-07-26 14:36:34,094] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 14:36:34] "GET / HTTP/1.1" 200 -
+[2026-07-26 14:36:34,150] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 14:36:34] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+[2026-07-26 14:36:34,151] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 14:36:34] "[36mGET /static/js/dashboard.js HTTP/1.1[0m" 304 -
+[2026-07-26 14:36:34,187] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 14:36:34] "GET /api/servers HTTP/1.1" 200 -
+[2026-07-26 14:36:34,226] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 14:36:34] "GET /api/overview?server_id=all HTTP/1.1" 200 -
+[2026-07-26 14:36:34,239] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 14:36:34] "GET /api/alerts?server_id=all HTTP/1.1" 200 -
+[2026-07-26 14:36:34,244] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 14:36:34] "GET /api/query?server_id=all HTTP/1.1" 200 -
+[2026-07-26 14:36:34,247] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 14:36:34] "GET /api/latency?server_id=all HTTP/1.1" 200 -
+[2026-07-26 14:36:34,249] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 14:36:34] "GET /api/security?server_id=all HTTP/1.1" 200 -
+[2026-07-26 14:36:34,250] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 14:36:34] "GET /api/cache?server_id=all HTTP/1.1" 200 -
+[2026-07-26 14:36:37,512] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 14:36:37] "GET /api/overview?server_id=srv-localhost HTTP/1.1" 200 -
+[2026-07-26 14:36:37,520] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 14:36:37] "GET /api/alerts?server_id=srv-localhost HTTP/1.1" 200 -
+[2026-07-26 14:36:37,534] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 14:36:37] "GET /api/query?server_id=srv-localhost HTTP/1.1" 200 -
+[2026-07-26 14:36:37,535] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 14:36:37] "GET /api/latency?server_id=srv-localhost HTTP/1.1" 200 -
+[2026-07-26 14:36:37,537] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 14:36:37] "GET /api/cache?server_id=srv-localhost HTTP/1.1" 200 -
+[2026-07-26 14:36:37,539] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 14:36:37] "GET /api/security?server_id=srv-localhost HTTP/1.1" 200 -
+[2026-07-26 14:36:43,798] INFO in base: Running job "run_collector_task (trigger: interval[0:00:15], next run at: 2026-07-26 14:36:58 IST)" (scheduled at 2026-07-26 14:36:43.796621+05:30)
+[2026-07-26 14:36:43,798] INFO in base: Running job "run_log_sync_task (trigger: interval[0:00:30], next run at: 2026-07-26 14:37:13 IST)" (scheduled at 2026-07-26 14:36:43.797040+05:30)
+[2026-07-26 14:36:43,800] INFO in collector: Starting automated 30s GitHub log upload & local purge cycle...
+[2026-07-26 14:36:43,801] INFO in collector: Polling unbound-control for server Unbound Local Resolver (127.0.0.1@8953)...
