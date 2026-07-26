@@ -713,41 +713,42 @@ function getSelectedServerId() {
 async function fetchDashboardData(isInitial = false) {
     const serverId = getSelectedServerId();
     try {
-        const [overviewRes, queryRes, cacheRes, latencyRes, securityRes] = await Promise.all([
-            fetch(`/api/overview?server_id=${serverId}`).then(r => r.json()),
+        fetch(`/api/overview?server_id=${serverId}`).then(r => r.json()).then(overviewRes => {
+            if (overviewRes && overviewRes.latest) {
+                const elTotal = document.getElementById('statTotalQueries');
+                const elQps = document.getElementById('statQPS');
+                const elCacheRate = document.getElementById('statCacheHitRate');
+                const elCacheRatio = document.getElementById('statCacheRatio');
+                const elAvgLat = document.getElementById('statAvgLatency');
+                const elP95 = document.getElementById('statP95');
+                const elP99 = document.getElementById('statP99');
+
+                if (elTotal) elTotal.textContent = (overviewRes.latest.total_queries || 0).toLocaleString();
+                if (elQps) elQps.textContent = (overviewRes.latest.qps || 0).toFixed(3);
+                if (elCacheRate) elCacheRate.textContent = `${overviewRes.latest.cache_hit_rate || 0}%`;
+                if (elCacheRatio) elCacheRatio.textContent = `Hits: ${(overviewRes.latest.cache_hits || 0).toLocaleString()} | Miss: ${(overviewRes.latest.cache_misses || 0).toLocaleString()}`;
+                if (elAvgLat) elAvgLat.textContent = `${(overviewRes.latest.avg_latency || 0).toFixed(3)} ms`;
+                if (elP95) elP95.textContent = (overviewRes.latest.p95_latency || 0).toFixed(3);
+                if (elP99) elP99.textContent = (overviewRes.latest.p99_latency || 0).toFixed(3);
+            }
+
+            if (overviewRes && overviewRes.top_used_server) {
+                const labelEl = document.getElementById('topServerLabel');
+                const nameEl = document.getElementById('topServerName');
+                const qEl = document.getElementById('topServerQueries');
+
+                if (labelEl) labelEl.textContent = 'Top Resolver (1h):';
+                if (nameEl) nameEl.textContent = overviewRes.top_used_server.name || 'N/A';
+                if (qEl) qEl.textContent = `${(overviewRes.top_used_server.queries || 0).toLocaleString()} queries`;
+            }
+        }).catch(e => console.error(e));
+
+        const [queryRes, cacheRes, latencyRes, securityRes] = await Promise.all([
             fetch(`/api/query?server_id=${serverId}`).then(r => r.json()),
             fetch(`/api/cache?server_id=${serverId}`).then(r => r.json()),
             fetch(`/api/latency?server_id=${serverId}`).then(r => r.json()),
             fetch(`/api/security?server_id=${serverId}`).then(r => r.json())
         ]);
-
-        if (overviewRes.latest) {
-            const elTotal = document.getElementById('statTotalQueries');
-            const elQps = document.getElementById('statQPS');
-            const elCacheRate = document.getElementById('statCacheHitRate');
-            const elCacheRatio = document.getElementById('statCacheRatio');
-            const elAvgLat = document.getElementById('statAvgLatency');
-            const elP95 = document.getElementById('statP95');
-            const elP99 = document.getElementById('statP99');
-
-            if (elTotal) elTotal.textContent = (overviewRes.latest.total_queries || 0).toLocaleString();
-            if (elQps) elQps.textContent = (overviewRes.latest.qps || 0).toFixed(3);
-            if (elCacheRate) elCacheRate.textContent = `${overviewRes.latest.cache_hit_rate || 0}%`;
-            if (elCacheRatio) elCacheRatio.textContent = `Hits: ${(overviewRes.latest.cache_hits || 0).toLocaleString()} | Miss: ${(overviewRes.latest.cache_misses || 0).toLocaleString()}`;
-            if (elAvgLat) elAvgLat.textContent = `${(overviewRes.latest.avg_latency || 0).toFixed(3)} ms`;
-            if (elP95) elP95.textContent = (overviewRes.latest.p95_latency || 0).toFixed(3);
-            if (elP99) elP99.textContent = (overviewRes.latest.p99_latency || 0).toFixed(3);
-        }
-
-        if (overviewRes.top_used_server) {
-            const labelEl = document.getElementById('topServerLabel');
-            const nameEl = document.getElementById('topServerName');
-            const qEl = document.getElementById('topServerQueries');
-
-            if (labelEl) labelEl.textContent = 'Top Resolver (1h):';
-            if (nameEl) nameEl.textContent = overviewRes.top_used_server.name || 'N/A';
-            if (qEl) qEl.textContent = `${(overviewRes.top_used_server.queries || 0).toLocaleString()} queries`;
-        }
 
         updateCharts(queryRes, cacheRes, latencyRes, securityRes, isInitial);
     } catch (err) {
