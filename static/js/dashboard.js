@@ -159,7 +159,7 @@ function renderQueryDetails(container, history, queryRes, coverageBadge) {
                 <td class="ps-3 font-monospace small text-secondary">${timeStr}</td>
                 <td><span class="badge bg-secondary bg-opacity-25">${h.server_name}</span></td>
                 <td class="fw-bold text-light">${h.total_queries.toLocaleString()}</td>
-                <td class="text-info">${h.qps}</td>
+                <td class="text-info">${(h.qps || 0).toFixed(3)}</td>
                 <td class="text-secondary">${h.ipv4_queries}</td>
                 <td class="text-secondary">${h.ipv6_queries}</td>
                 <td class="text-muted">${h.active_clients}</td>
@@ -178,7 +178,7 @@ function renderQueryDetails(container, history, queryRes, coverageBadge) {
             <div class="col-md-3">
                 <div class="p-3 rounded bg-body-tertiary border border-secondary border-opacity-25">
                     <small class="text-secondary">Current QPS</small>
-                    <h4 class="fw-bold text-primary mb-0 mt-1">${history[0].qps || 0}</h4>
+                    <h4 class="fw-bold text-primary mb-0 mt-1">${(history[0].qps || 0).toFixed(3)}</h4>
                 </div>
             </div>
             <div class="col-md-3">
@@ -369,11 +369,11 @@ function renderLatencyDetails(container, history, coverageBadge) {
             <tr>
                 <td class="ps-3 font-monospace small text-secondary">${timeStr}</td>
                 <td><span class="badge bg-secondary bg-opacity-25">${h.server_name}</span></td>
-                <td class="fw-bold text-warning">${h.avg_latency} ms</td>
-                <td class="text-info">${h.median_latency} ms</td>
-                <td class="text-secondary">${h.p90_latency} ms</td>
-                <td class="text-danger">${h.p95_latency} ms</td>
-                <td class="text-danger">${h.p99_latency} ms</td>
+                <td class="fw-bold text-warning">${(h.avg_latency || 0).toFixed(3)} ms</td>
+                <td class="text-info">${(h.median_latency || 0).toFixed(3)} ms</td>
+                <td class="text-secondary">${(h.p90_latency || 0).toFixed(3)} ms</td>
+                <td class="text-danger">${(h.p95_latency || 0).toFixed(3)} ms</td>
+                <td class="text-danger">${(h.p99_latency || 0).toFixed(3)} ms</td>
             </tr>
         `;
     });
@@ -383,25 +383,25 @@ function renderLatencyDetails(container, history, coverageBadge) {
             <div class="col-md-3">
                 <div class="p-3 rounded bg-body-tertiary border border-secondary border-opacity-25">
                     <small class="text-secondary">Avg Latency</small>
-                    <h4 class="fw-bold text-warning mb-0 mt-1">${latest.avg_latency} ms</h4>
+                    <h4 class="fw-bold text-warning mb-0 mt-1">${(latest.avg_latency || 0).toFixed(3)} ms</h4>
                 </div>
             </div>
             <div class="col-md-3">
                 <div class="p-3 rounded bg-body-tertiary border border-secondary border-opacity-25">
                     <small class="text-secondary">P50 (Median)</small>
-                    <h4 class="fw-bold text-info mb-0 mt-1">${latest.median_latency} ms</h4>
+                    <h4 class="fw-bold text-info mb-0 mt-1">${(latest.median_latency || 0).toFixed(3)} ms</h4>
                 </div>
             </div>
             <div class="col-md-3">
                 <div class="p-3 rounded bg-body-tertiary border border-secondary border-opacity-25">
                     <small class="text-secondary">P95 Latency</small>
-                    <h4 class="fw-bold text-danger mb-0 mt-1">${latest.p95_latency} ms</h4>
+                    <h4 class="fw-bold text-danger mb-0 mt-1">${(latest.p95_latency || 0).toFixed(3)} ms</h4>
                 </div>
             </div>
             <div class="col-md-3">
                 <div class="p-3 rounded bg-body-tertiary border border-secondary border-opacity-25">
                     <small class="text-secondary">P99 Latency</small>
-                    <h4 class="fw-bold text-danger mb-0 mt-1">${latest.p99_latency} ms</h4>
+                    <h4 class="fw-bold text-danger mb-0 mt-1">${(latest.p99_latency || 0).toFixed(3)} ms</h4>
                 </div>
             </div>
         </div>
@@ -631,6 +631,17 @@ async function clearHistoryData() {
     }
 }
 
+async function clearAlerts() {
+    if (!confirm('Are you sure you want to clear recent alert logs?')) return;
+    const serverId = getSelectedServerId();
+    try {
+        await fetch(`/api/clear-alerts?server_id=${serverId}`, { method: 'POST' });
+        fetchAlerts();
+    } catch (e) {
+        console.error('Failed to clear alerts:', e);
+    }
+}
+
 async function saveServerBackend(server) {
     try {
         await fetch('/api/servers', {
@@ -800,7 +811,7 @@ function updateCharts(queryData, cacheData, latencyData, securityData, isInitial
     );
 
     const localTimestamps = timestamps.map(ts => formatClientLocalTime(ts, spanOverMultipleDays));
-    const updateMode = isInitial ? 'default' : 'none'; // 'none' mode prevents flash/animation on 15s refresh
+    const updateMode = isInitial ? 'default' : 'none'; // 'none' mode prevents flash/animation on 1s refresh
 
     if (queryChartInstance) {
         queryChartInstance.data.labels = localTimestamps;

@@ -87,6 +87,16 @@ def clear_history():
     db.session.commit()
     return jsonify({'status': 'ok', 'message': 'Metric history and alerts cleared successfully.'})
 
+@api_bp.route('/clear-alerts', methods=['POST'])
+def clear_alerts():
+    server_id = request.args.get('server_id')
+    if server_id and server_id != 'all':
+        AlertLog.query.filter_by(server_id=server_id).delete()
+    else:
+        AlertLog.query.delete()
+    db.session.commit()
+    return jsonify({'status': 'ok', 'message': 'Alert logs cleared successfully.'})
+
 @api_bp.route('/overview', methods=['GET'])
 def get_overview():
     server_id = request.args.get('server_id')
@@ -171,14 +181,14 @@ def get_overview():
         })
 
     total_queries = sum(m.total_queries for m in latest_per_server)
-    total_qps = round(sum(m.qps for m in latest_per_server), 2)
+    total_qps = round(sum(m.qps for m in latest_per_server), 3)
     cache_hits = sum(m.cache_hits for m in latest_per_server)
     cache_misses = sum(m.cache_misses for m in latest_per_server)
     total_cache = cache_hits + cache_misses
     cache_hit_rate = round((cache_hits / total_cache * 100), 2) if total_cache > 0 else 0.0
-    avg_latency = round(sum(m.avg_latency for m in latest_per_server) / len(latest_per_server), 2)
-    p95_latency = max(m.p95_latency for m in latest_per_server)
-    p99_latency = max(m.p99_latency for m in latest_per_server)
+    avg_latency = round(sum(m.avg_latency for m in latest_per_server) / len(latest_per_server), 3)
+    p95_latency = round(max(m.p95_latency for m in latest_per_server), 3)
+    p99_latency = round(max(m.p99_latency for m in latest_per_server), 3)
     nxdomain_count = sum(m.nxdomain_count for m in latest_per_server)
     servfail_count = sum(m.servfail_count for m in latest_per_server)
     dnssec_failures = sum(m.dnssec_failures for m in latest_per_server)
@@ -230,15 +240,14 @@ def get_query_analytics():
             delta_qps.append(0.0)
         else:
             diff = max(0, records[i].total_queries - records[i-1].total_queries)
-            time_diff = (records[i].timestamp - records[i-1].timestamp).total_seconds() or 15.0
-            qps_val = round(diff / time_diff, 2)
+            time_diff = (records[i].timestamp - records[i-1].timestamp).total_seconds() or 1.0
+            qps_val = round(diff / time_diff, 3)
             delta_queries.append(diff)
             delta_qps.append(qps_val)
             
     ipv4 = [r.ipv4_queries for r in records]
     ipv6 = [r.ipv6_queries for r in records]
     
-    # Meaningful domain & query type breakdown
     latest = records[-1] if records else None
     qtypes = {
         'A': latest.qtype_a if latest else 0,
@@ -248,20 +257,19 @@ def get_query_analytics():
         'OTHER': latest.qtype_other if latest else 0
     }
 
-    # Curated domain telemetry breakdown based on active queries
     top_cached_domains = [
-        {'domain': 'one.one.one.one', 'hits': 412, 'type': 'A', 'latency': '0.12 ms', 'status': 'Cached (HIT)'},
-        {'domain': 'dns.google', 'hits': 298, 'type': 'AAAA', 'latency': '0.15 ms', 'status': 'Cached (HIT)'},
-        {'domain': 'github.com', 'hits': 185, 'type': 'A', 'latency': '0.18 ms', 'status': 'Cached (HIT)'},
-        {'domain': 'api.github.com', 'hits': 142, 'type': 'HTTPS', 'latency': '0.14 ms', 'status': 'Cached (HIT)'},
-        {'domain': 'raw.githubusercontent.com', 'hits': 96, 'type': 'A', 'latency': '0.21 ms', 'status': 'Cached (HIT)'}
+        {'domain': 'one.one.one.one', 'hits': 412, 'type': 'A', 'latency': '0.120 ms', 'status': 'Cached (HIT)'},
+        {'domain': 'dns.google', 'hits': 298, 'type': 'AAAA', 'latency': '0.150 ms', 'status': 'Cached (HIT)'},
+        {'domain': 'github.com', 'hits': 185, 'type': 'A', 'latency': '0.180 ms', 'status': 'Cached (HIT)'},
+        {'domain': 'api.github.com', 'hits': 142, 'type': 'HTTPS', 'latency': '0.140 ms', 'status': 'Cached (HIT)'},
+        {'domain': 'raw.githubusercontent.com', 'hits': 96, 'type': 'A', 'latency': '0.210 ms', 'status': 'Cached (HIT)'}
     ]
 
     top_fetched_domains = [
-        {'domain': 'archive.ubuntu.com', 'queries': 164, 'type': 'A', 'avg_latency': '14.2 ms', 'status': 'Upstream Resolved (MISS)'},
-        {'domain': 'pypi.org', 'queries': 112, 'type': 'A', 'avg_latency': '18.5 ms', 'status': 'Upstream Resolved (MISS)'},
-        {'domain': 'cdn.jsdelivr.net', 'queries': 88, 'type': 'HTTPS', 'avg_latency': '11.8 ms', 'status': 'Upstream Resolved (MISS)'},
-        {'domain': 'deb.debian.org', 'queries': 65, 'type': 'AAAA', 'avg_latency': '22.1 ms', 'status': 'Upstream Resolved (MISS)'}
+        {'domain': 'archive.ubuntu.com', 'queries': 164, 'type': 'A', 'avg_latency': '14.200 ms', 'status': 'Upstream Resolved (MISS)'},
+        {'domain': 'pypi.org', 'queries': 112, 'type': 'A', 'avg_latency': '18.500 ms', 'status': 'Upstream Resolved (MISS)'},
+        {'domain': 'cdn.jsdelivr.net', 'queries': 88, 'type': 'HTTPS', 'avg_latency': '11.800 ms', 'status': 'Upstream Resolved (MISS)'},
+        {'domain': 'deb.debian.org', 'queries': 65, 'type': 'AAAA', 'avg_latency': '22.100 ms', 'status': 'Upstream Resolved (MISS)'}
     ]
 
     return jsonify({
@@ -271,8 +279,8 @@ def get_query_analytics():
         'ipv4': ipv4,
         'ipv6': ipv6,
         'total_sum': sum(delta_queries),
-        'peak_qps': max(delta_qps) if delta_qps else 0.0,
-        'avg_qps': round(sum(delta_qps)/len(delta_qps), 2) if delta_qps else 0.0,
+        'peak_qps': round(max(delta_qps), 3) if delta_qps else 0.0,
+        'avg_qps': round(sum(delta_qps)/len(delta_qps), 3) if delta_qps else 0.0,
         'time_coverage': _get_time_coverage_info(records),
         'qtypes': qtypes,
         'top_cached_domains': top_cached_domains,
@@ -311,11 +319,11 @@ def get_latency_analytics():
     records = query.order_by(MetricHistory.timestamp.asc()).all()
     
     timestamps = [r.timestamp.strftime('%Y-%m-%dT%H:%M:%SZ') for r in records]
-    avg = [r.avg_latency for r in records]
-    p50 = [r.median_latency for r in records]
-    p90 = [r.p90_latency for r in records]
-    p95 = [r.p95_latency for r in records]
-    p99 = [r.p99_latency for r in records]
+    avg = [round(r.avg_latency or 0.0, 3) for r in records]
+    p50 = [round(r.median_latency or 0.0, 3) for r in records]
+    p90 = [round(r.p90_latency or 0.0, 3) for r in records]
+    p95 = [round(r.p95_latency or 0.0, 3) for r in records]
+    p99 = [round(r.p99_latency or 0.0, 3) for r in records]
     
     return jsonify({
         'timestamps': timestamps,
