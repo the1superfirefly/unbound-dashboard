@@ -434,11 +434,13 @@ def get_query_analytics():
     
     latest = records[-1] if records else None
     qtypes = {
-        'A': latest.qtype_a if latest else 0,
-        'AAAA': latest.qtype_aaaa if latest else 0,
-        'TXT': latest.qtype_txt if latest else 0,
-        'HTTPS': latest.qtype_https if latest else 0,
-        'OTHER': latest.qtype_other if latest else 0
+        'A': (latest.qtype_a or 0) if latest else 0,
+        'AAAA': (latest.qtype_aaaa or 0) if latest else 0,
+        'SRV': (latest.qtype_srv or 0) if latest else 0,
+        'PTR': (latest.qtype_ptr or 0) if latest else 0,
+        'HTTPS': (latest.qtype_https or 0) if latest else 0,
+        'TXT': (latest.qtype_txt or 0) if latest else 0,
+        'OTHER': (latest.qtype_other or 0) if latest else 0
     }
 
     top_cached_domains = [
