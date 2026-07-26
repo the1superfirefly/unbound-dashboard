@@ -1,5 +1,6 @@
 from flask import Blueprint, jsonify, request, Response
 from database import db, MetricHistory, AlertLog, ServerConfig
+from sqlalchemy import func
 from datetime import datetime, timedelta
 import json
 import csv
@@ -36,7 +37,6 @@ def handle_servers():
         if server_id:
             srv = db.session.get(ServerConfig, server_id)
             if srv:
-                # Delete associated metric records & alerts
                 MetricHistory.query.filter_by(server_id=server_id).delete()
                 AlertLog.query.filter_by(server_id=server_id).delete()
                 db.session.delete(srv)
@@ -49,39 +49,82 @@ def handle_servers():
 @api_bp.route('/overview', methods=['GET'])
 def get_overview():
     server_id = request.args.get('server_id')
-    query = MetricHistory.query
+    server_count = ServerConfig.query.filter_by(is_active=True).count()
+    
     if server_id and server_id != 'all':
-        query = query.filter_by(server_id=server_id)
-        
-    latest_metrics = query.order_by(MetricHistory.timestamp.desc()).first()
-    if not latest_metrics:
-        srv = db.session.get(ServerConfig, server_id) if server_id and server_id != 'all' else None
-        srv_name = srv.name if srv else "Unbound Server"
+        latest = MetricHistory.query.filter_by(server_id=server_id).order_by(MetricHistory.timestamp.desc()).first()
+        if not latest:
+            return jsonify({
+                'status': 'ok',
+                'server_count': server_count,
+                'latest': {
+                    'server_id': server_id,
+                    'server_name': 'Selected Server',
+                    'total_queries': 0, 'qps': 0.0, 'cache_hits': 0, 'cache_misses': 0,
+                    'cache_hit_rate': 0.0, 'avg_latency': 0.0, 'p95_latency': 0.0,
+                    'p99_latency': 0.0, 'servfail_count': 0, 'nxdomain_count': 0,
+                    'dnssec_failures': 0, 'active_clients': 0
+                }
+            })
+        return jsonify({'status': 'ok', 'server_count': server_count, 'latest': latest.to_dict()})
+
+    # Aggregated view across all active servers (latest metric per server)
+    subq = db.session.query(
+        MetricHistory.server_id,
+        func.max(MetricHistory.id).label('max_id')
+    ).group_by(MetricHistory.server_id).subquery()
+
+    latest_per_server = db.session.query(MetricHistory).join(
+        subq, MetricHistory.id == subq.c.max_id
+    ).all()
+
+    if not latest_per_server:
         return jsonify({
             'status': 'ok',
-            'server_count': ServerConfig.query.count(),
+            'server_count': server_count,
             'latest': {
-                'server_id': server_id or 'none',
-                'server_name': srv_name,
-                'total_queries': 0,
-                'qps': 0.0,
-                'cache_hits': 0,
-                'cache_misses': 0,
-                'cache_hit_rate': 0.0,
-                'avg_latency': 0.0,
-                'p95_latency': 0.0,
-                'p99_latency': 0.0,
-                'servfail_count': 0,
-                'nxdomain_count': 0,
-                'dnssec_failures': 0,
-                'active_clients': 0
+                'server_id': 'all',
+                'server_name': 'All Servers (Aggregated)',
+                'total_queries': 0, 'qps': 0.0, 'cache_hits': 0, 'cache_misses': 0,
+                'cache_hit_rate': 0.0, 'avg_latency': 0.0, 'p95_latency': 0.0,
+                'p99_latency': 0.0, 'servfail_count': 0, 'nxdomain_count': 0,
+                'dnssec_failures': 0, 'active_clients': 0
             }
         })
-        
+
+    total_queries = sum(m.total_queries for m in latest_per_server)
+    total_qps = round(sum(m.qps for m in latest_per_server), 2)
+    cache_hits = sum(m.cache_hits for m in latest_per_server)
+    cache_misses = sum(m.cache_misses for m in latest_per_server)
+    total_cache = cache_hits + cache_misses
+    cache_hit_rate = round((cache_hits / total_cache * 100), 2) if total_cache > 0 else 0.0
+    avg_latency = round(sum(m.avg_latency for m in latest_per_server) / len(latest_per_server), 2)
+    p95_latency = max(m.p95_latency for m in latest_per_server)
+    p99_latency = max(m.p99_latency for m in latest_per_server)
+    nxdomain_count = sum(m.nxdomain_count for m in latest_per_server)
+    servfail_count = sum(m.servfail_count for m in latest_per_server)
+    dnssec_failures = sum(m.dnssec_failures for m in latest_per_server)
+    active_clients = sum(m.active_clients for m in latest_per_server)
+
     return jsonify({
         'status': 'ok',
-        'server_count': ServerConfig.query.count(),
-        'latest': latest_metrics.to_dict()
+        'server_count': server_count,
+        'latest': {
+            'server_id': 'all',
+            'server_name': 'All Servers (Aggregated)',
+            'total_queries': total_queries,
+            'qps': total_qps,
+            'cache_hits': cache_hits,
+            'cache_misses': cache_misses,
+            'cache_hit_rate': cache_hit_rate,
+            'avg_latency': avg_latency,
+            'p95_latency': p95_latency,
+            'p99_latency': p99_latency,
+            'nxdomain_count': nxdomain_count,
+            'servfail_count': servfail_count,
+            'dnssec_failures': dnssec_failures,
+            'active_clients': active_clients
+        }
     })
 
 @api_bp.route('/query', methods=['GET'])
