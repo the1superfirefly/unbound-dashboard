@@ -204,10 +204,18 @@ def get_overview():
     dnssec_failures = sum(m.dnssec_failures for m in latest_per_server)
     active_clients = sum(m.active_clients for m in latest_per_server)
 
+    top_server = max(latest_per_server, key=lambda m: m.total_queries or 0) if latest_per_server else None
+    top_server_info = {
+        'id': top_server.server_id,
+        'name': top_server.server_name,
+        'queries': top_server.total_queries or 0
+    } if top_server else {'id': 'none', 'name': 'N/A', 'queries': 0}
+
     return jsonify({
         'status': 'ok',
         'server_count': server_count,
         'time_coverage': _get_time_coverage_info(all_records),
+        'top_used_server': top_server_info,
         'latest': {
             'server_id': 'all',
             'server_name': 'All Servers (Aggregated)',

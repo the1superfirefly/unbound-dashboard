@@ -24,8 +24,14 @@
                 <span>Unbound Analytics</span>
                 <span class="badge bg-primary-subtle text-primary border border-primary-subtle rounded-pill fs-7 ms-1" id="appVersionBadge">{{ version }}</span>
             </a>
+
+            <!-- Top Used Server Badge in Center Navbar Space -->
+            <div class="d-none d-md-flex align-items-center gap-2 px-3 py-1 bg-body-tertiary border border-secondary border-opacity-25 rounded-pill small adaptive-muted ms-auto me-3" id="topServerIndicator" title="Most active DNS resolver by query volume">
+                <i class="bi bi-trophy-fill text-warning"></i>
+                <span>Top Resolver: <strong class="adaptive-text" id="topServerName">Calculating...</strong> <span class="badge bg-primary bg-opacity-25 text-primary ms-1" id="topServerQueries">0 queries</span></span>
+            </div>
             
-            <div class="d-flex align-items-center gap-3 ms-auto">
+            <div class="d-flex align-items-center gap-3">
                 <!-- Server Selector -->
                 <div class="input-group input-group-sm">
                     <span class="input-group-text bg-body-tertiary border-secondary text-secondary">

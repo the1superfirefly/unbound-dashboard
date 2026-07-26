@@ -719,11 +719,13 @@ async function fetchDashboardData(isInitial = false) {
             document.getElementById('statAvgLatency').textContent = `${(overviewRes.latest.avg_latency || 0).toFixed(3)} ms`;
             document.getElementById('statP95').textContent = (overviewRes.latest.p95_latency || 0).toFixed(3);
             document.getElementById('statP99').textContent = (overviewRes.latest.p99_latency || 0).toFixed(3);
-            
-            const totalAnomalies = (overviewRes.latest.nxdomain_count || 0) + (overviewRes.latest.servfail_count || 0) + (overviewRes.latest.dnssec_failures || 0);
-            document.getElementById('statSecurityAnomalies').textContent = totalAnomalies;
-            document.getElementById('statNXDOMAIN').textContent = overviewRes.latest.nxdomain_count || 0;
-            document.getElementById('statSERVFAIL').textContent = overviewRes.latest.servfail_count || 0;
+        }
+
+        if (overviewRes.top_used_server) {
+            const nameEl = document.getElementById('topServerName');
+            const qEl = document.getElementById('topServerQueries');
+            if (nameEl) nameEl.textContent = overviewRes.top_used_server.name || 'N/A';
+            if (qEl) qEl.textContent = `${(overviewRes.top_used_server.queries || 0).toLocaleString()} queries`;
         }
 
         updateCharts(queryRes, cacheRes, latencyRes, securityRes, isInitial);
