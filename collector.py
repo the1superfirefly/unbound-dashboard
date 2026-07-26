@@ -26,7 +26,7 @@ def purge_orphan_metrics(app):
 def fetch_and_record_metrics(app):
     """
     Polls defined Unbound servers using unbound-control stats_noreset with correct @port syntax.
-    Captures detailed diagnostic stderr messages if connection fails.
+    Supports per-server SSL cert configs in certs/<host>/unbound.conf.
     """
     with app.app_context():
         servers = ServerConfig.query.filter_by(is_active=True).all()
@@ -46,6 +46,9 @@ def fetch_and_record_metrics(app):
             stats_data = None
             last_error = ""
             
+            # Check if custom cert config exists for this host
+            custom_conf = os.path.join(app.root_path, 'certs', host, 'unbound.conf')
+            
             # Polling Variants:
             # 1. Direct local call if host is localhost
             if host in ['127.0.0.1', 'localhost']:
@@ -57,8 +60,20 @@ def fetch_and_record_metrics(app):
                         last_error = res.stderr.strip()
                 except Exception as e:
                     last_error = str(e)
+
+            # 2. Custom certificate config if present
+            if not stats_data and os.path.exists(custom_conf):
+                try:
+                    cmd = ["unbound-control", "-c", custom_conf, "-s", f"{host}@{port}", "stats_noreset"]
+                    res = subprocess.run(cmd, capture_output=True, text=True, timeout=5)
+                    if res.returncode == 0 and res.stdout:
+                        stats_data = parse_unbound_stats(res.stdout)
+                    else:
+                        last_error = res.stderr.strip()
+                except Exception as e:
+                    last_error = str(e)
                     
-            # 2. Remote control with @port syntax (-s host@port)
+            # 3. Standard remote control with @port syntax (-s host@port)
             if not stats_data:
                 try:
                     cmd = ["unbound-control", "-s", f"{host}@{port}", "stats_noreset"]
@@ -70,23 +85,12 @@ def fetch_and_record_metrics(app):
                 except Exception as e:
                     last_error = str(e)
 
-            # 3. Fallback (-s host)
-            if not stats_data and host not in ['127.0.0.1', 'localhost']:
-                try:
-                    cmd = ["unbound-control", "-s", host, "stats_noreset"]
-                    res = subprocess.run(cmd, capture_output=True, text=True, timeout=5)
-                    if res.returncode == 0 and res.stdout:
-                        stats_data = parse_unbound_stats(res.stdout)
-                except Exception:
-                    pass
-
             if not stats_data:
-                # Format clear diagnostic alert for user
                 diag_msg = f"Connection failed to {host}@{port}: {last_error}."
-                if "Connection refused" in last_error:
+                if "Connection reset by peer" in last_error or "SSL" in last_error or "certificate" in last_error:
+                    diag_msg += " SSL cert mismatch. Copy /etc/unbound/unbound_*.pem from target host to certs/" + host + "/."
+                elif "Connection refused" in last_error:
                     diag_msg += " Ensure 'control-enable: yes' & 'control-interface: 0.0.0.0' are in /etc/unbound/unbound.conf on target host."
-                elif "SSL" in last_error or "certificate" in last_error or "cert" in last_error:
-                    diag_msg += " SSL certificate authentication required. Run 'unbound-control-setup' on target server."
                 
                 logger.warning(diag_msg)
                 alert = AlertLog(
