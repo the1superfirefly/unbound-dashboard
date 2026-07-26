@@ -1,344 +1,421 @@
-[2026-07-26 18:00:53,903] INFO in base: Job "sync_logs_to_github (trigger: interval[0:00:30], next run at: 2026-07-26 18:01:22 IST)" executed successfully
-[2026-07-26 18:00:54,204] INFO in base: Running job "fetch_and_record_metrics (trigger: interval[0:00:01], next run at: 2026-07-26 18:00:55 IST)" (scheduled at 2026-07-26 18:00:54.202797+05:30)
-[2026-07-26 18:00:54,207] INFO in collector: Polling unbound-control for server Unbound Local Resolver (127.0.0.1@8953)...
-[2026-07-26 18:00:54,225] INFO in collector: [METRIC TELEMETRY] Server 'Unbound Local Resolver' (127.0.0.1@8953) -> Total Queries: 1778 | QPS: 0.146 | Hits: 8 | Misses: 1770 | Hit Rate: 0.45% | Avg Latency: 175.537ms | SERVFAIL: 0 | NXDOMAIN: 0
-[2026-07-26 18:00:54,225] INFO in collector: Polling unbound-control for server 192.168.3.111 (192.168.3.111@8953)...
-[2026-07-26 18:00:54,271] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:00:54] "GET /api/alerts?server_id=srv-1785068302242 HTTP/1.1" 200 -
-[2026-07-26 18:00:54,290] INFO in collector: [METRIC TELEMETRY] Server '192.168.3.111' (192.168.3.111@8953) -> Total Queries: 3394 | QPS: 0.274 | Hits: 97 | Misses: 3297 | Hit Rate: 2.86% | Avg Latency: 198.925ms | SERVFAIL: 0 | NXDOMAIN: 0
-[2026-07-26 18:00:54,677] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:00:54] "GET /api/query?server_id=srv-1785068302242 HTTP/1.1" 200 -
-[2026-07-26 18:00:54,800] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:00:54] "GET /api/latency?server_id=srv-1785068302242 HTTP/1.1" 200 -
-[2026-07-26 18:00:54,820] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:00:54] "GET /api/overview?server_id=srv-1785068302242 HTTP/1.1" 200 -
-[2026-07-26 18:00:54,840] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:00:54] "GET /api/cache?server_id=srv-1785068302242 HTTP/1.1" 200 -
-[2026-07-26 18:00:54,858] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:00:54] "GET /api/security?server_id=srv-1785068302242 HTTP/1.1" 200 -
-[2026-07-26 18:00:54,950] INFO in base: Job "fetch_and_record_metrics (trigger: interval[0:00:01], next run at: 2026-07-26 18:00:55 IST)" executed successfully
-[2026-07-26 18:00:55,181] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:00:55] "GET /api/alerts?server_id=srv-1785068302242 HTTP/1.1" 200 -
-[2026-07-26 18:00:55,203] INFO in base: Running job "fetch_and_record_metrics (trigger: interval[0:00:01], next run at: 2026-07-26 18:00:56 IST)" (scheduled at 2026-07-26 18:00:55.202797+05:30)
-[2026-07-26 18:00:55,204] INFO in collector: Polling unbound-control for server Unbound Local Resolver (127.0.0.1@8953)...
-[2026-07-26 18:00:55,217] INFO in collector: [METRIC TELEMETRY] Server 'Unbound Local Resolver' (127.0.0.1@8953) -> Total Queries: 1778 | QPS: 0.146 | Hits: 8 | Misses: 1770 | Hit Rate: 0.45% | Avg Latency: 175.537ms | SERVFAIL: 0 | NXDOMAIN: 0
-[2026-07-26 18:00:55,218] INFO in collector: Polling unbound-control for server 192.168.3.111 (192.168.3.111@8953)...
-[2026-07-26 18:00:55,282] INFO in collector: [METRIC TELEMETRY] Server '192.168.3.111' (192.168.3.111@8953) -> Total Queries: 3394 | QPS: 0.274 | Hits: 97 | Misses: 3297 | Hit Rate: 2.86% | Avg Latency: 198.925ms | SERVFAIL: 0 | NXDOMAIN: 0
-[2026-07-26 18:00:55,391] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:00:55] "GET /api/security?server_id=srv-1785068302242 HTTP/1.1" 200 -
-[2026-07-26 18:00:55,714] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:00:55] "GET /api/cache?server_id=srv-1785068302242 HTTP/1.1" 200 -
-[2026-07-26 18:00:55,777] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:00:55] "GET /api/query?server_id=srv-1785068302242 HTTP/1.1" 200 -
-[2026-07-26 18:00:55,796] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:00:55] "GET /api/latency?server_id=srv-1785068302242 HTTP/1.1" 200 -
-[2026-07-26 18:00:55,810] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:00:55] "GET /api/overview?server_id=srv-1785068302242 HTTP/1.1" 200 -
-[2026-07-26 18:00:55,853] INFO in base: Job "fetch_and_record_metrics (trigger: interval[0:00:01], next run at: 2026-07-26 18:00:56 IST)" executed successfully
-[2026-07-26 18:00:56,096] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:00:56] "GET /api/alerts?server_id=srv-1785068302242 HTTP/1.1" 200 -
-[2026-07-26 18:00:56,203] INFO in base: Running job "fetch_and_record_metrics (trigger: interval[0:00:01], next run at: 2026-07-26 18:00:57 IST)" (scheduled at 2026-07-26 18:00:56.202797+05:30)
-[2026-07-26 18:00:56,206] INFO in collector: Polling unbound-control for server Unbound Local Resolver (127.0.0.1@8953)...
-[2026-07-26 18:00:56,220] INFO in collector: [METRIC TELEMETRY] Server 'Unbound Local Resolver' (127.0.0.1@8953) -> Total Queries: 1778 | QPS: 0.146 | Hits: 8 | Misses: 1770 | Hit Rate: 0.45% | Avg Latency: 175.537ms | SERVFAIL: 0 | NXDOMAIN: 0
-[2026-07-26 18:00:56,220] INFO in collector: Polling unbound-control for server 192.168.3.111 (192.168.3.111@8953)...
-[2026-07-26 18:00:56,286] INFO in collector: [METRIC TELEMETRY] Server '192.168.3.111' (192.168.3.111@8953) -> Total Queries: 3394 | QPS: 0.274 | Hits: 97 | Misses: 3297 | Hit Rate: 2.86% | Avg Latency: 198.925ms | SERVFAIL: 0 | NXDOMAIN: 0
-[2026-07-26 18:00:56,546] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:00:56] "GET /api/overview?server_id=srv-1785068302242 HTTP/1.1" 200 -
-[2026-07-26 18:00:56,588] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:00:56] "GET /api/cache?server_id=srv-1785068302242 HTTP/1.1" 200 -
-[2026-07-26 18:00:56,654] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:00:56] "GET /api/query?server_id=srv-1785068302242 HTTP/1.1" 200 -
-[2026-07-26 18:00:56,673] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:00:56] "GET /api/security?server_id=srv-1785068302242 HTTP/1.1" 200 -
-[2026-07-26 18:00:56,690] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:00:56] "GET /api/latency?server_id=srv-1785068302242 HTTP/1.1" 200 -
-[2026-07-26 18:00:56,757] INFO in base: Job "fetch_and_record_metrics (trigger: interval[0:00:01], next run at: 2026-07-26 18:00:57 IST)" executed successfully
-[2026-07-26 18:00:57,088] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:00:57] "GET /api/alerts?server_id=srv-1785068302242 HTTP/1.1" 200 -
-[2026-07-26 18:00:57,203] INFO in base: Running job "fetch_and_record_metrics (trigger: interval[0:00:01], next run at: 2026-07-26 18:00:58 IST)" (scheduled at 2026-07-26 18:00:57.202797+05:30)
-[2026-07-26 18:00:57,206] INFO in collector: Polling unbound-control for server Unbound Local Resolver (127.0.0.1@8953)...
-[2026-07-26 18:00:57,220] INFO in collector: [METRIC TELEMETRY] Server 'Unbound Local Resolver' (127.0.0.1@8953) -> Total Queries: 1778 | QPS: 0.146 | Hits: 8 | Misses: 1770 | Hit Rate: 0.45% | Avg Latency: 175.537ms | SERVFAIL: 0 | NXDOMAIN: 0
-[2026-07-26 18:00:57,220] INFO in collector: Polling unbound-control for server 192.168.3.111 (192.168.3.111@8953)...
-[2026-07-26 18:00:57,250] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:00:57] "GET /api/query?server_id=srv-1785068302242 HTTP/1.1" 200 -
-[2026-07-26 18:00:57,292] INFO in collector: [METRIC TELEMETRY] Server '192.168.3.111' (192.168.3.111@8953) -> Total Queries: 3394 | QPS: 0.274 | Hits: 97 | Misses: 3297 | Hit Rate: 2.86% | Avg Latency: 198.925ms | SERVFAIL: 0 | NXDOMAIN: 0
-[2026-07-26 18:00:57,467] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:00:57] "GET /api/cache?server_id=srv-1785068302242 HTTP/1.1" 200 -
-[2026-07-26 18:00:57,525] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:00:57] "GET /api/overview?server_id=srv-1785068302242 HTTP/1.1" 200 -
-[2026-07-26 18:00:57,549] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:00:57] "GET /api/latency?server_id=srv-1785068302242 HTTP/1.1" 200 -
-[2026-07-26 18:00:57,566] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:00:57] "GET /api/security?server_id=srv-1785068302242 HTTP/1.1" 200 -
-[2026-07-26 18:00:57,660] INFO in base: Job "fetch_and_record_metrics (trigger: interval[0:00:01], next run at: 2026-07-26 18:00:58 IST)" executed successfully
-[2026-07-26 18:00:58,159] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:00:58] "GET /api/alerts?server_id=srv-1785068302242 HTTP/1.1" 200 -
-[2026-07-26 18:00:58,203] INFO in base: Running job "fetch_and_record_metrics (trigger: interval[0:00:01], next run at: 2026-07-26 18:00:59 IST)" (scheduled at 2026-07-26 18:00:58.202797+05:30)
-[2026-07-26 18:00:58,205] INFO in collector: Polling unbound-control for server Unbound Local Resolver (127.0.0.1@8953)...
-[2026-07-26 18:00:58,220] INFO in collector: [METRIC TELEMETRY] Server 'Unbound Local Resolver' (127.0.0.1@8953) -> Total Queries: 1778 | QPS: 0.146 | Hits: 8 | Misses: 1770 | Hit Rate: 0.45% | Avg Latency: 175.537ms | SERVFAIL: 0 | NXDOMAIN: 0
-[2026-07-26 18:00:58,220] INFO in collector: Polling unbound-control for server 192.168.3.111 (192.168.3.111@8953)...
-[2026-07-26 18:00:58,285] INFO in collector: [METRIC TELEMETRY] Server '192.168.3.111' (192.168.3.111@8953) -> Total Queries: 3394 | QPS: 0.274 | Hits: 97 | Misses: 3297 | Hit Rate: 2.86% | Avg Latency: 198.925ms | SERVFAIL: 0 | NXDOMAIN: 0
-[2026-07-26 18:00:58,500] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:00:58] "GET /api/cache?server_id=srv-1785068302242 HTTP/1.1" 200 -
-[2026-07-26 18:00:58,710] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:00:58] "GET /api/query?server_id=srv-1785068302242 HTTP/1.1" 200 -
-[2026-07-26 18:00:58,726] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:00:58] "GET /api/overview?server_id=srv-1785068302242 HTTP/1.1" 200 -
-[2026-07-26 18:00:58,745] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:00:58] "GET /api/latency?server_id=srv-1785068302242 HTTP/1.1" 200 -
-[2026-07-26 18:00:58,763] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:00:58] "GET /api/security?server_id=srv-1785068302242 HTTP/1.1" 200 -
-[2026-07-26 18:00:58,796] INFO in base: Job "fetch_and_record_metrics (trigger: interval[0:00:01], next run at: 2026-07-26 18:00:59 IST)" executed successfully
-[2026-07-26 18:00:59,181] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:00:59] "GET /api/alerts?server_id=srv-1785068302242 HTTP/1.1" 200 -
-[2026-07-26 18:00:59,203] INFO in base: Running job "fetch_and_record_metrics (trigger: interval[0:00:01], next run at: 2026-07-26 18:01:00 IST)" (scheduled at 2026-07-26 18:00:59.202797+05:30)
-[2026-07-26 18:00:59,206] INFO in collector: Polling unbound-control for server Unbound Local Resolver (127.0.0.1@8953)...
-[2026-07-26 18:00:59,220] INFO in collector: [METRIC TELEMETRY] Server 'Unbound Local Resolver' (127.0.0.1@8953) -> Total Queries: 1778 | QPS: 0.146 | Hits: 8 | Misses: 1770 | Hit Rate: 0.45% | Avg Latency: 175.537ms | SERVFAIL: 0 | NXDOMAIN: 0
-[2026-07-26 18:00:59,220] INFO in collector: Polling unbound-control for server 192.168.3.111 (192.168.3.111@8953)...
-[2026-07-26 18:00:59,283] INFO in collector: [METRIC TELEMETRY] Server '192.168.3.111' (192.168.3.111@8953) -> Total Queries: 3394 | QPS: 0.274 | Hits: 97 | Misses: 3297 | Hit Rate: 2.86% | Avg Latency: 198.925ms | SERVFAIL: 0 | NXDOMAIN: 0
-[2026-07-26 18:00:59,508] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:00:59] "GET /api/security?server_id=srv-1785068302242 HTTP/1.1" 200 -
-[2026-07-26 18:00:59,597] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:00:59] "GET /api/query?server_id=srv-1785068302242 HTTP/1.1" 200 -
-[2026-07-26 18:00:59,619] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:00:59] "GET /api/cache?server_id=srv-1785068302242 HTTP/1.1" 200 -
-[2026-07-26 18:00:59,650] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:00:59] "GET /api/overview?server_id=srv-1785068302242 HTTP/1.1" 200 -
-[2026-07-26 18:00:59,667] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:00:59] "GET /api/latency?server_id=srv-1785068302242 HTTP/1.1" 200 -
-[2026-07-26 18:00:59,758] INFO in base: Job "fetch_and_record_metrics (trigger: interval[0:00:01], next run at: 2026-07-26 18:01:00 IST)" executed successfully
-[2026-07-26 18:01:00,110] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:00] "GET /api/alerts?server_id=srv-1785068302242 HTTP/1.1" 200 -
-[2026-07-26 18:01:00,203] INFO in base: Running job "fetch_and_record_metrics (trigger: interval[0:00:01], next run at: 2026-07-26 18:01:01 IST)" (scheduled at 2026-07-26 18:01:00.202797+05:30)
-[2026-07-26 18:01:00,205] INFO in collector: Polling unbound-control for server Unbound Local Resolver (127.0.0.1@8953)...
-[2026-07-26 18:01:00,219] INFO in collector: [METRIC TELEMETRY] Server 'Unbound Local Resolver' (127.0.0.1@8953) -> Total Queries: 1780 | QPS: 0.146 | Hits: 8 | Misses: 1772 | Hit Rate: 0.45% | Avg Latency: 175.42ms | SERVFAIL: 0 | NXDOMAIN: 0
-[2026-07-26 18:01:00,219] INFO in collector: Polling unbound-control for server 192.168.3.111 (192.168.3.111@8953)...
-[2026-07-26 18:01:00,286] INFO in collector: [METRIC TELEMETRY] Server '192.168.3.111' (192.168.3.111@8953) -> Total Queries: 3394 | QPS: 0.274 | Hits: 97 | Misses: 3297 | Hit Rate: 2.86% | Avg Latency: 198.925ms | SERVFAIL: 0 | NXDOMAIN: 0
-[2026-07-26 18:01:00,576] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:00] "GET /api/security?server_id=srv-1785068302242 HTTP/1.1" 200 -
-[2026-07-26 18:01:00,602] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:00] "GET /api/overview?server_id=srv-1785068302242 HTTP/1.1" 200 -
-[2026-07-26 18:01:00,635] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:00] "GET /api/latency?server_id=srv-1785068302242 HTTP/1.1" 200 -
-[2026-07-26 18:01:00,706] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:00] "GET /api/query?server_id=srv-1785068302242 HTTP/1.1" 200 -
-[2026-07-26 18:01:00,719] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:00] "GET /api/cache?server_id=srv-1785068302242 HTTP/1.1" 200 -
-[2026-07-26 18:01:00,742] INFO in base: Job "fetch_and_record_metrics (trigger: interval[0:00:01], next run at: 2026-07-26 18:01:01 IST)" executed successfully
-[2026-07-26 18:01:01,124] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:01] "GET /api/alerts?server_id=srv-1785068302242 HTTP/1.1" 200 -
-[2026-07-26 18:01:01,203] INFO in base: Running job "fetch_and_record_metrics (trigger: interval[0:00:01], next run at: 2026-07-26 18:01:02 IST)" (scheduled at 2026-07-26 18:01:01.202797+05:30)
-[2026-07-26 18:01:01,205] INFO in collector: Polling unbound-control for server Unbound Local Resolver (127.0.0.1@8953)...
-[2026-07-26 18:01:01,219] INFO in collector: [METRIC TELEMETRY] Server 'Unbound Local Resolver' (127.0.0.1@8953) -> Total Queries: 1780 | QPS: 0.146 | Hits: 8 | Misses: 1772 | Hit Rate: 0.45% | Avg Latency: 175.42ms | SERVFAIL: 0 | NXDOMAIN: 0
-[2026-07-26 18:01:01,219] INFO in collector: Polling unbound-control for server 192.168.3.111 (192.168.3.111@8953)...
-[2026-07-26 18:01:01,289] INFO in collector: [METRIC TELEMETRY] Server '192.168.3.111' (192.168.3.111@8953) -> Total Queries: 3394 | QPS: 0.274 | Hits: 97 | Misses: 3297 | Hit Rate: 2.86% | Avg Latency: 198.925ms | SERVFAIL: 0 | NXDOMAIN: 0
-[2026-07-26 18:01:01,565] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:01] "GET /api/security?server_id=srv-1785068302242 HTTP/1.1" 200 -
-[2026-07-26 18:01:01,629] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:01] "GET /api/overview?server_id=srv-1785068302242 HTTP/1.1" 200 -
-[2026-07-26 18:01:01,689] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:01] "GET /api/cache?server_id=srv-1785068302242 HTTP/1.1" 200 -
-[2026-07-26 18:01:01,709] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:01] "GET /api/latency?server_id=srv-1785068302242 HTTP/1.1" 200 -
-[2026-07-26 18:01:01,727] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:01] "GET /api/query?server_id=srv-1785068302242 HTTP/1.1" 200 -
-[2026-07-26 18:01:01,758] INFO in base: Job "fetch_and_record_metrics (trigger: interval[0:00:01], next run at: 2026-07-26 18:01:02 IST)" executed successfully
-[2026-07-26 18:01:02,150] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:02] "GET /api/alerts?server_id=srv-1785068302242 HTTP/1.1" 200 -
-[2026-07-26 18:01:02,203] INFO in base: Running job "fetch_and_record_metrics (trigger: interval[0:00:01], next run at: 2026-07-26 18:01:03 IST)" (scheduled at 2026-07-26 18:01:02.202797+05:30)
-[2026-07-26 18:01:02,206] INFO in collector: Polling unbound-control for server Unbound Local Resolver (127.0.0.1@8953)...
-[2026-07-26 18:01:02,220] INFO in collector: [METRIC TELEMETRY] Server 'Unbound Local Resolver' (127.0.0.1@8953) -> Total Queries: 1781 | QPS: 0.146 | Hits: 8 | Misses: 1773 | Hit Rate: 0.45% | Avg Latency: 175.42ms | SERVFAIL: 0 | NXDOMAIN: 0
-[2026-07-26 18:01:02,221] INFO in collector: Polling unbound-control for server 192.168.3.111 (192.168.3.111@8953)...
-[2026-07-26 18:01:02,289] INFO in collector: [METRIC TELEMETRY] Server '192.168.3.111' (192.168.3.111@8953) -> Total Queries: 3394 | QPS: 0.274 | Hits: 97 | Misses: 3297 | Hit Rate: 2.86% | Avg Latency: 198.925ms | SERVFAIL: 0 | NXDOMAIN: 0
-[2026-07-26 18:01:02,425] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:02] "GET /api/cache?server_id=srv-1785068302242 HTTP/1.1" 200 -
-[2026-07-26 18:01:02,608] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:02] "GET /api/latency?server_id=srv-1785068302242 HTTP/1.1" 200 -
-[2026-07-26 18:01:02,649] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:02] "GET /api/query?server_id=srv-1785068302242 HTTP/1.1" 200 -
-[2026-07-26 18:01:02,664] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:02] "GET /api/overview?server_id=srv-1785068302242 HTTP/1.1" 200 -
-[2026-07-26 18:01:02,684] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:02] "GET /api/security?server_id=srv-1785068302242 HTTP/1.1" 200 -
-[2026-07-26 18:01:02,759] INFO in base: Job "fetch_and_record_metrics (trigger: interval[0:00:01], next run at: 2026-07-26 18:01:03 IST)" executed successfully
-[2026-07-26 18:01:03,167] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:03] "GET /api/alerts?server_id=srv-1785068302242 HTTP/1.1" 200 -
-[2026-07-26 18:01:03,203] INFO in base: Running job "fetch_and_record_metrics (trigger: interval[0:00:01], next run at: 2026-07-26 18:01:04 IST)" (scheduled at 2026-07-26 18:01:03.202797+05:30)
-[2026-07-26 18:01:03,205] INFO in collector: Polling unbound-control for server Unbound Local Resolver (127.0.0.1@8953)...
-[2026-07-26 18:01:03,219] INFO in collector: [METRIC TELEMETRY] Server 'Unbound Local Resolver' (127.0.0.1@8953) -> Total Queries: 1781 | QPS: 0.146 | Hits: 8 | Misses: 1773 | Hit Rate: 0.45% | Avg Latency: 176.057ms | SERVFAIL: 0 | NXDOMAIN: 0
-[2026-07-26 18:01:03,219] INFO in collector: Polling unbound-control for server 192.168.3.111 (192.168.3.111@8953)...
-[2026-07-26 18:01:03,289] INFO in collector: [METRIC TELEMETRY] Server '192.168.3.111' (192.168.3.111@8953) -> Total Queries: 3394 | QPS: 0.274 | Hits: 97 | Misses: 3297 | Hit Rate: 2.86% | Avg Latency: 198.925ms | SERVFAIL: 0 | NXDOMAIN: 0
-[2026-07-26 18:01:03,721] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:03] "GET /api/security?server_id=srv-1785068302242 HTTP/1.1" 200 -
-[2026-07-26 18:01:03,755] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:03] "GET /api/overview?server_id=srv-1785068302242 HTTP/1.1" 200 -
-[2026-07-26 18:01:03,787] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:03] "GET /api/cache?server_id=srv-1785068302242 HTTP/1.1" 200 -
-[2026-07-26 18:01:03,811] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:03] "GET /api/query?server_id=srv-1785068302242 HTTP/1.1" 200 -
-[2026-07-26 18:01:03,830] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:03] "GET /api/latency?server_id=srv-1785068302242 HTTP/1.1" 200 -
-[2026-07-26 18:01:03,856] INFO in base: Job "fetch_and_record_metrics (trigger: interval[0:00:01], next run at: 2026-07-26 18:01:04 IST)" executed successfully
-[2026-07-26 18:01:04,092] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:04] "GET /api/alerts?server_id=srv-1785068302242 HTTP/1.1" 200 -
-[2026-07-26 18:01:04,203] INFO in base: Running job "fetch_and_record_metrics (trigger: interval[0:00:01], next run at: 2026-07-26 18:01:05 IST)" (scheduled at 2026-07-26 18:01:04.202797+05:30)
-[2026-07-26 18:01:04,208] INFO in collector: Polling unbound-control for server Unbound Local Resolver (127.0.0.1@8953)...
-[2026-07-26 18:01:04,221] INFO in collector: [METRIC TELEMETRY] Server 'Unbound Local Resolver' (127.0.0.1@8953) -> Total Queries: 1781 | QPS: 0.146 | Hits: 8 | Misses: 1773 | Hit Rate: 0.45% | Avg Latency: 176.057ms | SERVFAIL: 0 | NXDOMAIN: 0
-[2026-07-26 18:01:04,222] INFO in collector: Polling unbound-control for server 192.168.3.111 (192.168.3.111@8953)...
-[2026-07-26 18:01:04,291] INFO in collector: [METRIC TELEMETRY] Server '192.168.3.111' (192.168.3.111@8953) -> Total Queries: 3394 | QPS: 0.274 | Hits: 97 | Misses: 3297 | Hit Rate: 2.86% | Avg Latency: 198.925ms | SERVFAIL: 0 | NXDOMAIN: 0
-[2026-07-26 18:01:04,504] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:04] "GET /api/security?server_id=srv-1785068302242 HTTP/1.1" 200 -
-[2026-07-26 18:01:04,651] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:04] "GET /api/query?server_id=srv-1785068302242 HTTP/1.1" 200 -
-[2026-07-26 18:01:04,668] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:04] "GET /api/cache?server_id=srv-1785068302242 HTTP/1.1" 200 -
-[2026-07-26 18:01:04,689] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:04] "GET /api/latency?server_id=srv-1785068302242 HTTP/1.1" 200 -
-[2026-07-26 18:01:04,704] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:04] "GET /api/overview?server_id=srv-1785068302242 HTTP/1.1" 200 -
-[2026-07-26 18:01:04,761] INFO in base: Job "fetch_and_record_metrics (trigger: interval[0:00:01], next run at: 2026-07-26 18:01:05 IST)" executed successfully
-[2026-07-26 18:01:05,125] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:05] "GET /api/alerts?server_id=srv-1785068302242 HTTP/1.1" 200 -
-[2026-07-26 18:01:05,203] INFO in base: Running job "fetch_and_record_metrics (trigger: interval[0:00:01], next run at: 2026-07-26 18:01:06 IST)" (scheduled at 2026-07-26 18:01:05.202797+05:30)
-[2026-07-26 18:01:05,206] INFO in collector: Polling unbound-control for server Unbound Local Resolver (127.0.0.1@8953)...
-[2026-07-26 18:01:05,219] INFO in collector: [METRIC TELEMETRY] Server 'Unbound Local Resolver' (127.0.0.1@8953) -> Total Queries: 1781 | QPS: 0.146 | Hits: 8 | Misses: 1773 | Hit Rate: 0.45% | Avg Latency: 176.057ms | SERVFAIL: 0 | NXDOMAIN: 0
-[2026-07-26 18:01:05,220] INFO in collector: Polling unbound-control for server 192.168.3.111 (192.168.3.111@8953)...
-[2026-07-26 18:01:05,287] INFO in collector: [METRIC TELEMETRY] Server '192.168.3.111' (192.168.3.111@8953) -> Total Queries: 3394 | QPS: 0.274 | Hits: 97 | Misses: 3297 | Hit Rate: 2.86% | Avg Latency: 198.925ms | SERVFAIL: 0 | NXDOMAIN: 0
-[2026-07-26 18:01:05,538] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:05] "GET /api/query?server_id=srv-1785068302242 HTTP/1.1" 200 -
-[2026-07-26 18:01:05,561] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:05] "GET /api/security?server_id=srv-1785068302242 HTTP/1.1" 200 -
-[2026-07-26 18:01:05,592] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:05] "GET /api/latency?server_id=srv-1785068302242 HTTP/1.1" 200 -
-[2026-07-26 18:01:05,601] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:05] "GET /api/cache?server_id=srv-1785068302242 HTTP/1.1" 200 -
-[2026-07-26 18:01:05,659] INFO in base: Job "fetch_and_record_metrics (trigger: interval[0:00:01], next run at: 2026-07-26 18:01:06 IST)" executed successfully
-[2026-07-26 18:01:05,663] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:05] "GET /api/overview?server_id=srv-1785068302242 HTTP/1.1" 200 -
-[2026-07-26 18:01:06,204] INFO in base: Running job "fetch_and_record_metrics (trigger: interval[0:00:01], next run at: 2026-07-26 18:01:07 IST)" (scheduled at 2026-07-26 18:01:06.202797+05:30)
-[2026-07-26 18:01:06,206] INFO in collector: Polling unbound-control for server Unbound Local Resolver (127.0.0.1@8953)...
-[2026-07-26 18:01:06,220] INFO in collector: [METRIC TELEMETRY] Server 'Unbound Local Resolver' (127.0.0.1@8953) -> Total Queries: 1781 | QPS: 0.146 | Hits: 8 | Misses: 1773 | Hit Rate: 0.45% | Avg Latency: 176.057ms | SERVFAIL: 0 | NXDOMAIN: 0
-[2026-07-26 18:01:06,221] INFO in collector: Polling unbound-control for server 192.168.3.111 (192.168.3.111@8953)...
-[2026-07-26 18:01:06,255] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:06] "GET /api/alerts?server_id=srv-1785068302242 HTTP/1.1" 200 -
-[2026-07-26 18:01:06,294] INFO in collector: [METRIC TELEMETRY] Server '192.168.3.111' (192.168.3.111@8953) -> Total Queries: 3394 | QPS: 0.274 | Hits: 97 | Misses: 3297 | Hit Rate: 2.86% | Avg Latency: 198.925ms | SERVFAIL: 0 | NXDOMAIN: 0
-[2026-07-26 18:01:06,736] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:06] "GET /api/query?server_id=srv-1785068302242 HTTP/1.1" 200 -
-[2026-07-26 18:01:06,868] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:06] "GET /api/cache?server_id=srv-1785068302242 HTTP/1.1" 200 -
-[2026-07-26 18:01:06,887] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:06] "GET /api/latency?server_id=srv-1785068302242 HTTP/1.1" 200 -
-[2026-07-26 18:01:06,902] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:06] "GET /api/overview?server_id=srv-1785068302242 HTTP/1.1" 200 -
-[2026-07-26 18:01:06,920] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:06] "GET /api/security?server_id=srv-1785068302242 HTTP/1.1" 200 -
-[2026-07-26 18:01:06,963] INFO in base: Job "fetch_and_record_metrics (trigger: interval[0:00:01], next run at: 2026-07-26 18:01:07 IST)" executed successfully
-[2026-07-26 18:01:07,204] INFO in base: Running job "fetch_and_record_metrics (trigger: interval[0:00:01], next run at: 2026-07-26 18:01:08 IST)" (scheduled at 2026-07-26 18:01:07.202797+05:30)
-[2026-07-26 18:01:07,207] INFO in collector: Polling unbound-control for server Unbound Local Resolver (127.0.0.1@8953)...
-[2026-07-26 18:01:07,224] INFO in collector: [METRIC TELEMETRY] Server 'Unbound Local Resolver' (127.0.0.1@8953) -> Total Queries: 1781 | QPS: 0.146 | Hits: 8 | Misses: 1773 | Hit Rate: 0.45% | Avg Latency: 176.057ms | SERVFAIL: 0 | NXDOMAIN: 0
-[2026-07-26 18:01:07,225] INFO in collector: Polling unbound-control for server 192.168.3.111 (192.168.3.111@8953)...
-[2026-07-26 18:01:07,300] INFO in collector: [METRIC TELEMETRY] Server '192.168.3.111' (192.168.3.111@8953) -> Total Queries: 3394 | QPS: 0.274 | Hits: 97 | Misses: 3297 | Hit Rate: 2.86% | Avg Latency: 198.925ms | SERVFAIL: 0 | NXDOMAIN: 0
-[2026-07-26 18:01:07,326] INFO in base: Job "fetch_and_record_metrics (trigger: interval[0:00:01], next run at: 2026-07-26 18:01:08 IST)" executed successfully
-[2026-07-26 18:01:08,204] INFO in base: Running job "fetch_and_record_metrics (trigger: interval[0:00:01], next run at: 2026-07-26 18:01:09 IST)" (scheduled at 2026-07-26 18:01:08.202797+05:30)
-[2026-07-26 18:01:08,207] INFO in collector: Polling unbound-control for server Unbound Local Resolver (127.0.0.1@8953)...
-[2026-07-26 18:01:08,224] INFO in collector: [METRIC TELEMETRY] Server 'Unbound Local Resolver' (127.0.0.1@8953) -> Total Queries: 1782 | QPS: 0.146 | Hits: 8 | Misses: 1774 | Hit Rate: 0.45% | Avg Latency: 175.961ms | SERVFAIL: 0 | NXDOMAIN: 0
-[2026-07-26 18:01:08,225] INFO in collector: Polling unbound-control for server 192.168.3.111 (192.168.3.111@8953)...
-[2026-07-26 18:01:08,303] INFO in collector: [METRIC TELEMETRY] Server '192.168.3.111' (192.168.3.111@8953) -> Total Queries: 3394 | QPS: 0.274 | Hits: 97 | Misses: 3297 | Hit Rate: 2.86% | Avg Latency: 198.925ms | SERVFAIL: 0 | NXDOMAIN: 0
-[2026-07-26 18:01:08,343] INFO in base: Job "fetch_and_record_metrics (trigger: interval[0:00:01], next run at: 2026-07-26 18:01:09 IST)" executed successfully
-[2026-07-26 18:01:08,404] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:08] "GET /api/query?server_id=srv-1785068302242 HTTP/1.1" 200 -
-[2026-07-26 18:01:08,417] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:08] "POST /api/clear-alerts?server_id=srv-1785068302242 HTTP/1.1" 200 -
-[2026-07-26 18:01:08,442] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:08] "GET /api/alerts?server_id=srv-1785068302242 HTTP/1.1" 200 -
-[2026-07-26 18:01:08,467] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:08] "GET /api/alerts?server_id=srv-1785068302242 HTTP/1.1" 200 -
-[2026-07-26 18:01:08,838] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:08] "GET /api/cache?server_id=srv-1785068302242 HTTP/1.1" 200 -
-[2026-07-26 18:01:08,891] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:08] "GET /api/latency?server_id=srv-1785068302242 HTTP/1.1" 200 -
-[2026-07-26 18:01:08,905] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:08] "GET /api/overview?server_id=srv-1785068302242 HTTP/1.1" 200 -
-[2026-07-26 18:01:08,923] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:08] "GET /api/security?server_id=srv-1785068302242 HTTP/1.1" 200 -
-[2026-07-26 18:01:09,105] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:09] "GET /api/alerts?server_id=srv-1785068302242 HTTP/1.1" 200 -
-[2026-07-26 18:01:09,203] INFO in base: Running job "fetch_and_record_metrics (trigger: interval[0:00:01], next run at: 2026-07-26 18:01:10 IST)" (scheduled at 2026-07-26 18:01:09.202797+05:30)
-[2026-07-26 18:01:09,207] INFO in collector: Polling unbound-control for server Unbound Local Resolver (127.0.0.1@8953)...
-[2026-07-26 18:01:09,220] INFO in collector: [METRIC TELEMETRY] Server 'Unbound Local Resolver' (127.0.0.1@8953) -> Total Queries: 1784 | QPS: 0.147 | Hits: 8 | Misses: 1776 | Hit Rate: 0.45% | Avg Latency: 175.934ms | SERVFAIL: 0 | NXDOMAIN: 0
-[2026-07-26 18:01:09,221] INFO in collector: Polling unbound-control for server 192.168.3.111 (192.168.3.111@8953)...
-[2026-07-26 18:01:09,276] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:09] "GET /api/overview?server_id=srv-1785068302242 HTTP/1.1" 200 -
-[2026-07-26 18:01:09,285] INFO in collector: [METRIC TELEMETRY] Server '192.168.3.111' (192.168.3.111@8953) -> Total Queries: 3394 | QPS: 0.274 | Hits: 97 | Misses: 3297 | Hit Rate: 2.86% | Avg Latency: 198.925ms | SERVFAIL: 0 | NXDOMAIN: 0
-[2026-07-26 18:01:09,535] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:09] "GET /api/latency?server_id=srv-1785068302242 HTTP/1.1" 200 -
-[2026-07-26 18:01:09,649] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:09] "GET /api/cache?server_id=srv-1785068302242 HTTP/1.1" 200 -
-[2026-07-26 18:01:09,668] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:09] "GET /api/query?server_id=srv-1785068302242 HTTP/1.1" 200 -
-[2026-07-26 18:01:09,685] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:09] "GET /api/security?server_id=srv-1785068302242 HTTP/1.1" 200 -
-[2026-07-26 18:01:09,764] INFO in base: Job "fetch_and_record_metrics (trigger: interval[0:00:01], next run at: 2026-07-26 18:01:10 IST)" executed successfully
-[2026-07-26 18:01:10,129] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:10] "GET /api/alerts?server_id=srv-1785068302242 HTTP/1.1" 200 -
-[2026-07-26 18:01:10,203] INFO in base: Running job "fetch_and_record_metrics (trigger: interval[0:00:01], next run at: 2026-07-26 18:01:11 IST)" (scheduled at 2026-07-26 18:01:10.202797+05:30)
-[2026-07-26 18:01:10,206] INFO in collector: Polling unbound-control for server Unbound Local Resolver (127.0.0.1@8953)...
-[2026-07-26 18:01:10,219] INFO in collector: [METRIC TELEMETRY] Server 'Unbound Local Resolver' (127.0.0.1@8953) -> Total Queries: 1784 | QPS: 0.147 | Hits: 8 | Misses: 1776 | Hit Rate: 0.45% | Avg Latency: 175.934ms | SERVFAIL: 0 | NXDOMAIN: 0
-[2026-07-26 18:01:10,220] INFO in collector: Polling unbound-control for server 192.168.3.111 (192.168.3.111@8953)...
-[2026-07-26 18:01:10,289] INFO in collector: [METRIC TELEMETRY] Server '192.168.3.111' (192.168.3.111@8953) -> Total Queries: 3394 | QPS: 0.274 | Hits: 97 | Misses: 3297 | Hit Rate: 2.86% | Avg Latency: 198.925ms | SERVFAIL: 0 | NXDOMAIN: 0
-[2026-07-26 18:01:10,618] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:10] "GET /api/security?server_id=srv-1785068302242 HTTP/1.1" 200 -
-[2026-07-26 18:01:10,750] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:10] "GET /api/query?server_id=srv-1785068302242 HTTP/1.1" 200 -
-[2026-07-26 18:01:10,765] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:10] "GET /api/cache?server_id=srv-1785068302242 HTTP/1.1" 200 -
-[2026-07-26 18:01:10,780] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:10] "GET /api/overview?server_id=srv-1785068302242 HTTP/1.1" 200 -
-[2026-07-26 18:01:10,798] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:10] "GET /api/latency?server_id=srv-1785068302242 HTTP/1.1" 200 -
-[2026-07-26 18:01:10,858] INFO in base: Job "fetch_and_record_metrics (trigger: interval[0:00:01], next run at: 2026-07-26 18:01:11 IST)" executed successfully
-[2026-07-26 18:01:11,158] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:11] "GET /api/alerts?server_id=srv-1785068302242 HTTP/1.1" 200 -
-[2026-07-26 18:01:11,203] INFO in base: Running job "fetch_and_record_metrics (trigger: interval[0:00:01], next run at: 2026-07-26 18:01:12 IST)" (scheduled at 2026-07-26 18:01:11.202797+05:30)
-[2026-07-26 18:01:11,206] INFO in collector: Polling unbound-control for server Unbound Local Resolver (127.0.0.1@8953)...
-[2026-07-26 18:01:11,220] INFO in collector: [METRIC TELEMETRY] Server 'Unbound Local Resolver' (127.0.0.1@8953) -> Total Queries: 1784 | QPS: 0.147 | Hits: 8 | Misses: 1776 | Hit Rate: 0.45% | Avg Latency: 175.934ms | SERVFAIL: 0 | NXDOMAIN: 0
-[2026-07-26 18:01:11,220] INFO in collector: Polling unbound-control for server 192.168.3.111 (192.168.3.111@8953)...
-[2026-07-26 18:01:11,289] INFO in collector: [METRIC TELEMETRY] Server '192.168.3.111' (192.168.3.111@8953) -> Total Queries: 3394 | QPS: 0.274 | Hits: 97 | Misses: 3297 | Hit Rate: 2.86% | Avg Latency: 198.925ms | SERVFAIL: 0 | NXDOMAIN: 0
-[2026-07-26 18:01:11,695] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:11] "GET /api/latency?server_id=srv-1785068302242 HTTP/1.1" 200 -
-[2026-07-26 18:01:11,723] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:11] "GET /api/cache?server_id=srv-1785068302242 HTTP/1.1" 200 -
-[2026-07-26 18:01:11,766] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:11] "GET /api/query?server_id=srv-1785068302242 HTTP/1.1" 200 -
-[2026-07-26 18:01:11,786] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:11] "GET /api/security?server_id=srv-1785068302242 HTTP/1.1" 200 -
-[2026-07-26 18:01:11,801] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:11] "GET /api/overview?server_id=srv-1785068302242 HTTP/1.1" 200 -
-[2026-07-26 18:01:11,857] INFO in base: Job "fetch_and_record_metrics (trigger: interval[0:00:01], next run at: 2026-07-26 18:01:12 IST)" executed successfully
-[2026-07-26 18:01:12,174] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:12] "GET /api/alerts?server_id=srv-1785068302242 HTTP/1.1" 200 -
-[2026-07-26 18:01:12,203] INFO in base: Running job "fetch_and_record_metrics (trigger: interval[0:00:01], next run at: 2026-07-26 18:01:13 IST)" (scheduled at 2026-07-26 18:01:12.202797+05:30)
-[2026-07-26 18:01:12,205] INFO in collector: Polling unbound-control for server Unbound Local Resolver (127.0.0.1@8953)...
-[2026-07-26 18:01:12,219] INFO in collector: [METRIC TELEMETRY] Server 'Unbound Local Resolver' (127.0.0.1@8953) -> Total Queries: 1784 | QPS: 0.147 | Hits: 8 | Misses: 1776 | Hit Rate: 0.45% | Avg Latency: 175.934ms | SERVFAIL: 0 | NXDOMAIN: 0
-[2026-07-26 18:01:12,220] INFO in collector: Polling unbound-control for server 192.168.3.111 (192.168.3.111@8953)...
-[2026-07-26 18:01:12,283] INFO in collector: [METRIC TELEMETRY] Server '192.168.3.111' (192.168.3.111@8953) -> Total Queries: 3394 | QPS: 0.274 | Hits: 97 | Misses: 3297 | Hit Rate: 2.86% | Avg Latency: 198.925ms | SERVFAIL: 0 | NXDOMAIN: 0
-[2026-07-26 18:01:12,640] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:12] "GET /api/cache?server_id=srv-1785068302242 HTTP/1.1" 200 -
-[2026-07-26 18:01:12,685] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:12] "GET /api/latency?server_id=srv-1785068302242 HTTP/1.1" 200 -
-[2026-07-26 18:01:12,733] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:12] "GET /api/overview?server_id=srv-1785068302242 HTTP/1.1" 200 -
-[2026-07-26 18:01:12,755] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:12] "GET /api/query?server_id=srv-1785068302242 HTTP/1.1" 200 -
-[2026-07-26 18:01:12,774] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:12] "GET /api/security?server_id=srv-1785068302242 HTTP/1.1" 200 -
-[2026-07-26 18:01:12,840] INFO in base: Job "fetch_and_record_metrics (trigger: interval[0:00:01], next run at: 2026-07-26 18:01:13 IST)" executed successfully
-[2026-07-26 18:01:13,102] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:13] "GET /api/alerts?server_id=srv-1785068302242 HTTP/1.1" 200 -
-[2026-07-26 18:01:13,203] INFO in base: Running job "fetch_and_record_metrics (trigger: interval[0:00:01], next run at: 2026-07-26 18:01:14 IST)" (scheduled at 2026-07-26 18:01:13.202797+05:30)
-[2026-07-26 18:01:13,205] INFO in collector: Polling unbound-control for server Unbound Local Resolver (127.0.0.1@8953)...
-[2026-07-26 18:01:13,219] INFO in collector: [METRIC TELEMETRY] Server 'Unbound Local Resolver' (127.0.0.1@8953) -> Total Queries: 1784 | QPS: 0.147 | Hits: 8 | Misses: 1776 | Hit Rate: 0.45% | Avg Latency: 175.934ms | SERVFAIL: 0 | NXDOMAIN: 0
-[2026-07-26 18:01:13,220] INFO in collector: Polling unbound-control for server 192.168.3.111 (192.168.3.111@8953)...
-[2026-07-26 18:01:13,284] INFO in collector: [METRIC TELEMETRY] Server '192.168.3.111' (192.168.3.111@8953) -> Total Queries: 3394 | QPS: 0.274 | Hits: 97 | Misses: 3297 | Hit Rate: 2.86% | Avg Latency: 198.925ms | SERVFAIL: 0 | NXDOMAIN: 0
-[2026-07-26 18:01:13,573] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:13] "GET /api/query?server_id=srv-1785068302242 HTTP/1.1" 200 -
-[2026-07-26 18:01:13,644] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:13] "GET /api/cache?server_id=srv-1785068302242 HTTP/1.1" 200 -
-[2026-07-26 18:01:13,672] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:13] "GET /api/latency?server_id=srv-1785068302242 HTTP/1.1" 200 -
-[2026-07-26 18:01:13,703] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:13] "GET /api/security?server_id=srv-1785068302242 HTTP/1.1" 200 -
-[2026-07-26 18:01:13,713] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:13] "GET /api/overview?server_id=srv-1785068302242 HTTP/1.1" 200 -
-[2026-07-26 18:01:13,752] INFO in base: Job "fetch_and_record_metrics (trigger: interval[0:00:01], next run at: 2026-07-26 18:01:14 IST)" executed successfully
-[2026-07-26 18:01:14,111] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:14] "GET /api/alerts?server_id=srv-1785068302242 HTTP/1.1" 200 -
-[2026-07-26 18:01:14,203] INFO in base: Running job "fetch_and_record_metrics (trigger: interval[0:00:01], next run at: 2026-07-26 18:01:15 IST)" (scheduled at 2026-07-26 18:01:14.202797+05:30)
-[2026-07-26 18:01:14,207] INFO in collector: Polling unbound-control for server Unbound Local Resolver (127.0.0.1@8953)...
-[2026-07-26 18:01:14,220] INFO in collector: [METRIC TELEMETRY] Server 'Unbound Local Resolver' (127.0.0.1@8953) -> Total Queries: 1784 | QPS: 0.147 | Hits: 8 | Misses: 1776 | Hit Rate: 0.45% | Avg Latency: 175.934ms | SERVFAIL: 0 | NXDOMAIN: 0
-[2026-07-26 18:01:14,221] INFO in collector: Polling unbound-control for server 192.168.3.111 (192.168.3.111@8953)...
-[2026-07-26 18:01:14,293] INFO in collector: [METRIC TELEMETRY] Server '192.168.3.111' (192.168.3.111@8953) -> Total Queries: 3394 | QPS: 0.274 | Hits: 97 | Misses: 3297 | Hit Rate: 2.86% | Avg Latency: 198.925ms | SERVFAIL: 0 | NXDOMAIN: 0
-[2026-07-26 18:01:14,720] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:14] "GET /api/overview?server_id=srv-1785068302242 HTTP/1.1" 200 -
-[2026-07-26 18:01:14,767] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:14] "GET /api/query?server_id=srv-1785068302242 HTTP/1.1" 200 -
-[2026-07-26 18:01:14,912] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:14] "GET /api/cache?server_id=srv-1785068302242 HTTP/1.1" 200 -
-[2026-07-26 18:01:14,946] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:14] "GET /api/latency?server_id=srv-1785068302242 HTTP/1.1" 200 -
-[2026-07-26 18:01:15,014] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:15] "GET /api/security?server_id=srv-1785068302242 HTTP/1.1" 200 -
-[2026-07-26 18:01:15,036] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:15] "GET /api/overview?server_id=srv-localhost HTTP/1.1" 200 -
-[2026-07-26 18:01:15,061] INFO in base: Job "fetch_and_record_metrics (trigger: interval[0:00:01], next run at: 2026-07-26 18:01:15 IST)" executed successfully
-[2026-07-26 18:01:15,063] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:15] "GET /api/alerts?server_id=srv-localhost HTTP/1.1" 200 -
-[2026-07-26 18:01:15,093] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:15] "GET /api/alerts?server_id=srv-localhost HTTP/1.1" 200 -
-[2026-07-26 18:01:15,203] INFO in base: Running job "fetch_and_record_metrics (trigger: interval[0:00:01], next run at: 2026-07-26 18:01:16 IST)" (scheduled at 2026-07-26 18:01:15.202797+05:30)
-[2026-07-26 18:01:15,206] INFO in collector: Polling unbound-control for server Unbound Local Resolver (127.0.0.1@8953)...
-[2026-07-26 18:01:15,218] INFO in collector: [METRIC TELEMETRY] Server 'Unbound Local Resolver' (127.0.0.1@8953) -> Total Queries: 1784 | QPS: 0.147 | Hits: 8 | Misses: 1776 | Hit Rate: 0.45% | Avg Latency: 175.934ms | SERVFAIL: 0 | NXDOMAIN: 0
-[2026-07-26 18:01:15,219] INFO in collector: Polling unbound-control for server 192.168.3.111 (192.168.3.111@8953)...
-[2026-07-26 18:01:15,282] INFO in collector: [METRIC TELEMETRY] Server '192.168.3.111' (192.168.3.111@8953) -> Total Queries: 3394 | QPS: 0.274 | Hits: 97 | Misses: 3297 | Hit Rate: 2.86% | Avg Latency: 198.925ms | SERVFAIL: 0 | NXDOMAIN: 0
-[2026-07-26 18:01:15,357] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:15] "GET /api/query?server_id=srv-localhost HTTP/1.1" 200 -
-[2026-07-26 18:01:15,597] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:15] "GET /api/overview?server_id=srv-localhost HTTP/1.1" 200 -
-[2026-07-26 18:01:15,652] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:15] "GET /api/security?server_id=srv-localhost HTTP/1.1" 200 -
-[2026-07-26 18:01:15,685] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:15] "GET /api/latency?server_id=srv-localhost HTTP/1.1" 200 -
-[2026-07-26 18:01:15,705] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:15] "GET /api/cache?server_id=srv-localhost HTTP/1.1" 200 -
-[2026-07-26 18:01:15,738] INFO in base: Job "fetch_and_record_metrics (trigger: interval[0:00:01], next run at: 2026-07-26 18:01:16 IST)" executed successfully
-[2026-07-26 18:01:16,169] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:16] "GET /api/alerts?server_id=srv-localhost HTTP/1.1" 200 -
-[2026-07-26 18:01:16,203] INFO in base: Running job "fetch_and_record_metrics (trigger: interval[0:00:01], next run at: 2026-07-26 18:01:17 IST)" (scheduled at 2026-07-26 18:01:16.202797+05:30)
-[2026-07-26 18:01:16,205] INFO in collector: Polling unbound-control for server Unbound Local Resolver (127.0.0.1@8953)...
-[2026-07-26 18:01:16,233] INFO in collector: [METRIC TELEMETRY] Server 'Unbound Local Resolver' (127.0.0.1@8953) -> Total Queries: 1787 | QPS: 0.147 | Hits: 8 | Misses: 1779 | Hit Rate: 0.45% | Avg Latency: 175.716ms | SERVFAIL: 0 | NXDOMAIN: 0
-[2026-07-26 18:01:16,238] INFO in collector: Polling unbound-control for server 192.168.3.111 (192.168.3.111@8953)...
-[2026-07-26 18:01:16,242] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:16] "GET /api/latency?server_id=srv-localhost HTTP/1.1" 200 -
-[2026-07-26 18:01:16,302] INFO in collector: [METRIC TELEMETRY] Server '192.168.3.111' (192.168.3.111@8953) -> Total Queries: 3394 | QPS: 0.274 | Hits: 97 | Misses: 3297 | Hit Rate: 2.86% | Avg Latency: 198.925ms | SERVFAIL: 0 | NXDOMAIN: 0
-[2026-07-26 18:01:16,328] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:16] "GET /api/cache?server_id=srv-localhost HTTP/1.1" 200 -
-[2026-07-26 18:01:16,375] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:16] "GET /api/security?server_id=srv-localhost HTTP/1.1" 200 -
-[2026-07-26 18:01:16,437] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:16] "GET /api/query?server_id=srv-localhost HTTP/1.1" 200 -
-[2026-07-26 18:01:16,499] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:16] "GET /api/latency?server_id=srv-localhost HTTP/1.1" 200 -
-[2026-07-26 18:01:16,564] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:16] "GET /api/overview?server_id=srv-localhost HTTP/1.1" 200 -
-[2026-07-26 18:01:16,570] INFO in base: Job "fetch_and_record_metrics (trigger: interval[0:00:01], next run at: 2026-07-26 18:01:17 IST)" executed successfully
-[2026-07-26 18:01:16,895] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:16] "GET /api/cache?server_id=srv-localhost HTTP/1.1" 200 -
-[2026-07-26 18:01:16,925] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:16] "GET /api/security?server_id=srv-localhost HTTP/1.1" 200 -
-[2026-07-26 18:01:16,948] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:16] "GET /api/query?server_id=srv-localhost HTTP/1.1" 200 -
-[2026-07-26 18:01:17,203] INFO in base: Running job "fetch_and_record_metrics (trigger: interval[0:00:01], next run at: 2026-07-26 18:01:18 IST)" (scheduled at 2026-07-26 18:01:17.202797+05:30)
-[2026-07-26 18:01:17,207] INFO in collector: Polling unbound-control for server Unbound Local Resolver (127.0.0.1@8953)...
-[2026-07-26 18:01:17,224] INFO in collector: [METRIC TELEMETRY] Server 'Unbound Local Resolver' (127.0.0.1@8953) -> Total Queries: 1787 | QPS: 0.147 | Hits: 8 | Misses: 1779 | Hit Rate: 0.45% | Avg Latency: 175.716ms | SERVFAIL: 0 | NXDOMAIN: 0
-[2026-07-26 18:01:17,225] INFO in collector: Polling unbound-control for server 192.168.3.111 (192.168.3.111@8953)...
-[2026-07-26 18:01:17,301] INFO in collector: [METRIC TELEMETRY] Server '192.168.3.111' (192.168.3.111@8953) -> Total Queries: 3394 | QPS: 0.274 | Hits: 97 | Misses: 3297 | Hit Rate: 2.86% | Avg Latency: 198.925ms | SERVFAIL: 0 | NXDOMAIN: 0
-[2026-07-26 18:01:17,305] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:17] "GET /api/alerts?server_id=srv-localhost HTTP/1.1" 200 -
-[2026-07-26 18:01:18,104] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:18] "GET /api/latency?server_id=srv-localhost HTTP/1.1" 200 -
-[2026-07-26 18:01:18,129] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:18] "GET /api/overview?server_id=srv-localhost HTTP/1.1" 200 -
-[2026-07-26 18:01:18,154] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:18] "GET /api/query?server_id=srv-localhost HTTP/1.1" 200 -
-[2026-07-26 18:01:18,175] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:18] "GET /api/cache?server_id=srv-localhost HTTP/1.1" 200 -
-[2026-07-26 18:01:18,198] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:18] "GET /api/security?server_id=srv-localhost HTTP/1.1" 200 -
-[2026-07-26 18:01:18,203] WARNING in base: Execution of job "fetch_and_record_metrics (trigger: interval[0:00:01], next run at: 2026-07-26 18:01:18 IST)" skipped: maximum number of running instances reached (1)
-[2026-07-26 18:01:18,273] INFO in base: Job "fetch_and_record_metrics (trigger: interval[0:00:01], next run at: 2026-07-26 18:01:19 IST)" executed successfully
-[2026-07-26 18:01:18,294] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:18] "GET /api/alerts?server_id=srv-localhost HTTP/1.1" 200 -
-[2026-07-26 18:01:18,751] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:18] "GET /api/cache?server_id=srv-localhost HTTP/1.1" 200 -
-[2026-07-26 18:01:19,030] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:19] "GET /api/overview?server_id=srv-localhost HTTP/1.1" 200 -
-[2026-07-26 18:01:19,054] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:19] "GET /api/query?server_id=srv-localhost HTTP/1.1" 200 -
-[2026-07-26 18:01:19,125] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:19] "GET /api/latency?server_id=srv-localhost HTTP/1.1" 200 -
-[2026-07-26 18:01:19,137] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:19] "GET /api/alerts?server_id=srv-localhost HTTP/1.1" 200 -
-[2026-07-26 18:01:19,165] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:19] "GET /api/security?server_id=srv-localhost HTTP/1.1" 200 -
-[2026-07-26 18:01:19,203] INFO in base: Running job "fetch_and_record_metrics (trigger: interval[0:00:01], next run at: 2026-07-26 18:01:20 IST)" (scheduled at 2026-07-26 18:01:19.202797+05:30)
-[2026-07-26 18:01:19,205] INFO in collector: Polling unbound-control for server Unbound Local Resolver (127.0.0.1@8953)...
-[2026-07-26 18:01:19,219] INFO in collector: [METRIC TELEMETRY] Server 'Unbound Local Resolver' (127.0.0.1@8953) -> Total Queries: 1787 | QPS: 0.147 | Hits: 8 | Misses: 1779 | Hit Rate: 0.45% | Avg Latency: 175.716ms | SERVFAIL: 0 | NXDOMAIN: 0
-[2026-07-26 18:01:19,219] INFO in collector: Polling unbound-control for server 192.168.3.111 (192.168.3.111@8953)...
-[2026-07-26 18:01:19,283] INFO in collector: [METRIC TELEMETRY] Server '192.168.3.111' (192.168.3.111@8953) -> Total Queries: 3394 | QPS: 0.274 | Hits: 97 | Misses: 3297 | Hit Rate: 2.86% | Avg Latency: 198.925ms | SERVFAIL: 0 | NXDOMAIN: 0
-[2026-07-26 18:01:19,897] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:19] "GET /api/query?server_id=srv-localhost HTTP/1.1" 200 -
-[2026-07-26 18:01:19,966] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:19] "GET /api/cache?server_id=srv-localhost HTTP/1.1" 200 -
-[2026-07-26 18:01:19,985] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:19] "GET /api/overview?server_id=srv-localhost HTTP/1.1" 200 -
-[2026-07-26 18:01:20,008] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:20] "GET /api/security?server_id=srv-localhost HTTP/1.1" 200 -
-[2026-07-26 18:01:20,032] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:20] "GET /api/latency?server_id=srv-localhost HTTP/1.1" 200 -
-[2026-07-26 18:01:20,061] INFO in base: Job "fetch_and_record_metrics (trigger: interval[0:00:01], next run at: 2026-07-26 18:01:20 IST)" executed successfully
-[2026-07-26 18:01:20,075] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:20] "GET /api/alerts?server_id=srv-1785068302242 HTTP/1.1" 200 -
-[2026-07-26 18:01:20,102] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:20] "GET /api/alerts?server_id=srv-1785068302242 HTTP/1.1" 200 -
-[2026-07-26 18:01:20,204] INFO in base: Running job "fetch_and_record_metrics (trigger: interval[0:00:01], next run at: 2026-07-26 18:01:21 IST)" (scheduled at 2026-07-26 18:01:20.202797+05:30)
-[2026-07-26 18:01:20,206] INFO in collector: Polling unbound-control for server Unbound Local Resolver (127.0.0.1@8953)...
-[2026-07-26 18:01:20,221] INFO in collector: [METRIC TELEMETRY] Server 'Unbound Local Resolver' (127.0.0.1@8953) -> Total Queries: 1787 | QPS: 0.147 | Hits: 8 | Misses: 1779 | Hit Rate: 0.45% | Avg Latency: 175.716ms | SERVFAIL: 0 | NXDOMAIN: 0
-[2026-07-26 18:01:20,221] INFO in collector: Polling unbound-control for server 192.168.3.111 (192.168.3.111@8953)...
-[2026-07-26 18:01:20,240] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:20] "GET /api/cache?server_id=srv-1785068302242 HTTP/1.1" 200 -
-[2026-07-26 18:01:20,297] INFO in collector: [METRIC TELEMETRY] Server '192.168.3.111' (192.168.3.111@8953) -> Total Queries: 3394 | QPS: 0.274 | Hits: 97 | Misses: 3297 | Hit Rate: 2.86% | Avg Latency: 198.925ms | SERVFAIL: 0 | NXDOMAIN: 0
-[2026-07-26 18:01:20,436] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:20] "GET /api/overview?server_id=srv-1785068302242 HTTP/1.1" 200 -
-[2026-07-26 18:01:20,459] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:20] "GET /api/query?server_id=srv-1785068302242 HTTP/1.1" 200 -
-[2026-07-26 18:01:20,482] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:20] "GET /api/security?server_id=srv-1785068302242 HTTP/1.1" 200 -
-[2026-07-26 18:01:20,503] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:20] "GET /api/latency?server_id=srv-1785068302242 HTTP/1.1" 200 -
-[2026-07-26 18:01:20,552] INFO in base: Job "fetch_and_record_metrics (trigger: interval[0:00:01], next run at: 2026-07-26 18:01:21 IST)" executed successfully
-[2026-07-26 18:01:21,203] INFO in base: Running job "fetch_and_record_metrics (trigger: interval[0:00:01], next run at: 2026-07-26 18:01:22 IST)" (scheduled at 2026-07-26 18:01:21.202797+05:30)
-[2026-07-26 18:01:21,206] INFO in collector: Polling unbound-control for server Unbound Local Resolver (127.0.0.1@8953)...
-[2026-07-26 18:01:21,280] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:21] "GET /api/security?server_id=srv-1785068302242 HTTP/1.1" 200 -
-[2026-07-26 18:01:21,281] INFO in collector: [METRIC TELEMETRY] Server 'Unbound Local Resolver' (127.0.0.1@8953) -> Total Queries: 1787 | QPS: 0.147 | Hits: 8 | Misses: 1779 | Hit Rate: 0.45% | Avg Latency: 175.716ms | SERVFAIL: 0 | NXDOMAIN: 0
-[2026-07-26 18:01:21,283] INFO in collector: Polling unbound-control for server 192.168.3.111 (192.168.3.111@8953)...
-[2026-07-26 18:01:21,286] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:21] "GET /api/alerts?server_id=srv-1785068302242 HTTP/1.1" 200 -
-[2026-07-26 18:01:21,321] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:21] "GET /api/query?server_id=srv-1785068302242 HTTP/1.1" 200 -
-[2026-07-26 18:01:21,345] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:21] "GET /api/overview?server_id=srv-1785068302242 HTTP/1.1" 200 -
-[2026-07-26 18:01:21,351] INFO in collector: [METRIC TELEMETRY] Server '192.168.3.111' (192.168.3.111@8953) -> Total Queries: 3394 | QPS: 0.274 | Hits: 97 | Misses: 3297 | Hit Rate: 2.86% | Avg Latency: 198.925ms | SERVFAIL: 0 | NXDOMAIN: 0
-[2026-07-26 18:01:21,374] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:21] "GET /api/cache?server_id=srv-1785068302242 HTTP/1.1" 200 -
-[2026-07-26 18:01:21,402] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:21] "GET /api/latency?server_id=srv-1785068302242 HTTP/1.1" 200 -
-[2026-07-26 18:01:21,470] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:21] "GET /api/security?server_id=srv-1785068302242 HTTP/1.1" 200 -
-[2026-07-26 18:01:21,489] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:21] "GET /api/query?server_id=srv-1785068302242 HTTP/1.1" 200 -
-[2026-07-26 18:01:21,519] INFO in base: Job "fetch_and_record_metrics (trigger: interval[0:00:01], next run at: 2026-07-26 18:01:22 IST)" executed successfully
-[2026-07-26 18:01:21,844] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:21] "GET /api/latency?server_id=srv-1785068302242 HTTP/1.1" 200 -
-[2026-07-26 18:01:21,870] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:21] "GET /api/cache?server_id=srv-1785068302242 HTTP/1.1" 200 -
-[2026-07-26 18:01:21,888] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:21] "GET /api/overview?server_id=srv-1785068302242 HTTP/1.1" 200 -
-[2026-07-26 18:01:22,106] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:22] "GET /api/alerts?server_id=srv-1785068302242 HTTP/1.1" 200 -
-[2026-07-26 18:01:22,204] INFO in base: Running job "fetch_and_record_metrics (trigger: interval[0:00:01], next run at: 2026-07-26 18:01:23 IST)" (scheduled at 2026-07-26 18:01:22.202797+05:30)
-[2026-07-26 18:01:22,205] INFO in base: Running job "sync_logs_to_github (trigger: interval[0:00:30], next run at: 2026-07-26 18:01:52 IST)" (scheduled at 2026-07-26 18:01:22.203395+05:30)
-[2026-07-26 18:01:22,206] INFO in collector: Starting automated 30s GitHub log upload & local purge cycle...
+[2026-07-26 18:01:23,880] INFO in base: Job "sync_logs_to_github (trigger: interval[0:00:30], next run at: 2026-07-26 18:01:52 IST)" executed successfully
+[2026-07-26 18:01:24,205] INFO in base: Running job "fetch_and_record_metrics (trigger: interval[0:00:01], next run at: 2026-07-26 18:01:25 IST)" (scheduled at 2026-07-26 18:01:24.202797+05:30)
+[2026-07-26 18:01:24,207] INFO in collector: Polling unbound-control for server Unbound Local Resolver (127.0.0.1@8953)...
+[2026-07-26 18:01:24,220] INFO in collector: [METRIC TELEMETRY] Server 'Unbound Local Resolver' (127.0.0.1@8953) -> Total Queries: 1789 | QPS: 0.147 | Hits: 8 | Misses: 1781 | Hit Rate: 0.45% | Avg Latency: 175.608ms | SERVFAIL: 0 | NXDOMAIN: 0
+[2026-07-26 18:01:24,221] INFO in collector: Polling unbound-control for server 192.168.3.111 (192.168.3.111@8953)...
+[2026-07-26 18:01:24,245] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:24] "GET /api/alerts?server_id=srv-localhost HTTP/1.1" 200 -
+[2026-07-26 18:01:24,285] INFO in collector: [METRIC TELEMETRY] Server '192.168.3.111' (192.168.3.111@8953) -> Total Queries: 3394 | QPS: 0.273 | Hits: 97 | Misses: 3297 | Hit Rate: 2.86% | Avg Latency: 198.925ms | SERVFAIL: 0 | NXDOMAIN: 0
+[2026-07-26 18:01:24,488] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:24] "GET /api/overview?server_id=srv-localhost HTTP/1.1" 200 -
+[2026-07-26 18:01:24,518] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:24] "GET /api/latency?server_id=srv-localhost HTTP/1.1" 200 -
+[2026-07-26 18:01:24,572] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:24] "GET /api/security?server_id=srv-localhost HTTP/1.1" 200 -
+[2026-07-26 18:01:24,606] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:24] "GET /api/cache?server_id=srv-localhost HTTP/1.1" 200 -
+[2026-07-26 18:01:24,629] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:24] "GET /api/query?server_id=srv-localhost HTTP/1.1" 200 -
+[2026-07-26 18:01:24,639] INFO in base: Job "fetch_and_record_metrics (trigger: interval[0:00:01], next run at: 2026-07-26 18:01:25 IST)" executed successfully
+[2026-07-26 18:01:25,203] INFO in base: Running job "fetch_and_record_metrics (trigger: interval[0:00:01], next run at: 2026-07-26 18:01:26 IST)" (scheduled at 2026-07-26 18:01:25.202797+05:30)
+[2026-07-26 18:01:25,206] INFO in collector: Polling unbound-control for server Unbound Local Resolver (127.0.0.1@8953)...
+[2026-07-26 18:01:25,225] INFO in collector: [METRIC TELEMETRY] Server 'Unbound Local Resolver' (127.0.0.1@8953) -> Total Queries: 1789 | QPS: 0.147 | Hits: 8 | Misses: 1781 | Hit Rate: 0.45% | Avg Latency: 175.608ms | SERVFAIL: 0 | NXDOMAIN: 0
+[2026-07-26 18:01:25,225] INFO in collector: Polling unbound-control for server 192.168.3.111 (192.168.3.111@8953)...
+[2026-07-26 18:01:25,244] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:25] "GET /api/security?server_id=srv-localhost HTTP/1.1" 200 -
+[2026-07-26 18:01:25,334] INFO in collector: [METRIC TELEMETRY] Server '192.168.3.111' (192.168.3.111@8953) -> Total Queries: 3394 | QPS: 0.273 | Hits: 97 | Misses: 3297 | Hit Rate: 2.86% | Avg Latency: 198.925ms | SERVFAIL: 0 | NXDOMAIN: 0
+[2026-07-26 18:01:25,348] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:25] "GET /api/latency?server_id=srv-localhost HTTP/1.1" 200 -
+[2026-07-26 18:01:25,372] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:25] "GET /api/cache?server_id=srv-localhost HTTP/1.1" 200 -
+[2026-07-26 18:01:25,400] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:25] "GET /api/overview?server_id=srv-localhost HTTP/1.1" 200 -
+[2026-07-26 18:01:25,423] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:25] "GET /api/query?server_id=srv-localhost HTTP/1.1" 200 -
+[2026-07-26 18:01:25,453] INFO in base: Job "fetch_and_record_metrics (trigger: interval[0:00:01], next run at: 2026-07-26 18:01:26 IST)" executed successfully
+[2026-07-26 18:01:26,080] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:26] "GET /api/cache?server_id=srv-localhost HTTP/1.1" 200 -
+[2026-07-26 18:01:26,102] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:26] "GET /api/query?server_id=srv-localhost HTTP/1.1" 200 -
+[2026-07-26 18:01:26,119] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:26] "GET /api/overview?server_id=srv-localhost HTTP/1.1" 200 -
+[2026-07-26 18:01:26,150] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:26] "POST /api/clear-alerts?server_id=srv-localhost HTTP/1.1" 200 -
+[2026-07-26 18:01:26,193] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:26] "GET /api/alerts?server_id=srv-localhost HTTP/1.1" 200 -
+[2026-07-26 18:01:26,203] INFO in base: Running job "fetch_and_record_metrics (trigger: interval[0:00:01], next run at: 2026-07-26 18:01:27 IST)" (scheduled at 2026-07-26 18:01:26.202797+05:30)
+[2026-07-26 18:01:26,205] INFO in collector: Polling unbound-control for server Unbound Local Resolver (127.0.0.1@8953)...
+[2026-07-26 18:01:26,217] INFO in collector: [METRIC TELEMETRY] Server 'Unbound Local Resolver' (127.0.0.1@8953) -> Total Queries: 1789 | QPS: 0.147 | Hits: 8 | Misses: 1781 | Hit Rate: 0.45% | Avg Latency: 175.608ms | SERVFAIL: 0 | NXDOMAIN: 0
+[2026-07-26 18:01:26,218] INFO in collector: Polling unbound-control for server 192.168.3.111 (192.168.3.111@8953)...
+[2026-07-26 18:01:26,227] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:26] "GET /api/alerts?server_id=srv-localhost HTTP/1.1" 200 -
+[2026-07-26 18:01:26,260] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:26] "GET /api/alerts?server_id=srv-localhost HTTP/1.1" 200 -
+[2026-07-26 18:01:26,284] INFO in collector: [METRIC TELEMETRY] Server '192.168.3.111' (192.168.3.111@8953) -> Total Queries: 3394 | QPS: 0.273 | Hits: 97 | Misses: 3297 | Hit Rate: 2.86% | Avg Latency: 198.925ms | SERVFAIL: 0 | NXDOMAIN: 0
+[2026-07-26 18:01:27,003] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:27] "GET /api/query?server_id=srv-localhost HTTP/1.1" 200 -
+[2026-07-26 18:01:27,033] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:27] "GET /api/cache?server_id=srv-localhost HTTP/1.1" 200 -
+[2026-07-26 18:01:27,053] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:27] "GET /api/overview?server_id=srv-localhost HTTP/1.1" 200 -
+[2026-07-26 18:01:27,076] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:27] "GET /api/latency?server_id=srv-localhost HTTP/1.1" 200 -
+[2026-07-26 18:01:27,100] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:27] "GET /api/security?server_id=srv-localhost HTTP/1.1" 200 -
+[2026-07-26 18:01:27,153] INFO in base: Job "fetch_and_record_metrics (trigger: interval[0:00:01], next run at: 2026-07-26 18:01:27 IST)" executed successfully
+[2026-07-26 18:01:27,203] INFO in base: Running job "fetch_and_record_metrics (trigger: interval[0:00:01], next run at: 2026-07-26 18:01:28 IST)" (scheduled at 2026-07-26 18:01:27.202797+05:30)
+[2026-07-26 18:01:27,205] INFO in collector: Polling unbound-control for server Unbound Local Resolver (127.0.0.1@8953)...
+[2026-07-26 18:01:27,218] INFO in collector: [METRIC TELEMETRY] Server 'Unbound Local Resolver' (127.0.0.1@8953) -> Total Queries: 1789 | QPS: 0.147 | Hits: 8 | Misses: 1781 | Hit Rate: 0.45% | Avg Latency: 175.608ms | SERVFAIL: 0 | NXDOMAIN: 0
+[2026-07-26 18:01:27,218] INFO in collector: Polling unbound-control for server 192.168.3.111 (192.168.3.111@8953)...
+[2026-07-26 18:01:27,287] INFO in collector: [METRIC TELEMETRY] Server '192.168.3.111' (192.168.3.111@8953) -> Total Queries: 3394 | QPS: 0.273 | Hits: 97 | Misses: 3297 | Hit Rate: 2.86% | Avg Latency: 198.925ms | SERVFAIL: 0 | NXDOMAIN: 0
+[2026-07-26 18:01:27,291] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:27] "GET /api/alerts?server_id=srv-localhost HTTP/1.1" 200 -
+[2026-07-26 18:01:27,865] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:27] "GET /api/query?server_id=srv-localhost HTTP/1.1" 200 -
+[2026-07-26 18:01:28,037] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:28] "GET /api/overview?server_id=srv-localhost HTTP/1.1" 200 -
+[2026-07-26 18:01:28,075] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:28] "GET /api/latency?server_id=srv-localhost HTTP/1.1" 200 -
+[2026-07-26 18:01:28,103] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:28] "GET /api/security?server_id=srv-localhost HTTP/1.1" 200 -
+[2026-07-26 18:01:28,125] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:28] "GET /api/cache?server_id=srv-localhost HTTP/1.1" 200 -
+[2026-07-26 18:01:28,158] INFO in base: Job "fetch_and_record_metrics (trigger: interval[0:00:01], next run at: 2026-07-26 18:01:28 IST)" executed successfully
+[2026-07-26 18:01:28,165] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:28] "GET /api/alerts?server_id=srv-localhost HTTP/1.1" 200 -
+[2026-07-26 18:01:28,203] INFO in base: Running job "fetch_and_record_metrics (trigger: interval[0:00:01], next run at: 2026-07-26 18:01:29 IST)" (scheduled at 2026-07-26 18:01:28.202797+05:30)
+[2026-07-26 18:01:28,206] INFO in collector: Polling unbound-control for server Unbound Local Resolver (127.0.0.1@8953)...
+[2026-07-26 18:01:28,219] INFO in collector: [METRIC TELEMETRY] Server 'Unbound Local Resolver' (127.0.0.1@8953) -> Total Queries: 1789 | QPS: 0.147 | Hits: 8 | Misses: 1781 | Hit Rate: 0.45% | Avg Latency: 175.608ms | SERVFAIL: 0 | NXDOMAIN: 0
+[2026-07-26 18:01:28,219] INFO in collector: Polling unbound-control for server 192.168.3.111 (192.168.3.111@8953)...
+[2026-07-26 18:01:28,293] INFO in collector: [METRIC TELEMETRY] Server '192.168.3.111' (192.168.3.111@8953) -> Total Queries: 3394 | QPS: 0.273 | Hits: 97 | Misses: 3297 | Hit Rate: 2.86% | Avg Latency: 198.925ms | SERVFAIL: 0 | NXDOMAIN: 0
+[2026-07-26 18:01:28,869] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:28] "GET /api/security?server_id=srv-localhost HTTP/1.1" 200 -
+[2026-07-26 18:01:28,955] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:28] "GET /api/overview?server_id=srv-localhost HTTP/1.1" 200 -
+[2026-07-26 18:01:28,982] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:28] "GET /api/latency?server_id=srv-localhost HTTP/1.1" 200 -
+[2026-07-26 18:01:29,001] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:29] "GET /api/cache?server_id=srv-localhost HTTP/1.1" 200 -
+[2026-07-26 18:01:29,026] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:29] "GET /api/query?server_id=srv-localhost HTTP/1.1" 200 -
+[2026-07-26 18:01:29,060] INFO in base: Job "fetch_and_record_metrics (trigger: interval[0:00:01], next run at: 2026-07-26 18:01:29 IST)" executed successfully
+[2026-07-26 18:01:29,081] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:29] "GET /api/alerts?server_id=srv-localhost HTTP/1.1" 200 -
+[2026-07-26 18:01:29,203] INFO in base: Running job "fetch_and_record_metrics (trigger: interval[0:00:01], next run at: 2026-07-26 18:01:30 IST)" (scheduled at 2026-07-26 18:01:29.202797+05:30)
+[2026-07-26 18:01:29,207] INFO in collector: Polling unbound-control for server Unbound Local Resolver (127.0.0.1@8953)...
+[2026-07-26 18:01:29,220] INFO in collector: [METRIC TELEMETRY] Server 'Unbound Local Resolver' (127.0.0.1@8953) -> Total Queries: 1789 | QPS: 0.147 | Hits: 8 | Misses: 1781 | Hit Rate: 0.45% | Avg Latency: 175.608ms | SERVFAIL: 0 | NXDOMAIN: 0
+[2026-07-26 18:01:29,221] INFO in collector: Polling unbound-control for server 192.168.3.111 (192.168.3.111@8953)...
+[2026-07-26 18:01:29,304] INFO in collector: [METRIC TELEMETRY] Server '192.168.3.111' (192.168.3.111@8953) -> Total Queries: 3394 | QPS: 0.273 | Hits: 97 | Misses: 3297 | Hit Rate: 2.86% | Avg Latency: 198.925ms | SERVFAIL: 0 | NXDOMAIN: 0
+[2026-07-26 18:01:29,306] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:29] "GET /api/security?server_id=srv-localhost HTTP/1.1" 200 -
+[2026-07-26 18:01:29,775] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:29] "GET /api/cache?server_id=srv-localhost HTTP/1.1" 200 -
+[2026-07-26 18:01:29,784] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:29] "GET /api/overview?server_id=srv-localhost HTTP/1.1" 200 -
+[2026-07-26 18:01:29,805] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:29] "GET /api/latency?server_id=srv-localhost HTTP/1.1" 200 -
+[2026-07-26 18:01:29,829] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:29] "GET /api/query?server_id=srv-localhost HTTP/1.1" 200 -
+[2026-07-26 18:01:29,873] INFO in base: Job "fetch_and_record_metrics (trigger: interval[0:00:01], next run at: 2026-07-26 18:01:30 IST)" executed successfully
+[2026-07-26 18:01:29,926] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:29] "GET /api/latency?server_id=srv-localhost HTTP/1.1" 200 -
+[2026-07-26 18:01:29,958] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:29] "GET /api/security?server_id=srv-localhost HTTP/1.1" 200 -
+[2026-07-26 18:01:30,099] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:30] "GET /api/overview?server_id=srv-localhost HTTP/1.1" 200 -
+[2026-07-26 18:01:30,106] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:30] "GET /api/alerts?server_id=srv-localhost HTTP/1.1" 200 -
+[2026-07-26 18:01:30,204] INFO in base: Running job "fetch_and_record_metrics (trigger: interval[0:00:01], next run at: 2026-07-26 18:01:31 IST)" (scheduled at 2026-07-26 18:01:30.202797+05:30)
+[2026-07-26 18:01:30,206] INFO in collector: Polling unbound-control for server Unbound Local Resolver (127.0.0.1@8953)...
+[2026-07-26 18:01:30,219] INFO in collector: [METRIC TELEMETRY] Server 'Unbound Local Resolver' (127.0.0.1@8953) -> Total Queries: 1789 | QPS: 0.147 | Hits: 8 | Misses: 1781 | Hit Rate: 0.45% | Avg Latency: 175.608ms | SERVFAIL: 0 | NXDOMAIN: 0
+[2026-07-26 18:01:30,219] INFO in collector: Polling unbound-control for server 192.168.3.111 (192.168.3.111@8953)...
+[2026-07-26 18:01:30,283] INFO in collector: [METRIC TELEMETRY] Server '192.168.3.111' (192.168.3.111@8953) -> Total Queries: 3394 | QPS: 0.273 | Hits: 97 | Misses: 3297 | Hit Rate: 2.86% | Avg Latency: 198.925ms | SERVFAIL: 0 | NXDOMAIN: 0
+[2026-07-26 18:01:30,360] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:30] "GET /api/latency?server_id=srv-localhost HTTP/1.1" 200 -
+[2026-07-26 18:01:30,389] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:30] "GET /api/security?server_id=srv-localhost HTTP/1.1" 200 -
+[2026-07-26 18:01:30,433] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:30] "GET /api/cache?server_id=srv-localhost HTTP/1.1" 200 -
+[2026-07-26 18:01:30,493] INFO in base: Job "fetch_and_record_metrics (trigger: interval[0:00:01], next run at: 2026-07-26 18:01:31 IST)" executed successfully
+[2026-07-26 18:01:30,505] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:30] "GET /api/query?server_id=srv-localhost HTTP/1.1" 200 -
+[2026-07-26 18:01:30,715] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:30] "GET /api/alerts?server_id=all HTTP/1.1" 200 -
+[2026-07-26 18:01:31,075] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:31] "GET /api/alerts?server_id=all HTTP/1.1" 200 -
+[2026-07-26 18:01:31,124] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:31] "GET /api/overview?server_id=all HTTP/1.1" 200 -
+[2026-07-26 18:01:31,204] INFO in base: Running job "fetch_and_record_metrics (trigger: interval[0:00:01], next run at: 2026-07-26 18:01:32 IST)" (scheduled at 2026-07-26 18:01:31.202797+05:30)
+[2026-07-26 18:01:31,207] INFO in collector: Polling unbound-control for server Unbound Local Resolver (127.0.0.1@8953)...
+[2026-07-26 18:01:31,241] INFO in collector: [METRIC TELEMETRY] Server 'Unbound Local Resolver' (127.0.0.1@8953) -> Total Queries: 1789 | QPS: 0.147 | Hits: 8 | Misses: 1781 | Hit Rate: 0.45% | Avg Latency: 175.608ms | SERVFAIL: 0 | NXDOMAIN: 0
+[2026-07-26 18:01:31,242] INFO in collector: Polling unbound-control for server 192.168.3.111 (192.168.3.111@8953)...
+[2026-07-26 18:01:31,252] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:31] "GET /api/cache?server_id=all HTTP/1.1" 200 -
+[2026-07-26 18:01:31,358] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:31] "GET /api/security?server_id=all HTTP/1.1" 200 -
+[2026-07-26 18:01:31,359] INFO in collector: [METRIC TELEMETRY] Server '192.168.3.111' (192.168.3.111@8953) -> Total Queries: 3394 | QPS: 0.273 | Hits: 97 | Misses: 3297 | Hit Rate: 2.86% | Avg Latency: 198.925ms | SERVFAIL: 0 | NXDOMAIN: 0
+[2026-07-26 18:01:31,476] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:31] "GET /api/latency?server_id=all HTTP/1.1" 200 -
+[2026-07-26 18:01:31,564] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:31] "GET /api/overview?server_id=all HTTP/1.1" 200 -
+[2026-07-26 18:01:31,715] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:31] "GET /api/cache?server_id=all HTTP/1.1" 200 -
+[2026-07-26 18:01:31,722] INFO in base: Job "fetch_and_record_metrics (trigger: interval[0:00:01], next run at: 2026-07-26 18:01:32 IST)" executed successfully
+[2026-07-26 18:01:31,768] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:31] "GET /api/query?server_id=all HTTP/1.1" 200 -
+[2026-07-26 18:01:31,818] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:31] "GET /api/latency?server_id=all HTTP/1.1" 200 -
+[2026-07-26 18:01:31,996] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:31] "GET /api/security?server_id=all HTTP/1.1" 200 -
+[2026-07-26 18:01:32,056] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:32] "GET /api/query?server_id=all HTTP/1.1" 200 -
+[2026-07-26 18:01:32,143] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:32] "GET /api/alerts?server_id=all HTTP/1.1" 200 -
+[2026-07-26 18:01:32,205] INFO in base: Running job "fetch_and_record_metrics (trigger: interval[0:00:01], next run at: 2026-07-26 18:01:33 IST)" (scheduled at 2026-07-26 18:01:32.202797+05:30)
+[2026-07-26 18:01:32,207] INFO in collector: Polling unbound-control for server Unbound Local Resolver (127.0.0.1@8953)...
+[2026-07-26 18:01:32,229] INFO in collector: [METRIC TELEMETRY] Server 'Unbound Local Resolver' (127.0.0.1@8953) -> Total Queries: 1789 | QPS: 0.147 | Hits: 8 | Misses: 1781 | Hit Rate: 0.45% | Avg Latency: 175.608ms | SERVFAIL: 0 | NXDOMAIN: 0
+[2026-07-26 18:01:32,230] INFO in collector: Polling unbound-control for server 192.168.3.111 (192.168.3.111@8953)...
+[2026-07-26 18:01:32,306] INFO in collector: [METRIC TELEMETRY] Server '192.168.3.111' (192.168.3.111@8953) -> Total Queries: 3394 | QPS: 0.273 | Hits: 97 | Misses: 3297 | Hit Rate: 2.86% | Avg Latency: 198.925ms | SERVFAIL: 0 | NXDOMAIN: 0
+[2026-07-26 18:01:32,428] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:32] "GET /api/security?server_id=all HTTP/1.1" 200 -
+[2026-07-26 18:01:32,590] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:32] "GET /api/cache?server_id=all HTTP/1.1" 200 -
+[2026-07-26 18:01:32,710] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:32] "GET /api/overview?server_id=all HTTP/1.1" 200 -
+[2026-07-26 18:01:32,803] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:32] "GET /api/latency?server_id=all HTTP/1.1" 200 -
+[2026-07-26 18:01:32,882] INFO in base: Job "fetch_and_record_metrics (trigger: interval[0:00:01], next run at: 2026-07-26 18:01:33 IST)" executed successfully
+[2026-07-26 18:01:32,952] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:32] "GET /api/query?server_id=all HTTP/1.1" 200 -
+[2026-07-26 18:01:33,080] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:33] "GET /api/alerts?server_id=all HTTP/1.1" 200 -
+[2026-07-26 18:01:33,205] INFO in base: Running job "fetch_and_record_metrics (trigger: interval[0:00:01], next run at: 2026-07-26 18:01:34 IST)" (scheduled at 2026-07-26 18:01:33.202797+05:30)
+[2026-07-26 18:01:33,208] INFO in collector: Polling unbound-control for server Unbound Local Resolver (127.0.0.1@8953)...
+[2026-07-26 18:01:33,222] INFO in collector: [METRIC TELEMETRY] Server 'Unbound Local Resolver' (127.0.0.1@8953) -> Total Queries: 1791 | QPS: 0.147 | Hits: 8 | Misses: 1783 | Hit Rate: 0.45% | Avg Latency: 175.634ms | SERVFAIL: 0 | NXDOMAIN: 0
+[2026-07-26 18:01:33,222] INFO in collector: Polling unbound-control for server 192.168.3.111 (192.168.3.111@8953)...
+[2026-07-26 18:01:33,294] INFO in collector: [METRIC TELEMETRY] Server '192.168.3.111' (192.168.3.111@8953) -> Total Queries: 3394 | QPS: 0.273 | Hits: 97 | Misses: 3297 | Hit Rate: 2.86% | Avg Latency: 198.925ms | SERVFAIL: 0 | NXDOMAIN: 0
+[2026-07-26 18:01:33,574] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:33] "GET /api/latency?server_id=all HTTP/1.1" 200 -
+[2026-07-26 18:01:33,726] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:33] "GET /api/security?server_id=all HTTP/1.1" 200 -
+[2026-07-26 18:01:33,793] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:33] "GET /api/cache?server_id=all HTTP/1.1" 200 -
+[2026-07-26 18:01:33,834] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:33] "GET /api/overview?server_id=all HTTP/1.1" 200 -
+[2026-07-26 18:01:33,863] INFO in base: Job "fetch_and_record_metrics (trigger: interval[0:00:01], next run at: 2026-07-26 18:01:34 IST)" executed successfully
+[2026-07-26 18:01:33,910] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:33] "GET /api/query?server_id=all HTTP/1.1" 200 -
+[2026-07-26 18:01:34,092] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:34] "GET /api/alerts?server_id=all HTTP/1.1" 200 -
+[2026-07-26 18:01:34,207] INFO in base: Running job "fetch_and_record_metrics (trigger: interval[0:00:01], next run at: 2026-07-26 18:01:35 IST)" (scheduled at 2026-07-26 18:01:34.202797+05:30)
+[2026-07-26 18:01:34,213] INFO in collector: Polling unbound-control for server Unbound Local Resolver (127.0.0.1@8953)...
+[2026-07-26 18:01:34,259] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:34] "GET /api/overview?server_id=all HTTP/1.1" 200 -
+[2026-07-26 18:01:34,260] INFO in collector: [METRIC TELEMETRY] Server 'Unbound Local Resolver' (127.0.0.1@8953) -> Total Queries: 1791 | QPS: 0.147 | Hits: 8 | Misses: 1783 | Hit Rate: 0.45% | Avg Latency: 175.808ms | SERVFAIL: 0 | NXDOMAIN: 0
+[2026-07-26 18:01:34,260] INFO in collector: Polling unbound-control for server 192.168.3.111 (192.168.3.111@8953)...
+[2026-07-26 18:01:34,348] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:34] "GET /api/cache?server_id=all HTTP/1.1" 200 -
+[2026-07-26 18:01:34,349] INFO in collector: [METRIC TELEMETRY] Server '192.168.3.111' (192.168.3.111@8953) -> Total Queries: 3394 | QPS: 0.273 | Hits: 97 | Misses: 3297 | Hit Rate: 2.86% | Avg Latency: 198.925ms | SERVFAIL: 0 | NXDOMAIN: 0
+[2026-07-26 18:01:34,540] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:34] "GET /api/latency?server_id=all HTTP/1.1" 200 -
+[2026-07-26 18:01:34,677] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:34] "GET /api/security?server_id=all HTTP/1.1" 200 -
+[2026-07-26 18:01:34,704] INFO in base: Job "fetch_and_record_metrics (trigger: interval[0:00:01], next run at: 2026-07-26 18:01:35 IST)" executed successfully
+[2026-07-26 18:01:34,732] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:34] "GET /api/query?server_id=all HTTP/1.1" 200 -
+[2026-07-26 18:01:35,129] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:35] "GET /api/alerts?server_id=all HTTP/1.1" 200 -
+[2026-07-26 18:01:35,205] INFO in base: Running job "fetch_and_record_metrics (trigger: interval[0:00:01], next run at: 2026-07-26 18:01:36 IST)" (scheduled at 2026-07-26 18:01:35.202797+05:30)
+[2026-07-26 18:01:35,209] INFO in collector: Polling unbound-control for server Unbound Local Resolver (127.0.0.1@8953)...
+[2026-07-26 18:01:35,224] INFO in collector: [METRIC TELEMETRY] Server 'Unbound Local Resolver' (127.0.0.1@8953) -> Total Queries: 1791 | QPS: 0.147 | Hits: 8 | Misses: 1783 | Hit Rate: 0.45% | Avg Latency: 175.808ms | SERVFAIL: 0 | NXDOMAIN: 0
+[2026-07-26 18:01:35,225] INFO in collector: Polling unbound-control for server 192.168.3.111 (192.168.3.111@8953)...
+[2026-07-26 18:01:35,296] INFO in collector: [METRIC TELEMETRY] Server '192.168.3.111' (192.168.3.111@8953) -> Total Queries: 3394 | QPS: 0.273 | Hits: 97 | Misses: 3297 | Hit Rate: 2.86% | Avg Latency: 198.925ms | SERVFAIL: 0 | NXDOMAIN: 0
+[2026-07-26 18:01:35,321] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:35] "GET /api/overview?server_id=all HTTP/1.1" 200 -
+[2026-07-26 18:01:35,772] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:35] "GET /api/security?server_id=all HTTP/1.1" 200 -
+[2026-07-26 18:01:35,869] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:35] "GET /api/cache?server_id=all HTTP/1.1" 200 -
+[2026-07-26 18:01:35,916] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:35] "GET /api/latency?server_id=all HTTP/1.1" 200 -
+[2026-07-26 18:01:35,974] INFO in base: Job "fetch_and_record_metrics (trigger: interval[0:00:01], next run at: 2026-07-26 18:01:36 IST)" executed successfully
+[2026-07-26 18:01:36,052] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:36] "GET /api/query?server_id=all HTTP/1.1" 200 -
+[2026-07-26 18:01:36,070] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:36] "GET /api/alerts?server_id=all HTTP/1.1" 200 -
+[2026-07-26 18:01:36,206] INFO in base: Running job "fetch_and_record_metrics (trigger: interval[0:00:01], next run at: 2026-07-26 18:01:37 IST)" (scheduled at 2026-07-26 18:01:36.202797+05:30)
+[2026-07-26 18:01:36,211] INFO in collector: Polling unbound-control for server Unbound Local Resolver (127.0.0.1@8953)...
+[2026-07-26 18:01:36,225] INFO in collector: [METRIC TELEMETRY] Server 'Unbound Local Resolver' (127.0.0.1@8953) -> Total Queries: 1791 | QPS: 0.147 | Hits: 8 | Misses: 1783 | Hit Rate: 0.45% | Avg Latency: 175.808ms | SERVFAIL: 0 | NXDOMAIN: 0
+[2026-07-26 18:01:36,227] INFO in collector: Polling unbound-control for server 192.168.3.111 (192.168.3.111@8953)...
+[2026-07-26 18:01:36,298] INFO in collector: [METRIC TELEMETRY] Server '192.168.3.111' (192.168.3.111@8953) -> Total Queries: 3394 | QPS: 0.273 | Hits: 97 | Misses: 3297 | Hit Rate: 2.86% | Avg Latency: 198.925ms | SERVFAIL: 0 | NXDOMAIN: 0
+[2026-07-26 18:01:36,347] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:36] "GET /api/security?server_id=all HTTP/1.1" 200 -
+[2026-07-26 18:01:36,596] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:36] "GET /api/latency?server_id=all HTTP/1.1" 200 -
+[2026-07-26 18:01:39,384] INFO in collector: Polling unbound-control for server Unbound Local Resolver (127.0.0.1@8953)...
+[2026-07-26 18:01:39,397] INFO in collector: [METRIC TELEMETRY] Server 'Unbound Local Resolver' (127.0.0.1@8953) -> Total Queries: 1791 | QPS: 0.147 | Hits: 8 | Misses: 1783 | Hit Rate: 0.45% | Avg Latency: 175.808ms | SERVFAIL: 0 | NXDOMAIN: 0
+[2026-07-26 18:01:39,397] INFO in collector: Polling unbound-control for server 192.168.3.111 (192.168.3.111@8953)...
+[2026-07-26 18:01:39,461] INFO in collector: [METRIC TELEMETRY] Server '192.168.3.111' (192.168.3.111@8953) -> Total Queries: 3394 | QPS: 0.273 | Hits: 97 | Misses: 3297 | Hit Rate: 2.86% | Avg Latency: 198.925ms | SERVFAIL: 0 | NXDOMAIN: 0
+[2026-07-26 18:01:39,496] INFO in base: Adding job tentatively -- it will be properly scheduled when the scheduler starts
+[2026-07-26 18:01:39,496] INFO in base: Adding job tentatively -- it will be properly scheduled when the scheduler starts
+[2026-07-26 18:01:39,497] INFO in base: Added job "fetch_and_record_metrics" to job store "default"
+[2026-07-26 18:01:39,497] INFO in base: Added job "sync_logs_to_github" to job store "default"
+[2026-07-26 18:01:39,497] INFO in base: Scheduler started
+[2026-07-26 18:01:39,498] INFO in collector: APScheduler initialized: 1s polling cycle & 30s log sync actively running.
+[2026-07-26 18:01:39,499] INFO in app: Starting Unbound Analytics Dashboard v2.447.0-3105e36 on 0.0.0.0:81
+[2026-07-26 18:01:39,499] INFO in app: Starting Unbound Analytics Dashboard v2.447.0-3105e36 on 0.0.0.0:81
+[2026-07-26 18:01:39,506] INFO in _internal: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:81
+ * Running on http://192.168.4.86:81
+[2026-07-26 18:01:39,506] INFO in _internal: [33mPress CTRL+C to quit[0m
+[2026-07-26 18:01:39,704] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:39] "GET /health HTTP/1.1" 200 -
+[2026-07-26 18:01:40,497] INFO in base: Running job "fetch_and_record_metrics (trigger: interval[0:00:01], next run at: 2026-07-26 18:01:40 IST)" (scheduled at 2026-07-26 18:01:40.495821+05:30)
+[2026-07-26 18:01:40,499] INFO in collector: Polling unbound-control for server Unbound Local Resolver (127.0.0.1@8953)...
+[2026-07-26 18:01:40,514] INFO in collector: [METRIC TELEMETRY] Server 'Unbound Local Resolver' (127.0.0.1@8953) -> Total Queries: 1791 | QPS: 0.147 | Hits: 8 | Misses: 1783 | Hit Rate: 0.45% | Avg Latency: 175.808ms | SERVFAIL: 0 | NXDOMAIN: 0
+[2026-07-26 18:01:40,514] INFO in collector: Polling unbound-control for server 192.168.3.111 (192.168.3.111@8953)...
+[2026-07-26 18:01:40,589] INFO in collector: [METRIC TELEMETRY] Server '192.168.3.111' (192.168.3.111@8953) -> Total Queries: 3394 | QPS: 0.273 | Hits: 97 | Misses: 3297 | Hit Rate: 2.86% | Avg Latency: 198.925ms | SERVFAIL: 0 | NXDOMAIN: 0
+[2026-07-26 18:01:40,629] INFO in base: Job "fetch_and_record_metrics (trigger: interval[0:00:01], next run at: 2026-07-26 18:01:41 IST)" executed successfully
+[2026-07-26 18:01:41,449] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:41] "GET /health HTTP/1.1" 200 -
+[2026-07-26 18:01:41,496] INFO in base: Running job "fetch_and_record_metrics (trigger: interval[0:00:01], next run at: 2026-07-26 18:01:42 IST)" (scheduled at 2026-07-26 18:01:41.495821+05:30)
+[2026-07-26 18:01:41,499] INFO in collector: Polling unbound-control for server Unbound Local Resolver (127.0.0.1@8953)...
+[2026-07-26 18:01:41,516] INFO in collector: [METRIC TELEMETRY] Server 'Unbound Local Resolver' (127.0.0.1@8953) -> Total Queries: 1791 | QPS: 0.147 | Hits: 8 | Misses: 1783 | Hit Rate: 0.45% | Avg Latency: 175.808ms | SERVFAIL: 0 | NXDOMAIN: 0
+[2026-07-26 18:01:41,516] INFO in collector: Polling unbound-control for server 192.168.3.111 (192.168.3.111@8953)...
+[2026-07-26 18:01:41,588] INFO in collector: [METRIC TELEMETRY] Server '192.168.3.111' (192.168.3.111@8953) -> Total Queries: 3394 | QPS: 0.273 | Hits: 97 | Misses: 3297 | Hit Rate: 2.86% | Avg Latency: 198.925ms | SERVFAIL: 0 | NXDOMAIN: 0
+[2026-07-26 18:01:41,627] INFO in base: Job "fetch_and_record_metrics (trigger: interval[0:00:01], next run at: 2026-07-26 18:01:42 IST)" executed successfully
+[2026-07-26 18:01:42,497] INFO in base: Running job "fetch_and_record_metrics (trigger: interval[0:00:01], next run at: 2026-07-26 18:01:43 IST)" (scheduled at 2026-07-26 18:01:42.495821+05:30)
+[2026-07-26 18:01:42,500] INFO in collector: Polling unbound-control for server Unbound Local Resolver (127.0.0.1@8953)...
+[2026-07-26 18:01:42,517] INFO in collector: [METRIC TELEMETRY] Server 'Unbound Local Resolver' (127.0.0.1@8953) -> Total Queries: 1791 | QPS: 0.147 | Hits: 8 | Misses: 1783 | Hit Rate: 0.45% | Avg Latency: 175.808ms | SERVFAIL: 0 | NXDOMAIN: 0
+[2026-07-26 18:01:42,518] INFO in collector: Polling unbound-control for server 192.168.3.111 (192.168.3.111@8953)...
+[2026-07-26 18:01:42,597] INFO in collector: [METRIC TELEMETRY] Server '192.168.3.111' (192.168.3.111@8953) -> Total Queries: 3394 | QPS: 0.273 | Hits: 97 | Misses: 3297 | Hit Rate: 2.86% | Avg Latency: 198.925ms | SERVFAIL: 0 | NXDOMAIN: 0
+[2026-07-26 18:01:42,638] INFO in base: Job "fetch_and_record_metrics (trigger: interval[0:00:01], next run at: 2026-07-26 18:01:43 IST)" executed successfully
+[2026-07-26 18:01:43,497] INFO in base: Running job "fetch_and_record_metrics (trigger: interval[0:00:01], next run at: 2026-07-26 18:01:44 IST)" (scheduled at 2026-07-26 18:01:43.495821+05:30)
+[2026-07-26 18:01:43,500] INFO in collector: Polling unbound-control for server Unbound Local Resolver (127.0.0.1@8953)...
+[2026-07-26 18:01:43,517] INFO in collector: [METRIC TELEMETRY] Server 'Unbound Local Resolver' (127.0.0.1@8953) -> Total Queries: 1791 | QPS: 0.147 | Hits: 8 | Misses: 1783 | Hit Rate: 0.45% | Avg Latency: 175.808ms | SERVFAIL: 0 | NXDOMAIN: 0
+[2026-07-26 18:01:43,518] INFO in collector: Polling unbound-control for server 192.168.3.111 (192.168.3.111@8953)...
+[2026-07-26 18:01:43,598] INFO in collector: [METRIC TELEMETRY] Server '192.168.3.111' (192.168.3.111@8953) -> Total Queries: 3394 | QPS: 0.273 | Hits: 97 | Misses: 3297 | Hit Rate: 2.86% | Avg Latency: 198.925ms | SERVFAIL: 0 | NXDOMAIN: 0
+[2026-07-26 18:01:43,637] INFO in base: Job "fetch_and_record_metrics (trigger: interval[0:00:01], next run at: 2026-07-26 18:01:44 IST)" executed successfully
+[2026-07-26 18:01:43,912] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:43] "GET / HTTP/1.1" 200 -
+[2026-07-26 18:01:43,969] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:43] "GET /static/css/style.css HTTP/1.1" 200 -
+[2026-07-26 18:01:43,979] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:43] "GET /static/js/dashboard.js HTTP/1.1" 200 -
+[2026-07-26 18:01:44,080] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:44] "GET /api/servers HTTP/1.1" 200 -
+[2026-07-26 18:01:44,150] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:44] "GET /api/alerts?server_id=all HTTP/1.1" 200 -
+[2026-07-26 18:01:44,497] INFO in base: Running job "fetch_and_record_metrics (trigger: interval[0:00:01], next run at: 2026-07-26 18:01:45 IST)" (scheduled at 2026-07-26 18:01:44.495821+05:30)
+[2026-07-26 18:01:44,500] INFO in collector: Polling unbound-control for server Unbound Local Resolver (127.0.0.1@8953)...
+[2026-07-26 18:01:44,514] INFO in collector: [METRIC TELEMETRY] Server 'Unbound Local Resolver' (127.0.0.1@8953) -> Total Queries: 1794 | QPS: 0.147 | Hits: 8 | Misses: 1786 | Hit Rate: 0.45% | Avg Latency: 175.695ms | SERVFAIL: 0 | NXDOMAIN: 0
+[2026-07-26 18:01:44,514] INFO in collector: Polling unbound-control for server 192.168.3.111 (192.168.3.111@8953)...
+[2026-07-26 18:01:44,586] INFO in collector: [METRIC TELEMETRY] Server '192.168.3.111' (192.168.3.111@8953) -> Total Queries: 3394 | QPS: 0.273 | Hits: 97 | Misses: 3297 | Hit Rate: 2.86% | Avg Latency: 198.925ms | SERVFAIL: 0 | NXDOMAIN: 0
+[2026-07-26 18:01:45,417] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:45] "GET /api/overview?server_id=all HTTP/1.1" 200 -
+[2026-07-26 18:01:45,496] WARNING in base: Execution of job "fetch_and_record_metrics (trigger: interval[0:00:01], next run at: 2026-07-26 18:01:45 IST)" skipped: maximum number of running instances reached (1)
+[2026-07-26 18:01:45,693] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:45] "GET /api/security?server_id=all HTTP/1.1" 200 -
+[2026-07-26 18:01:45,808] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:45] "GET /api/latency?server_id=all HTTP/1.1" 200 -
+[2026-07-26 18:01:45,839] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:45] "GET /api/cache?server_id=all HTTP/1.1" 200 -
+[2026-07-26 18:01:45,865] INFO in base: Job "fetch_and_record_metrics (trigger: interval[0:00:01], next run at: 2026-07-26 18:01:46 IST)" executed successfully
+[2026-07-26 18:01:45,984] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:45] "GET /api/query?server_id=all HTTP/1.1" 200 -
+[2026-07-26 18:01:45,987] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:45] "GET /api/alerts?server_id=all HTTP/1.1" 200 -
+[2026-07-26 18:01:46,120] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:46] "GET /api/alerts?server_id=all HTTP/1.1" 200 -
+[2026-07-26 18:01:46,497] INFO in base: Running job "fetch_and_record_metrics (trigger: interval[0:00:01], next run at: 2026-07-26 18:01:47 IST)" (scheduled at 2026-07-26 18:01:46.495821+05:30)
+[2026-07-26 18:01:46,500] INFO in collector: Polling unbound-control for server Unbound Local Resolver (127.0.0.1@8953)...
+[2026-07-26 18:01:46,514] INFO in collector: [METRIC TELEMETRY] Server 'Unbound Local Resolver' (127.0.0.1@8953) -> Total Queries: 1794 | QPS: 0.147 | Hits: 8 | Misses: 1786 | Hit Rate: 0.45% | Avg Latency: 175.695ms | SERVFAIL: 0 | NXDOMAIN: 0
+[2026-07-26 18:01:46,515] INFO in collector: Polling unbound-control for server 192.168.3.111 (192.168.3.111@8953)...
+[2026-07-26 18:01:46,586] INFO in collector: [METRIC TELEMETRY] Server '192.168.3.111' (192.168.3.111@8953) -> Total Queries: 3394 | QPS: 0.273 | Hits: 97 | Misses: 3297 | Hit Rate: 2.86% | Avg Latency: 198.925ms | SERVFAIL: 0 | NXDOMAIN: 0
+[2026-07-26 18:01:46,951] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:46] "GET /api/latency?server_id=all HTTP/1.1" 200 -
+[2026-07-26 18:01:47,167] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:47] "GET /api/security?server_id=all HTTP/1.1" 200 -
+[2026-07-26 18:01:47,216] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:47] "GET /api/cache?server_id=all HTTP/1.1" 200 -
+[2026-07-26 18:01:47,272] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:47] "GET /api/overview?server_id=all HTTP/1.1" 200 -
+[2026-07-26 18:01:47,341] INFO in base: Job "fetch_and_record_metrics (trigger: interval[0:00:01], next run at: 2026-07-26 18:01:47 IST)" executed successfully
+[2026-07-26 18:01:47,350] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:47] "GET /api/alerts?server_id=all HTTP/1.1" 200 -
+[2026-07-26 18:01:47,376] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:47] "GET /api/query?server_id=all HTTP/1.1" 200 -
+[2026-07-26 18:01:47,497] INFO in base: Running job "fetch_and_record_metrics (trigger: interval[0:00:01], next run at: 2026-07-26 18:01:48 IST)" (scheduled at 2026-07-26 18:01:47.495821+05:30)
+[2026-07-26 18:01:47,498] INFO in collector: Polling unbound-control for server Unbound Local Resolver (127.0.0.1@8953)...
+[2026-07-26 18:01:47,512] INFO in collector: [METRIC TELEMETRY] Server 'Unbound Local Resolver' (127.0.0.1@8953) -> Total Queries: 1794 | QPS: 0.147 | Hits: 8 | Misses: 1786 | Hit Rate: 0.45% | Avg Latency: 175.695ms | SERVFAIL: 0 | NXDOMAIN: 0
+[2026-07-26 18:01:47,512] INFO in collector: Polling unbound-control for server 192.168.3.111 (192.168.3.111@8953)...
+[2026-07-26 18:01:47,586] INFO in collector: [METRIC TELEMETRY] Server '192.168.3.111' (192.168.3.111@8953) -> Total Queries: 3394 | QPS: 0.273 | Hits: 97 | Misses: 3297 | Hit Rate: 2.86% | Avg Latency: 198.925ms | SERVFAIL: 0 | NXDOMAIN: 0
+[2026-07-26 18:01:48,496] WARNING in base: Execution of job "fetch_and_record_metrics (trigger: interval[0:00:01], next run at: 2026-07-26 18:01:48 IST)" skipped: maximum number of running instances reached (1)
+[2026-07-26 18:01:48,703] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:48] "GET /api/latency?server_id=all HTTP/1.1" 200 -
+[2026-07-26 18:01:48,817] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:48] "GET /api/overview?server_id=all HTTP/1.1" 200 -
+[2026-07-26 18:01:48,884] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:48] "GET /api/security?server_id=all HTTP/1.1" 200 -
+[2026-07-26 18:01:48,923] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:48] "GET /api/cache?server_id=all HTTP/1.1" 200 -
+[2026-07-26 18:01:49,055] INFO in base: Job "fetch_and_record_metrics (trigger: interval[0:00:01], next run at: 2026-07-26 18:01:49 IST)" executed successfully
+[2026-07-26 18:01:49,116] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:49] "GET /api/query?server_id=all HTTP/1.1" 200 -
+[2026-07-26 18:01:49,121] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:49] "GET /api/alerts?server_id=all HTTP/1.1" 200 -
+[2026-07-26 18:01:49,244] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:49] "GET /api/alerts?server_id=all HTTP/1.1" 200 -
+[2026-07-26 18:01:49,497] INFO in base: Running job "fetch_and_record_metrics (trigger: interval[0:00:01], next run at: 2026-07-26 18:01:50 IST)" (scheduled at 2026-07-26 18:01:49.495821+05:30)
+[2026-07-26 18:01:49,499] INFO in collector: Polling unbound-control for server Unbound Local Resolver (127.0.0.1@8953)...
+[2026-07-26 18:01:49,512] INFO in collector: [METRIC TELEMETRY] Server 'Unbound Local Resolver' (127.0.0.1@8953) -> Total Queries: 1794 | QPS: 0.147 | Hits: 8 | Misses: 1786 | Hit Rate: 0.45% | Avg Latency: 175.695ms | SERVFAIL: 0 | NXDOMAIN: 0
+[2026-07-26 18:01:49,513] INFO in collector: Polling unbound-control for server 192.168.3.111 (192.168.3.111@8953)...
+[2026-07-26 18:01:49,577] INFO in collector: [METRIC TELEMETRY] Server '192.168.3.111' (192.168.3.111@8953) -> Total Queries: 3394 | QPS: 0.273 | Hits: 97 | Misses: 3297 | Hit Rate: 2.86% | Avg Latency: 198.925ms | SERVFAIL: 0 | NXDOMAIN: 0
+[2026-07-26 18:01:49,981] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:49] "GET /api/overview?server_id=all HTTP/1.1" 200 -
+[2026-07-26 18:01:50,307] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:50] "GET /api/latency?server_id=all HTTP/1.1" 200 -
+[2026-07-26 18:01:50,391] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:50] "GET /api/cache?server_id=all HTTP/1.1" 200 -
+[2026-07-26 18:01:50,484] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:50] "GET /api/security?server_id=all HTTP/1.1" 200 -
+[2026-07-26 18:01:50,496] WARNING in base: Execution of job "fetch_and_record_metrics (trigger: interval[0:00:01], next run at: 2026-07-26 18:01:50 IST)" skipped: maximum number of running instances reached (1)
+[2026-07-26 18:01:50,545] INFO in base: Job "fetch_and_record_metrics (trigger: interval[0:00:01], next run at: 2026-07-26 18:01:51 IST)" executed successfully
+[2026-07-26 18:01:50,628] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:50] "GET /api/query?server_id=all HTTP/1.1" 200 -
+[2026-07-26 18:01:50,646] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:50] "GET /api/security?server_id=all HTTP/1.1" 200 -
+[2026-07-26 18:01:50,648] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:50] "GET /api/alerts?server_id=all HTTP/1.1" 200 -
+[2026-07-26 18:01:51,176] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:51] "GET /api/alerts?server_id=all HTTP/1.1" 200 -
+[2026-07-26 18:01:51,497] INFO in base: Running job "fetch_and_record_metrics (trigger: interval[0:00:01], next run at: 2026-07-26 18:01:52 IST)" (scheduled at 2026-07-26 18:01:51.495821+05:30)
+[2026-07-26 18:01:51,499] INFO in collector: Polling unbound-control for server Unbound Local Resolver (127.0.0.1@8953)...
+[2026-07-26 18:01:51,513] INFO in collector: [METRIC TELEMETRY] Server 'Unbound Local Resolver' (127.0.0.1@8953) -> Total Queries: 1794 | QPS: 0.147 | Hits: 8 | Misses: 1786 | Hit Rate: 0.45% | Avg Latency: 175.695ms | SERVFAIL: 0 | NXDOMAIN: 0
+[2026-07-26 18:01:51,514] INFO in collector: Polling unbound-control for server 192.168.3.111 (192.168.3.111@8953)...
+[2026-07-26 18:01:51,582] INFO in collector: [METRIC TELEMETRY] Server '192.168.3.111' (192.168.3.111@8953) -> Total Queries: 3394 | QPS: 0.273 | Hits: 97 | Misses: 3297 | Hit Rate: 2.86% | Avg Latency: 198.925ms | SERVFAIL: 0 | NXDOMAIN: 0
+[2026-07-26 18:01:52,035] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:52] "GET /api/latency?server_id=all HTTP/1.1" 200 -
+[2026-07-26 18:01:52,078] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:52] "GET /api/overview?server_id=all HTTP/1.1" 200 -
+[2026-07-26 18:01:52,115] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:52] "GET /api/cache?server_id=all HTTP/1.1" 200 -
+[2026-07-26 18:01:52,158] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:52] "GET /api/security?server_id=all HTTP/1.1" 200 -
+[2026-07-26 18:01:52,249] INFO in base: Job "fetch_and_record_metrics (trigger: interval[0:00:01], next run at: 2026-07-26 18:01:52 IST)" executed successfully
+[2026-07-26 18:01:52,258] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:52] "GET /api/alerts?server_id=all HTTP/1.1" 200 -
+[2026-07-26 18:01:52,345] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:52] "GET /api/query?server_id=all HTTP/1.1" 200 -
+[2026-07-26 18:01:52,497] INFO in base: Running job "fetch_and_record_metrics (trigger: interval[0:00:01], next run at: 2026-07-26 18:01:53 IST)" (scheduled at 2026-07-26 18:01:52.495821+05:30)
+[2026-07-26 18:01:52,498] INFO in collector: Polling unbound-control for server Unbound Local Resolver (127.0.0.1@8953)...
+[2026-07-26 18:01:52,511] INFO in collector: [METRIC TELEMETRY] Server 'Unbound Local Resolver' (127.0.0.1@8953) -> Total Queries: 1794 | QPS: 0.147 | Hits: 8 | Misses: 1786 | Hit Rate: 0.45% | Avg Latency: 175.695ms | SERVFAIL: 0 | NXDOMAIN: 0
+[2026-07-26 18:01:52,512] INFO in collector: Polling unbound-control for server 192.168.3.111 (192.168.3.111@8953)...
+[2026-07-26 18:01:52,579] INFO in collector: [METRIC TELEMETRY] Server '192.168.3.111' (192.168.3.111@8953) -> Total Queries: 3394 | QPS: 0.273 | Hits: 97 | Misses: 3297 | Hit Rate: 2.86% | Avg Latency: 198.925ms | SERVFAIL: 0 | NXDOMAIN: 0
+[2026-07-26 18:01:53,447] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:53] "GET /api/security?server_id=all HTTP/1.1" 200 -
+[2026-07-26 18:01:53,496] WARNING in base: Execution of job "fetch_and_record_metrics (trigger: interval[0:00:01], next run at: 2026-07-26 18:01:53 IST)" skipped: maximum number of running instances reached (1)
+[2026-07-26 18:01:53,715] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:53] "GET /api/latency?server_id=all HTTP/1.1" 200 -
+[2026-07-26 18:01:53,810] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:53] "GET /api/cache?server_id=all HTTP/1.1" 200 -
+[2026-07-26 18:01:53,848] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:53] "GET /api/overview?server_id=all HTTP/1.1" 200 -
+[2026-07-26 18:01:53,852] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:53] "GET /api/alerts?server_id=all HTTP/1.1" 200 -
+[2026-07-26 18:01:53,853] INFO in base: Job "fetch_and_record_metrics (trigger: interval[0:00:01], next run at: 2026-07-26 18:01:54 IST)" executed successfully
+[2026-07-26 18:01:53,891] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:53] "GET /api/query?server_id=all HTTP/1.1" 200 -
+[2026-07-26 18:01:54,145] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:54] "GET /api/alerts?server_id=all HTTP/1.1" 200 -
+[2026-07-26 18:01:54,497] INFO in base: Running job "fetch_and_record_metrics (trigger: interval[0:00:01], next run at: 2026-07-26 18:01:55 IST)" (scheduled at 2026-07-26 18:01:54.495821+05:30)
+[2026-07-26 18:01:54,500] INFO in collector: Polling unbound-control for server Unbound Local Resolver (127.0.0.1@8953)...
+[2026-07-26 18:01:54,514] INFO in collector: [METRIC TELEMETRY] Server 'Unbound Local Resolver' (127.0.0.1@8953) -> Total Queries: 1794 | QPS: 0.147 | Hits: 8 | Misses: 1786 | Hit Rate: 0.45% | Avg Latency: 175.695ms | SERVFAIL: 0 | NXDOMAIN: 0
+[2026-07-26 18:01:54,515] INFO in collector: Polling unbound-control for server 192.168.3.111 (192.168.3.111@8953)...
+[2026-07-26 18:01:54,578] INFO in collector: [METRIC TELEMETRY] Server '192.168.3.111' (192.168.3.111@8953) -> Total Queries: 3394 | QPS: 0.273 | Hits: 97 | Misses: 3297 | Hit Rate: 2.86% | Avg Latency: 198.925ms | SERVFAIL: 0 | NXDOMAIN: 0
+[2026-07-26 18:01:54,961] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:54] "GET /api/cache?server_id=all HTTP/1.1" 200 -
+[2026-07-26 18:01:55,142] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:55] "GET /api/overview?server_id=all HTTP/1.1" 200 -
+[2026-07-26 18:01:55,222] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:55] "GET /api/security?server_id=all HTTP/1.1" 200 -
+[2026-07-26 18:01:55,275] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:55] "GET /api/latency?server_id=all HTTP/1.1" 200 -
+[2026-07-26 18:01:55,347] INFO in base: Job "fetch_and_record_metrics (trigger: interval[0:00:01], next run at: 2026-07-26 18:01:55 IST)" executed successfully
+[2026-07-26 18:01:55,379] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:55] "GET /api/query?server_id=all HTTP/1.1" 200 -
+[2026-07-26 18:01:55,383] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:55] "GET /api/alerts?server_id=all HTTP/1.1" 200 -
+[2026-07-26 18:01:55,439] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:55] "GET /api/cache?server_id=all HTTP/1.1" 200 -
+[2026-07-26 18:01:55,496] INFO in base: Running job "fetch_and_record_metrics (trigger: interval[0:00:01], next run at: 2026-07-26 18:01:56 IST)" (scheduled at 2026-07-26 18:01:55.495821+05:30)
+[2026-07-26 18:01:55,499] INFO in collector: Polling unbound-control for server Unbound Local Resolver (127.0.0.1@8953)...
+[2026-07-26 18:01:55,513] INFO in collector: [METRIC TELEMETRY] Server 'Unbound Local Resolver' (127.0.0.1@8953) -> Total Queries: 1794 | QPS: 0.147 | Hits: 8 | Misses: 1786 | Hit Rate: 0.45% | Avg Latency: 175.695ms | SERVFAIL: 0 | NXDOMAIN: 0
+[2026-07-26 18:01:55,513] INFO in collector: Polling unbound-control for server 192.168.3.111 (192.168.3.111@8953)...
+[2026-07-26 18:01:55,586] INFO in collector: [METRIC TELEMETRY] Server '192.168.3.111' (192.168.3.111@8953) -> Total Queries: 3394 | QPS: 0.273 | Hits: 97 | Misses: 3297 | Hit Rate: 2.86% | Avg Latency: 198.925ms | SERVFAIL: 0 | NXDOMAIN: 0
+[2026-07-26 18:01:56,496] WARNING in base: Execution of job "fetch_and_record_metrics (trigger: interval[0:00:01], next run at: 2026-07-26 18:01:56 IST)" skipped: maximum number of running instances reached (1)
+[2026-07-26 18:01:56,693] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:56] "GET /api/latency?server_id=all HTTP/1.1" 200 -
+[2026-07-26 18:01:56,788] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:56] "GET /api/cache?server_id=all HTTP/1.1" 200 -
+[2026-07-26 18:01:56,833] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:56] "GET /api/security?server_id=all HTTP/1.1" 200 -
+[2026-07-26 18:01:56,930] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:56] "GET /api/overview?server_id=all HTTP/1.1" 200 -
+[2026-07-26 18:01:56,955] INFO in base: Job "fetch_and_record_metrics (trigger: interval[0:00:01], next run at: 2026-07-26 18:01:57 IST)" executed successfully
+[2026-07-26 18:01:57,001] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:57] "GET /api/query?server_id=all HTTP/1.1" 200 -
+[2026-07-26 18:01:57,029] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:57] "GET /api/alerts?server_id=all HTTP/1.1" 200 -
+[2026-07-26 18:01:57,128] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:57] "GET /api/alerts?server_id=all HTTP/1.1" 200 -
+[2026-07-26 18:01:57,497] INFO in base: Running job "fetch_and_record_metrics (trigger: interval[0:00:01], next run at: 2026-07-26 18:01:58 IST)" (scheduled at 2026-07-26 18:01:57.495821+05:30)
+[2026-07-26 18:01:57,500] INFO in collector: Polling unbound-control for server Unbound Local Resolver (127.0.0.1@8953)...
+[2026-07-26 18:01:57,514] INFO in collector: [METRIC TELEMETRY] Server 'Unbound Local Resolver' (127.0.0.1@8953) -> Total Queries: 1794 | QPS: 0.147 | Hits: 8 | Misses: 1786 | Hit Rate: 0.45% | Avg Latency: 175.695ms | SERVFAIL: 0 | NXDOMAIN: 0
+[2026-07-26 18:01:57,514] INFO in collector: Polling unbound-control for server 192.168.3.111 (192.168.3.111@8953)...
+[2026-07-26 18:01:57,580] INFO in collector: [METRIC TELEMETRY] Server '192.168.3.111' (192.168.3.111@8953) -> Total Queries: 3394 | QPS: 0.273 | Hits: 97 | Misses: 3297 | Hit Rate: 2.86% | Avg Latency: 198.925ms | SERVFAIL: 0 | NXDOMAIN: 0
+[2026-07-26 18:01:58,355] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:58] "GET /api/cache?server_id=all HTTP/1.1" 200 -
+[2026-07-26 18:01:58,540] WARNING in base: Execution of job "fetch_and_record_metrics (trigger: interval[0:00:01], next run at: 2026-07-26 18:01:58 IST)" skipped: maximum number of running instances reached (1)
+[2026-07-26 18:01:58,570] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:58] "GET /api/latency?server_id=all HTTP/1.1" 200 -
+[2026-07-26 18:01:58,617] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:58] "GET /api/overview?server_id=all HTTP/1.1" 200 -
+[2026-07-26 18:01:58,665] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:58] "GET /api/security?server_id=all HTTP/1.1" 200 -
+[2026-07-26 18:01:58,750] INFO in base: Job "fetch_and_record_metrics (trigger: interval[0:00:01], next run at: 2026-07-26 18:01:59 IST)" executed successfully
+[2026-07-26 18:01:58,777] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:58] "GET /api/alerts?server_id=all HTTP/1.1" 200 -
+[2026-07-26 18:01:58,809] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:58] "GET /api/query?server_id=all HTTP/1.1" 200 -
+[2026-07-26 18:01:59,165] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:01:59] "GET /api/alerts?server_id=all HTTP/1.1" 200 -
+[2026-07-26 18:01:59,498] INFO in base: Running job "fetch_and_record_metrics (trigger: interval[0:00:01], next run at: 2026-07-26 18:02:00 IST)" (scheduled at 2026-07-26 18:01:59.495821+05:30)
+[2026-07-26 18:01:59,500] INFO in collector: Polling unbound-control for server Unbound Local Resolver (127.0.0.1@8953)...
+[2026-07-26 18:01:59,514] INFO in collector: [METRIC TELEMETRY] Server 'Unbound Local Resolver' (127.0.0.1@8953) -> Total Queries: 1794 | QPS: 0.147 | Hits: 8 | Misses: 1786 | Hit Rate: 0.45% | Avg Latency: 175.695ms | SERVFAIL: 0 | NXDOMAIN: 0
+[2026-07-26 18:01:59,514] INFO in collector: Polling unbound-control for server 192.168.3.111 (192.168.3.111@8953)...
+[2026-07-26 18:01:59,581] INFO in collector: [METRIC TELEMETRY] Server '192.168.3.111' (192.168.3.111@8953) -> Total Queries: 3394 | QPS: 0.273 | Hits: 97 | Misses: 3297 | Hit Rate: 2.86% | Avg Latency: 198.925ms | SERVFAIL: 0 | NXDOMAIN: 0
+[2026-07-26 18:02:00,043] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:02:00] "GET /api/latency?server_id=all HTTP/1.1" 200 -
+[2026-07-26 18:02:00,137] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:02:00] "GET /api/security?server_id=all HTTP/1.1" 200 -
+[2026-07-26 18:02:00,305] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:02:00] "GET /api/overview?server_id=all HTTP/1.1" 200 -
+[2026-07-26 18:02:00,344] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:02:00] "GET /api/cache?server_id=all HTTP/1.1" 200 -
+[2026-07-26 18:02:00,369] INFO in base: Job "fetch_and_record_metrics (trigger: interval[0:00:01], next run at: 2026-07-26 18:02:00 IST)" executed successfully
+[2026-07-26 18:02:00,412] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:02:00] "GET /api/query?server_id=all HTTP/1.1" 200 -
+[2026-07-26 18:02:00,418] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:02:00] "GET /api/alerts?server_id=all HTTP/1.1" 200 -
+[2026-07-26 18:02:00,496] INFO in base: Running job "fetch_and_record_metrics (trigger: interval[0:00:01], next run at: 2026-07-26 18:02:01 IST)" (scheduled at 2026-07-26 18:02:00.495821+05:30)
+[2026-07-26 18:02:00,498] INFO in collector: Polling unbound-control for server Unbound Local Resolver (127.0.0.1@8953)...
+[2026-07-26 18:02:00,512] INFO in collector: [METRIC TELEMETRY] Server 'Unbound Local Resolver' (127.0.0.1@8953) -> Total Queries: 1794 | QPS: 0.147 | Hits: 8 | Misses: 1786 | Hit Rate: 0.45% | Avg Latency: 175.695ms | SERVFAIL: 0 | NXDOMAIN: 0
+[2026-07-26 18:02:00,513] INFO in collector: Polling unbound-control for server 192.168.3.111 (192.168.3.111@8953)...
+[2026-07-26 18:02:00,574] INFO in collector: [METRIC TELEMETRY] Server '192.168.3.111' (192.168.3.111@8953) -> Total Queries: 3394 | QPS: 0.273 | Hits: 97 | Misses: 3297 | Hit Rate: 2.86% | Avg Latency: 198.925ms | SERVFAIL: 0 | NXDOMAIN: 0
+[2026-07-26 18:02:01,497] WARNING in base: Execution of job "fetch_and_record_metrics (trigger: interval[0:00:01], next run at: 2026-07-26 18:02:01 IST)" skipped: maximum number of running instances reached (1)
+[2026-07-26 18:02:01,741] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:02:01] "GET /api/cache?server_id=all HTTP/1.1" 200 -
+[2026-07-26 18:02:01,790] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:02:01] "GET /api/latency?server_id=all HTTP/1.1" 200 -
+[2026-07-26 18:02:01,909] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:02:01] "GET /api/security?server_id=all HTTP/1.1" 200 -
+[2026-07-26 18:02:01,947] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:02:01] "GET /api/overview?server_id=all HTTP/1.1" 200 -
+[2026-07-26 18:02:02,044] INFO in base: Job "fetch_and_record_metrics (trigger: interval[0:00:01], next run at: 2026-07-26 18:02:02 IST)" executed successfully
+[2026-07-26 18:02:02,047] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:02:02] "GET /api/alerts?server_id=all HTTP/1.1" 200 -
+[2026-07-26 18:02:02,137] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:02:02] "GET /api/query?server_id=all HTTP/1.1" 200 -
+[2026-07-26 18:02:02,229] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:02:02] "GET /api/alerts?server_id=all HTTP/1.1" 200 -
+[2026-07-26 18:02:02,497] INFO in base: Running job "fetch_and_record_metrics (trigger: interval[0:00:01], next run at: 2026-07-26 18:02:03 IST)" (scheduled at 2026-07-26 18:02:02.495821+05:30)
+[2026-07-26 18:02:02,499] INFO in collector: Polling unbound-control for server Unbound Local Resolver (127.0.0.1@8953)...
+[2026-07-26 18:02:02,513] INFO in collector: [METRIC TELEMETRY] Server 'Unbound Local Resolver' (127.0.0.1@8953) -> Total Queries: 1794 | QPS: 0.147 | Hits: 8 | Misses: 1786 | Hit Rate: 0.45% | Avg Latency: 175.695ms | SERVFAIL: 0 | NXDOMAIN: 0
+[2026-07-26 18:02:02,513] INFO in collector: Polling unbound-control for server 192.168.3.111 (192.168.3.111@8953)...
+[2026-07-26 18:02:02,585] INFO in collector: [METRIC TELEMETRY] Server '192.168.3.111' (192.168.3.111@8953) -> Total Queries: 3394 | QPS: 0.273 | Hits: 97 | Misses: 3297 | Hit Rate: 2.86% | Avg Latency: 198.925ms | SERVFAIL: 0 | NXDOMAIN: 0
+[2026-07-26 18:02:03,213] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:02:03] "GET /api/security?server_id=all HTTP/1.1" 200 -
+[2026-07-26 18:02:03,496] WARNING in base: Execution of job "fetch_and_record_metrics (trigger: interval[0:00:01], next run at: 2026-07-26 18:02:03 IST)" skipped: maximum number of running instances reached (1)
+[2026-07-26 18:02:03,497] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:02:03] "GET /api/overview?server_id=all HTTP/1.1" 200 -
+[2026-07-26 18:02:03,538] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:02:03] "GET /api/cache?server_id=all HTTP/1.1" 200 -
+[2026-07-26 18:02:03,582] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:02:03] "GET /api/latency?server_id=all HTTP/1.1" 200 -
+[2026-07-26 18:02:03,658] INFO in base: Job "fetch_and_record_metrics (trigger: interval[0:00:01], next run at: 2026-07-26 18:02:04 IST)" executed successfully
+[2026-07-26 18:02:03,695] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:02:03] "GET /api/query?server_id=all HTTP/1.1" 200 -
+[2026-07-26 18:02:03,697] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:02:03] "GET /api/alerts?server_id=all HTTP/1.1" 200 -
+[2026-07-26 18:02:03,763] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:02:03] "GET /api/security?server_id=all HTTP/1.1" 200 -
+[2026-07-26 18:02:04,182] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:02:04] "GET /api/alerts?server_id=all HTTP/1.1" 200 -
+[2026-07-26 18:02:04,497] INFO in base: Running job "fetch_and_record_metrics (trigger: interval[0:00:01], next run at: 2026-07-26 18:02:05 IST)" (scheduled at 2026-07-26 18:02:04.495821+05:30)
+[2026-07-26 18:02:04,499] INFO in collector: Polling unbound-control for server Unbound Local Resolver (127.0.0.1@8953)...
+[2026-07-26 18:02:04,513] INFO in collector: [METRIC TELEMETRY] Server 'Unbound Local Resolver' (127.0.0.1@8953) -> Total Queries: 1794 | QPS: 0.147 | Hits: 8 | Misses: 1786 | Hit Rate: 0.45% | Avg Latency: 175.695ms | SERVFAIL: 0 | NXDOMAIN: 0
+[2026-07-26 18:02:04,514] INFO in collector: Polling unbound-control for server 192.168.3.111 (192.168.3.111@8953)...
+[2026-07-26 18:02:04,581] INFO in collector: [METRIC TELEMETRY] Server '192.168.3.111' (192.168.3.111@8953) -> Total Queries: 3394 | QPS: 0.273 | Hits: 97 | Misses: 3297 | Hit Rate: 2.86% | Avg Latency: 198.925ms | SERVFAIL: 0 | NXDOMAIN: 0
+[2026-07-26 18:02:05,082] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:02:05] "GET /api/cache?server_id=all HTTP/1.1" 200 -
+[2026-07-26 18:02:05,152] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:02:05] "GET /api/security?server_id=all HTTP/1.1" 200 -
+[2026-07-26 18:02:05,280] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:02:05] "GET /api/overview?server_id=all HTTP/1.1" 200 -
+[2026-07-26 18:02:05,350] INFO in base: Job "fetch_and_record_metrics (trigger: interval[0:00:01], next run at: 2026-07-26 18:02:05 IST)" executed successfully
+[2026-07-26 18:02:05,389] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:02:05] "GET /api/query?server_id=all HTTP/1.1" 200 -
+[2026-07-26 18:02:05,406] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:02:05] "GET /api/alerts?server_id=all HTTP/1.1" 200 -
+[2026-07-26 18:02:05,412] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:02:05] "GET /api/latency?server_id=all HTTP/1.1" 200 -
+[2026-07-26 18:02:05,497] INFO in base: Running job "fetch_and_record_metrics (trigger: interval[0:00:01], next run at: 2026-07-26 18:02:06 IST)" (scheduled at 2026-07-26 18:02:05.495821+05:30)
+[2026-07-26 18:02:05,499] INFO in collector: Polling unbound-control for server Unbound Local Resolver (127.0.0.1@8953)...
+[2026-07-26 18:02:05,512] INFO in collector: [METRIC TELEMETRY] Server 'Unbound Local Resolver' (127.0.0.1@8953) -> Total Queries: 1794 | QPS: 0.147 | Hits: 8 | Misses: 1786 | Hit Rate: 0.45% | Avg Latency: 175.695ms | SERVFAIL: 0 | NXDOMAIN: 0
+[2026-07-26 18:02:05,512] INFO in collector: Polling unbound-control for server 192.168.3.111 (192.168.3.111@8953)...
+[2026-07-26 18:02:05,584] INFO in collector: [METRIC TELEMETRY] Server '192.168.3.111' (192.168.3.111@8953) -> Total Queries: 3394 | QPS: 0.273 | Hits: 97 | Misses: 3297 | Hit Rate: 2.86% | Avg Latency: 198.925ms | SERVFAIL: 0 | NXDOMAIN: 0
+[2026-07-26 18:02:06,497] WARNING in base: Execution of job "fetch_and_record_metrics (trigger: interval[0:00:01], next run at: 2026-07-26 18:02:06 IST)" skipped: maximum number of running instances reached (1)
+[2026-07-26 18:02:06,814] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:02:06] "GET /api/cache?server_id=all HTTP/1.1" 200 -
+[2026-07-26 18:02:06,863] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:02:06] "GET /api/security?server_id=all HTTP/1.1" 200 -
+[2026-07-26 18:02:06,923] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:02:06] "GET /api/latency?server_id=all HTTP/1.1" 200 -
+[2026-07-26 18:02:06,973] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:02:06] "GET /api/overview?server_id=all HTTP/1.1" 200 -
+[2026-07-26 18:02:07,053] INFO in base: Job "fetch_and_record_metrics (trigger: interval[0:00:01], next run at: 2026-07-26 18:02:07 IST)" executed successfully
+[2026-07-26 18:02:07,068] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:02:07] "GET /api/alerts?server_id=all HTTP/1.1" 200 -
+[2026-07-26 18:02:07,098] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:02:07] "GET /api/query?server_id=all HTTP/1.1" 200 -
+[2026-07-26 18:02:07,117] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:02:07] "GET /api/alerts?server_id=all HTTP/1.1" 200 -
+[2026-07-26 18:02:07,542] INFO in base: Running job "fetch_and_record_metrics (trigger: interval[0:00:01], next run at: 2026-07-26 18:02:08 IST)" (scheduled at 2026-07-26 18:02:07.495821+05:30)
+[2026-07-26 18:02:07,545] INFO in collector: Polling unbound-control for server Unbound Local Resolver (127.0.0.1@8953)...
+[2026-07-26 18:02:07,558] INFO in collector: [METRIC TELEMETRY] Server 'Unbound Local Resolver' (127.0.0.1@8953) -> Total Queries: 1794 | QPS: 0.147 | Hits: 8 | Misses: 1786 | Hit Rate: 0.45% | Avg Latency: 175.695ms | SERVFAIL: 0 | NXDOMAIN: 0
+[2026-07-26 18:02:07,559] INFO in collector: Polling unbound-control for server 192.168.3.111 (192.168.3.111@8953)...
+[2026-07-26 18:02:07,632] INFO in collector: [METRIC TELEMETRY] Server '192.168.3.111' (192.168.3.111@8953) -> Total Queries: 3394 | QPS: 0.273 | Hits: 97 | Misses: 3297 | Hit Rate: 2.86% | Avg Latency: 198.925ms | SERVFAIL: 0 | NXDOMAIN: 0
+[2026-07-26 18:02:08,360] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:02:08] "GET /api/overview?server_id=all HTTP/1.1" 200 -
+[2026-07-26 18:02:08,496] WARNING in base: Execution of job "fetch_and_record_metrics (trigger: interval[0:00:01], next run at: 2026-07-26 18:02:08 IST)" skipped: maximum number of running instances reached (1)
+[2026-07-26 18:02:08,637] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:02:08] "GET /api/latency?server_id=all HTTP/1.1" 200 -
+[2026-07-26 18:02:08,688] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:02:08] "GET /api/security?server_id=all HTTP/1.1" 200 -
+[2026-07-26 18:02:08,735] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:02:08] "GET /api/cache?server_id=all HTTP/1.1" 200 -
+[2026-07-26 18:02:08,801] INFO in base: Job "fetch_and_record_metrics (trigger: interval[0:00:01], next run at: 2026-07-26 18:02:09 IST)" executed successfully
+[2026-07-26 18:02:08,804] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:02:08] "GET /api/alerts?server_id=all HTTP/1.1" 200 -
+[2026-07-26 18:02:08,837] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:02:08] "GET /api/query?server_id=all HTTP/1.1" 200 -
+[2026-07-26 18:02:09,199] INFO in _internal: 192.168.4.87 - - [26/Jul/2026 18:02:09] "GET /api/alerts?server_id=all HTTP/1.1" 200 -
+[2026-07-26 18:02:09,497] INFO in base: Running job "fetch_and_record_metrics (trigger: interval[0:00:01], next run at: 2026-07-26 18:02:10 IST)" (scheduled at 2026-07-26 18:02:09.495821+05:30)
+[2026-07-26 18:02:09,498] INFO in base: Running job "sync_logs_to_github (trigger: interval[0:00:30], next run at: 2026-07-26 18:02:09 IST)" (scheduled at 2026-07-26 18:02:09.496178+05:30)
+[2026-07-26 18:02:09,498] INFO in collector: Starting automated 30s GitHub log upload & local purge cycle...
+[2026-07-26 18:02:09,501] INFO in collector: Polling unbound-control for server Unbound Local Resolver (127.0.0.1@8953)...
