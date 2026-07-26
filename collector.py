@@ -157,7 +157,7 @@ def sync_logs_to_github(app):
         timestamp = datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S UTC')
         
         cwd = app.root_path
-        subprocess.run(["git", "add", rel_log_path], cwd=cwd, check=True)
+        subprocess.run(["git", "add", "-f", rel_log_path], cwd=cwd, check=True)
         commit_res = subprocess.run(["git", "commit", "-m", f"Automated telemetry log sync [{timestamp}]"], cwd=cwd, capture_output=True, text=True)
         
         if commit_res.returncode == 0:
